@@ -1,1 +1,12 @@
+body {
+  margin: 0;
+  background: black;
+}
 
+main {
+  width: 300px;
+  min-height: 250px;
+  background: indigo;
+  color: white;
+  padding: 2rem;
+}
