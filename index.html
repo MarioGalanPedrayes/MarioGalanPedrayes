@@ -3,18 +3,22 @@
 		<title>CV Mario Galán Pedrayes</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="index.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+		<script src="index.js"></script>
 	</head>
 	<body>
 		<header>
 			<nav>
 				<a class="btnMenu" href="">Curriculum vitae</a>
-				<a class="btnMenu" href="Desarrollo/index.html">Desarrollo</a>
+				<a class="btnMenu" href="Desarrollo/index.html">Desarrollos</a>
 				<a class="btnMenu" href="Laboratorio/index.html">Laboratorio</a>
 				<a class="btnMenu" href="Hobbies/index.html">Hobbies</a>
 			</nav>	
-			<h1>CV Mario Galán Pedrayes</h1>
+			<h1>Curriculum Vitae Mario Galán Pedrayes</h1>
 			<section> <!--Foto y presentación-->
-                <img src="ImagenesIndex/perfil.png" alt="Imagen de perfíl" title="Mario Galán Pedrayes"/>
+                <img src="multimedia/perfil.png" alt="Imagen de perfíl" title="Mario Galán Pedrayes"/>
                 <h3>Presentación</h3>
                 <p>Mi nombre es Mario Galán Pedrayes y soy un apasionado de la tecnología y las ciencias
                     de la salud. Considero que la unión de estos dos campos puede revolucionar el mundo, 
@@ -35,14 +39,16 @@
         	</header>
 	        <main>
 				<br>
-	            <section> <!--Experiencia laboral-->
+	            <section id="experiencia"> <!--Experiencia laboral-->
 	                <h3>Experiencia laboral</h3>
 	                <article class="noUltimo">
 	                    <ul>
 	                        <li><b>Empresa: </b>H.U.C.A.</li>
 	                        <li><b>Lapso temporal: </b>01/2025 - 03/2025</li>
 	                        <li><b>Funciones: </b>Laboratorio de hematología. Análisis de datos en hemogramas, uso de maquinaria
-	                        de laboratorio y recepción y comprobación del estado de las muestras.</li>
+	                        de laboratorio y recepción y comprobación del estado de las muestras. Tras el resultado de las pruebas realizaba
+							un análisis de los datos para comprobar si estos son correctos (no necesariamente buenos, si no si tenían un
+							sentido).</li>
 	                    </ul>
 	                </article>
 	                <article class="noUltimo">
@@ -51,7 +57,9 @@
 	                        <li><b>Lapso temporal: </b>11/2023 - 12/2023</li>
 	                        <li><b>Funciones: </b>Laboratorio de Respuesta Rápida. Uso de maquinaria
 	                        de laboratorio, recepción, comprobación del estado y distribución de las muestras, recepción
-	                        y resolución de peticiones.</li>
+	                        y resolución de peticiones. Realización de gasometrías, análisis de orinas (bioquímicas y análisis
+							microscópicos) y modificación de solicitud de pruebas por parte de lo solicitado por los facultativos.
+							Guardias nocturnas y festivas.</li>
 	                    </ul>
 	                </article>
 	                <article class="noUltimo">
@@ -59,7 +67,10 @@
 	                        <li><b>Empresa: </b>H.U.C.A.</li>
 	                        <li><b>Lapso temporal: </b>09/2023</li>
 	                        <li><b>Funciones: </b>Laboratorio de microbiología.
-	                        Toma de muestras del ambiente de los quirófanos para comprobar asepsia.</li>
+	                        Toma de muestras del ambiente de los quirófanos para comprobar asepsia. Siembra de placas petri
+							óptimas para bacterias y hongos con 1 litro de aire obtenidos del aire del quirófano mientras
+							el quirófano esta correctamente cerrado. Si las muestras daban colonias tras la siembra se realizaba un
+							nuevo análisis más exhaustivo comprobando filtros de aire.</li>
 	                    </ul>
 	                </article>
 	                <article>
@@ -67,7 +78,10 @@
 	                        <li><b>Empresa: </b>EDISA S.A.</li>
 	                        <li><b>Lapso temporal: </b>06/2018 - 08/2020</li>
 	                        <li><b>Funciones: </b>Programador PLSQL, intengración con Oracle Forms,
-	                        Oracle Reports y BiPublisher.</li>
+	                        Oracle Reports y BiPublisher. Creación y modificación de Forms para los módulos de Libra 
+							(ERP usado por Edisa) modificando también los archivos PLSQL relacionados con el desarrollo. Elaboración
+							de manuales de usuario y manuales técnicos para el correcto archivo y, en caso de solicitud por parte
+							del consultor o el jefe de equipo, modificación de informes en Oracle Reports o BiPublisher.</li>
 	                    </ul>
 	                </article>
 	            </section>
@@ -128,29 +142,31 @@
 	            </section>
 	            <section> <!--Aptitudes-->
 	                <h3>Aptitudes </h3>
-	                <ul>
-	                    <li>Conocimientos sobre los siguientes lenguajes y tecnologías:
-	                        <ul>
-	                            <li>PLSQL</li>
-	                            <li>Java</li>
-	                            <li>C#</li>
-	                            <li>Python</li>
-	                            <li>PHP</li>
-	                            <li>SQL</li>
-	                            <li>HTML</li>
-	                            <li>CSS</li>
-	                            <li>Unity</li>
-	                        </ul>
-	                    </li>
-	                    <li>Proactivismo</li>
-	                    <li>Responsabilidad</li>
-	                    <li>Curiosidad</li>
-	                    <li>Trabajo en equipo</li>
-	                    <li>Nivel de inglés asimilable a B1</li>
-	                    <li>Discapacidad del 59%</li>
-	                    <li>Carnet de conducir tipo B</li>
-			    <li>Carta de recomendación de antiguos responsables</li>
-	                </ul>
+	                <div id="aptitudes">
+							<ul>
+								<h3>Conocimientos sobre las siguientes tecnologías</h3>
+								<li>PLSQL</li>
+								<li>Java</li>
+								<li>C#</li>
+								<li>Python</li>
+								<li>PHP</li>
+								<li>SQL</li>
+								<li>HTML</li>
+								<li>CSS</li>
+								<li>Unity</li>				
+							</ul>
+							<ul>
+								<h3>Consideraciones</h3>
+								<li>Proactivismo</li>
+								<li>Responsabilidad</li>
+								<li>Curiosidad</li>
+								<li>Trabajo en equipo</li>
+								<li>Nivel de inglés asimilable a B1</li>
+								<li>Discapacidad del 59%</li>
+								<li>Carnet de conducir tipo B</li>
+								<li>Carta de recomendación de antiguos responsables</li>
+							</ul>
+					</div>
 	            </section>
 	            <section> <!--Publicaciones-->
 	                <h3>Publicaciones científicas</h3>

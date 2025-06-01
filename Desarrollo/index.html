@@ -1,20 +1,23 @@
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>CV Mario Galán Pedrayes</title>
+		<title>Desarrollo Mario Galán Pedrayes</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="index.css">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+		<script src="index.js"></script>
 	</head>
 	<body>
 		<header>
 			<nav>
 				<a class="btnMenu" href="../index.html">Curriculum vitae</a>
-				<a class="btnMenu" href="">Desarrollo</a>
+				<a class="btnMenu" href="">Desarrollos</a>
 				<a class="btnMenu" href="../Laboratorio/index.html">Laboratorio</a>
 				<a class="btnMenu" href="../Hobbies/index.html">Hobbies</a>
 			</nav>	
-			<h1>Desarrollo</h1>
+			<h1>Desarrollos</h1>
 			<section> 
-                <h3>Introducción</h3>
+                <h2>Introducción</h2>
                 <p>En este apartado escribiré sobre los proyectos en los que he trabajado de forma autodidacta. 
 				Desgraciadamente he perdido muchos desarrollos, ya que he usado un hosting gratuito (hostinger y 000webhost)
 				y estos hosters han "archivado" mis webs siendo incapaz de recuperarlas.<br>
@@ -29,7 +32,7 @@
 	        <section> 
 				<article>
 					<h2>Proyecto final Desarrollo de Aplicaciones Multiplataforma. Alegoría</h2>
-					<p>El proyecto final de esta FP (que he titulado "Alegoría") consistia en el desarrollo de un videojuego en el lenguaje C# y en el entorno UnitY.
+					<p>El proyecto final de esta FP (que he titulado "Alegoría") consistia en el desarrollo de un videojuego en el lenguaje C# y en el entorno Unity.
 					Los objetivos de este proyecto eran varios:</p>
 					<ol>
 						<li>Conseguir realizar un guardado de partida</li>
@@ -58,8 +61,9 @@
 					que provocaba tanto una suma de puntuación como la modificación del sistema de juego (invencibilidad del personaje, más velocidad, eliminación de enemigos).</p>
 					<p>El prototipo inicial finalizo tras crear otra figura que, al ser tocada por el jugador, finalizara el juego (es decir, cargara otra escena). Esta figura se convertirá
 					en la meta de cada nivel, que, al ser tocada por el jugador, traspasará los datos a la siguiente escena.</p>
-					<iframe width="1296" height="729" src="https://www.youtube.com/embed/0BRKYP3UEd0" title="Propotipo del proyecto de fin de ciclo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-					
+					<div class="vdPrototipo">
+						<iframe src="https://www.youtube.com/embed/0BRKYP3UEd0" title="Propotipo del proyecto de fin de ciclo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
 					<h3>Parte Visual</h3>
 					<p>Como este es mi punto flaco, me gustaría decir que conte con el consejo de Jose Antonio Villar para solucionar mis dudas y para tomar decisiones complicadas en cuanto al diseño.
 					Para comenzar pense en el tono del proyecto. La idea inicial era que fuera una especia de laberinto y una metáfora sobre lo que pueden
@@ -68,19 +72,25 @@
 					<p>
 					Como uno de mis hobbies es el bordado, pense en realizar los sprites en punto de cruz y luego exportarlos e insertarlos en Unity, pero, tras realizar el primer sprite en punto de cruz, me di cuenta
 					que el tiempo no era suficiente como para poder realizar el resto de sprites.</p>
-					<img src="multimedia/spritePWM1PC.jpg" alt="Sprite en punto de cruz" title="Sprite en punto de cruz"/><br>
-					<img src="multimedia/spritePWM1.png" alt="Sprite en bits" title="Sprite en bits"/>
+					<div class="imagenesCuadradas">
+						<img src="multimedia/spritePWM1PC.jpg" alt="Sprite en punto de cruz" title="Sprite en punto de cruz"/><br>
+						<img src="multimedia/spritePWM1woB.png" alt="Sprite en bits" title="Sprite en bits"/>
+					</div>
 					</p>
 					<p>
 					Aunque el diseño del menú comenzaron siendo unos simples botones fue evolucionando hasta convertirse en un menú interactivo con un 
 					video en bluque de fondo para darle sensación de dinamismo.
 					</p>
-					<img src="multimedia/menuproyectodam2.jpg" alt="Sprite en punto de cruz" title="Sprite en punto de cruz"/><br>
-					<img src="multimedia/menuproyectodam1.png" alt="Sprite en bits" title="Sprite en bits"/>
+					<div class="imagenes">
+						<img src="multimedia/menuproyectodam1.jpg" alt="Imagen menú 1" title="Imagen menú 1"/><br>
+						<img src="multimedia/menuproyectodam2.jpg" alt="Imagen menú 2" title="Imagen menú 2"/>
+					</div>
 					<h3>Presentación final</h3>
 					<p>Como parte del proyecto debemos realizar una  presentación que adjunto a continuación, donde se puede
 					observar el resultado final del proyecto.</p>
-					<iframe width="1483" height="834" src="https://www.youtube.com/embed/45zkpXCYDM4" title="Exposición proyecto Mario Galán 2 DAM Distancia 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<div class="vdPrototipo">
+						<iframe src="https://www.youtube.com/embed/45zkpXCYDM4" title="Exposición proyecto Mario Galán 2 DAM Distancia 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
 					</p>
 				</article>
 				<article>
@@ -95,7 +105,7 @@
 					de los tres valores (llamado poderes en el juego) aumentará o disminuirá, y si alguno sobrepasa un determinado valor (100) 
 					o dismuniye por debajo de 0, el usuario perderá. Para reflejarlo de forma visual he creado 3 barras mediante CSS
 					que aumenton o disminuyen en función del valor base del poder en cuestión.</p>
-					<img src="multimedia/proyectoDAW.png" alt="Imagen del proyecto DAW" title="imagen del proyecto DAW"/>
+					<img class="imagenesRectangulares" src="multimedia/proyectoDAW.png" alt="Imagen del proyecto DAW" title="imagen del proyecto DAW"/>
 				</article>
 				<article>
 					<h2>Proyecto Posts</h2>
@@ -110,7 +120,7 @@
 					<p>Para comprobar su funcionamiento use a mis conocidos de testers y, como podemos ver en la imagen, salieron a relucir errores
 					como la longitud del texto. Estos errores se solucionaron mediante un salto de linea y relacionar la altura del cuadro del post 
 					con el número de caracteres. Desgraciadamente es otra de las apliaciones que he perdido debido a la eliminación de mis webs.</p>
-					<img src="multimedia/proyectoPosts.jpg" alt="Imagen del proyecto Posts" title="imagen del proyecto Posts"/>
+					<img class="imagenesRectangulares" src="multimedia/proyectoPosts.jpg" alt="Imagen del proyecto Posts" title="imagen del proyecto Posts"/>
 				</article>
 				<article>
 					<h2>Desarrollo multiplataforma</h2>
@@ -119,14 +129,16 @@
 					de los distintos libros leidos, ya que es uno de mis hobbies y siempre he pensado que todas las Apps que existen 
 					para llevar el control de los libros leidos son innecesariamente complejas. El objetivo de esta App era crear
 					una aplicaciones que sencillamente pudiera guardar el título del libro, el autor y si ya se ha leido o no.</p>
-					<img src="multimedia/ejPDPM1.png" title="Ejercicio 1 PDPM" alt="Ejercicio 1 PDPM"/>
+					<img src="multimedia/ejPDPM1.jpg" title="Ejercicio 1 PDPM" alt="Ejercicio 1 PDPM"/>
 					<p>Cuando finalizamos la parte de desarrollo en Android pasamos a programar en Unity. Mi objetivo durante 
 					esta parte del curso fue hacer un juego de plataformas donde el usuario debiera coger X objetos o saltar X plataformas que tras 
 					unos segundos desaparecerá antes de poder llegar a la meta y,
 					una vez llegado, que la puntuación depende del tiempo que ha tardado. La mayor dificultad fue la de acomodar las físicas de salto y gravedad
 					a mi gusto ya que sentía que una gravedad "lineal" no tenía mucho sentido, por lo que tuve que buscar la forma de una gravedad
 					"exponencial", que cada vez que el usuario saltara desacelerara. Sirvió como práctica para lo que sería el proyecto de fin de ciclo.
-					<iframe width="1296" height="729" src="https://www.youtube.com/embed/5CMnPWzFuvA" title="Proyecto PDPM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<div class="vdPrototipo">
+						<iframe src="https://www.youtube.com/embed/5CMnPWzFuvA" title="Proyecto PDPM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
 				</article>
 				<article>
 					<h2>Acceso a Datos</h2>
@@ -136,7 +148,9 @@
 					tratamientos. El programa consiste en introducir datos de ciudades e indicar la población y si es capital. Al ser un trabajo de clase está
 					extensamente explicado en el siguiente video.</p>
 					<img src="multimedia/proyectoACD.png" title="proyecto de acceso a datos" alt="proyecto de acceso a datos"/>
-					<iframe width="1296" height="729" src="https://www.youtube.com/embed/wsNPmjM3CCU" title="Explicación del ejercicio evaluable de la segunda evaluación del módulo de DAM Acceso a datos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<div class="vdPrototipo">
+						<iframe src="https://www.youtube.com/embed/wsNPmjM3CCU" title="Explicación del ejercicio evaluable de la segunda evaluación del módulo de DAM Acceso a datos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
 					<p>Este módulo es uno de los que más he practicado ya que, a parte de la complicación del control de errores, pienso que
 					su utilidad en cualquier ámbito (como tiendas locales, gestiones, transporte, etc) puede ser extensa y muy útil para los usuarios.
 					Cualquier trabajador agradece funcionalidades como la capacidad de exportar datos en distintos formatos o importar datos obtenidos
@@ -162,7 +176,9 @@
 					Algunos de estos programas son los siguientes.</p>
 					<img src="multimedia/EJDesin2.png" title="Ejercicio 2 DESIN" alt="Ejercicio 2 DESIN"/>
 					<img src="multimedia/EJDesin3.jpg" title="Ejercicio 3 DESIN" alt="Ejercicio 3 DESIN"/>
-					<iframe width="1296" height="729" src="https://www.youtube.com/embed/59bSe3ygyDY" title="Explicación Proyecto DESIN 2º Cuatrimestre Mario Galán" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<div class="vdPrototipo">
+						<iframe src="https://www.youtube.com/embed/59bSe3ygyDY" title="Explicación Proyecto DESIN 2º Cuatrimestre Mario Galán" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
 					
 				</article>
 				<article>
