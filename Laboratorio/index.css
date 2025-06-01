@@ -39,6 +39,7 @@ header > section > img{
 	
 }
 
+
 .btnMenu{
 	border:solid;
 	padding: 10px;
@@ -76,58 +77,19 @@ iframe{
 	height: 583px;
 	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5); /*Sombra debajo*/
 	border:solid;
+	margin: 10px;
 }
 
-.imagenPantalla{
-	
-	width: 960px;
-	
-}
-
-img{
-
-	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5); /*Sombra debajo*/
-	border:solid;
-	display:block;
-	margin:auto;	
-	margin-bottom: 10px;
+iframe:hover{
 	
 	
 }
 
-#imgAcd > img{
-	display:inline;
-	margin-right: 42px;
-	height:400px;
-	width: 550px;
-	
-}
+
 
 .vdPrototipo{
 	display: flex;
 	justify-content: center;
-}
-
-.imagenes, .imagenesCuadradas{
-	display: flex;
-	justify-content: center;	
-}
-
-.imagenesCuadradas > img{
-	width: 300px;
-	height: 300px;
-	margin-left: 100px;
-	margin-right: 100px;
-	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5); /*Sombra debajo*/
-	border:solid;
-}
-
-.imagenes > img{
-	height: 300px;
-	margin-left: 50px;
-	margin-right: 50px;
-	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5); /*Sombra debajo*/
-	border:solid;
 }
 
 
