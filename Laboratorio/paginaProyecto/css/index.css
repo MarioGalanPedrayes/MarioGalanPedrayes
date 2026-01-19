@@ -1,0 +1,271 @@
+html{
+	
+	background-color: white;
+
+}
+
+body{
+	
+	width: 1600px;
+	margin: 0 auto;
+	margin-top: 10px;
+	border: solid;
+	padding-top: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #EFFFDC;
+	padding:5px;
+
+}
+
+body>header>img{
+	
+	float:left; /*pensar en comentar esta linea*/
+	width:15%; /*pensar en comentar esta linea*/
+	border:solid 1px;
+	background-color: white;
+	padding:3px;
+}
+
+
+
+body>header>h2,body>header>h3{
+	
+	text-align:center;
+	
+}
+
+body>main>article>header#menuPrincipal>nav{
+
+  
+}
+
+body>main>article>header#menuPrincipal>nav>ul{
+	
+	list-style: none;
+	overflow: hidden; 
+	text-align:center;
+
+	
+}
+
+body>main>article>header#menuPrincipal>nav>ul>li{
+	
+	display:inline;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	padding-right:10px;
+
+	
+}
+
+
+body>footer>h3{
+	
+	text-align:center;
+	
+}
+
+body>footer>p{
+	
+	display:inline;
+	float: right;
+	font-size: 10px
+	
+}
+
+iframe{
+
+	width:49%;
+	
+}
+
+iframe.derecha{
+
+	width:49%;
+	float:right;
+	
+}
+
+iframe.centro{
+	
+	float: center;
+	
+}
+
+
+main>article>header>nav>ul>li> a:link, a:visited {
+  background-color: white;
+  color: black;
+  border: 2px solid green;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+main>article>header>nav>ul>li>a:hover, a:active {
+  background-color: green;
+  color: white;
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 960px) {
+
+	body{width: 708px; padding:20px;}
+
+	header, footer, main, p, h2{width: 708px; }
+
+	body, input, textarea { font-size: 110%; background-color:white; border: 0px; }
+		
+	
+	body>header{
+		margin: 0 auto;
+	}
+	body>header>img{
+		display:block;
+		margin:auto;
+		padding-bottom:40px;
+		width:100%; 
+		border: none;
+		background-color: white;
+	}
+
+
+	main>article>header>nav>ul>li> a:link, a:visited {
+		background-color: white;
+		color: blue;
+		border: 0px solid white;
+		padding: 10px 20px;
+		text-align: center;
+		display: inline-block;
+		text-decoration: underline wavy blue; 	  
+	}
+
+	main>article>header>nav>ul>li>a:hover, a:active {
+	  background-color: white;
+	  color: red;
+	}
+
+}
+
+@media screen and (max-width: 767px) {
+
+	
+	body{width: 480px; padding:20px;}
+
+	header, footer, main, p, h2{width: 480px; }
+
+	body, input, textarea { font-size: 120%; background-color:white; border: 0px; }
+		
+	
+	body>header{
+		margin: 0 auto;
+	}
+	body>header>img{
+		display:block;
+		margin:auto;
+		padding-bottom:40px;
+		width:100%; 
+		border: none;
+		background-color: white;
+	}
+
+
+	main>article>header>nav>ul>li> a:link, a:visited {
+		background-color: white;
+		color: blue;
+		border: 0px solid white;
+		padding: 10px 20px;
+		text-align: center;
+		display: inline-block;
+		text-decoration: underline wavy blue; 	  
+	}
+
+	main>article>header>nav>ul>li>a:hover, a:active {
+	  background-color: white;
+	  color: red;
+	}
+}
+
+@media screen and (max-width: 479px) {
+
+	header {padding: 1px; }
+	
+	body{width: 320px; padding:20px;}
+
+	header, footer, main, p, h2{width: 320px; }
+
+	body, input, textarea { font-size: 130%; background-color:white; border: 0px; }
+		
+	
+	body>header{
+		margin: 0 auto;
+	}
+	body>header>img{
+		display:block;
+		margin:auto;
+		padding-bottom:40px;
+		width:100%; 
+		border: none;
+		background-color: white;
+	}
+
+
+	main>article>header>nav>ul>li> a:link, a:visited {
+		background-color: white;
+		color: blue;
+		border: 0px solid white;
+		padding: 10px 20px;
+		text-align: center;
+		display: inline-block;
+		text-decoration: underline wavy blue; 	  
+	}
+
+	main>article>header>nav>ul>li>a:hover, a:active {
+	  background-color: white;
+	  color: red;
+	}
+	
+	
+
+}
+
+@media screen and (max-width: 319px) {
+
+	main{width:100%;}
+		
+	body{width: 100%; padding:20px;}
+
+	header, footer, main, p, h2{width: 100%; }
+		
+	
+	body>header{
+		margin: 0 auto;
+	}
+	body>header>img{
+		display:block;
+		margin:auto;
+		padding-bottom:40px;
+		width:100%; 
+		border: none;
+		background-color: white;
+	}
+
+
+	main>article>header>nav>ul>li> a:link, a:visited {
+		background-color: white;
+		color: blue;
+		border: 0px solid white;
+		padding: 10px 20px;
+		text-align: center;
+		display: inline-block;
+		text-decoration: underline wavy blue; 	  
+	}
+
+	main>article>header>nav>ul>li>a:hover, a:active {
+	  background-color: white;
+	  color: red;
+	}
+
+}
