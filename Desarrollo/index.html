@@ -1,230 +1,277 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Desarrollo Mario Galán Pedrayes</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="index.css">
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-		<script src="index.js"></script>
-	</head>
-	<body>
-		<header>
-			<nav>
-				<a class="btnMenu" href="../index.html">Curriculum vitae</a>
-				<a class="btnMenu" href="">Desarrollos</a>
-				<a class="btnMenu" href="../Laboratorio/index.html">Laboratorio</a>
-				<a class="btnMenu" href="../Hobbies/index.html">Hobbies</a>
-			</nav>	
-			<h1>Desarrollos</h1>
-			<section> 
-                <h2>Introducción</h2>
-                <p>En este apartado escribiré sobre los proyectos en los que he trabajado de forma autodidacta. 
-				Desgraciadamente he perdido muchos desarrollos, ya que he usado un hosting gratuito (hostinger y 000webhost)
-				y estos hosters han "archivado" mis webs siendo incapaz de recuperarlas.<br>
-				Escribiré sobre desarrollos en varios lenguajes, adjuntando fotos de los desarrollos y fotos de las interfaces.
-				Además adjuntaré un PDF con mis apuntes sobre desarrollo realizados durante mis estudios de Desarrollo de Aplicaciones
-				Multiplataforma.
-                </p>
-			</section>
-        </header>
-	    <main>
-			<br>
-	        <section> 
-				<article>
-					<h2>Proyecto final Desarrollo de Aplicaciones Multiplataforma. Alegoría</h2>
-					<p>El proyecto final de esta FP (que he titulado "Alegoría") consistia en el desarrollo de un videojuego en el lenguaje C# y en el entorno Unity.
-					Los objetivos de este proyecto eran varios:</p>
-					<ol>
-						<li>Conseguir realizar un guardado de partida</li>
-						<li>Familiarizarme y practicar con el lenguaje C#</li>
-						<li>Realizar una aplicación multiplataforma completa y 100% usable</li>
-					</ol>
-					<p>El primer objetivo es debido a que, durante el examen del módulo "Aplicaciones multiplataforma", tuve problemas
-					para realizar un guardado de datos en una aplicación sencilla. Eso provocó que la nota no fuera 10, por lo que no 
-					pude quitarmelo de la cabeza hasta que conseguí entenderlo de forma teórica al 100% y poder realizarlo sin problema serializando
-					los datos de la apliación.<br>
-					El proyecto es un videojuego que permita recoger distintos potenciadores, evitar enemigos y obtener la mejor puntuación antes de llegar
-					a la meta, contando este con varios niveles y con un ranking para competir con los amigos. Este ranking se debe poder exportar e importar
-					tanto de forma serializada como en JSON para poder obtener los datos.</p>
-					<p>Este proyecto también me permitió practicar mi capacidad de programar con C# ya que no es un lenguaje que haya estudiado en 
-					la clase, es un lenguaje que aprendí por mi cuenta por lo que tuve algunos problemas durante el desarrollo del proyecto que me permitieron
-					conocer de forma más profunda las limitaciones y opciones de este lenguaje.</p>
-					<p>Comencé el desarrollo por dos bloques, primero quería conseguir una figura que se moviera, que al tener contacto con otra
-					realizara alguna acción (temblar la pantalla, cambiar de color, un sonido) y un mensaje. El segundo bloque era el visual y el menú, ya que 
-					considero que ese es mi mayor punto débil, todas mis APPs son sencillamente feas, por lo que quería que fuera la primera de la que me sentía orgulloso.
-					</p>
-					<h3>Parte Jugable</h3>
-					<p>Comencé con un triángulo que pudiera mover mediante las teclas "WASD" (teclas comúnmente usadas para mover personajes en videojuegos). A continuación cree
-					otra figura de forma cuadrada para que, al colisionar con esta, se produjera un evento. Aunque al principio me daba igual el evento, solo quería que 
-					la colisión desencadenara algún evento, al final del juego esta colisión provoca tanto la bajada de puntuación del jugador como la bajada de vida. 
-					Después cree otro objeto que desapareciera al ser tocado por el jugador (es decir, el triángulo), esta figura al final se convertirá en un potenciador
-					que provocaba tanto una suma de puntuación como la modificación del sistema de juego (invencibilidad del personaje, más velocidad, eliminación de enemigos).</p>
-					<p>El prototipo inicial finalizo tras crear otra figura que, al ser tocada por el jugador, finalizara el juego (es decir, cargara otra escena). Esta figura se convertirá
-					en la meta de cada nivel, que, al ser tocada por el jugador, traspasará los datos a la siguiente escena.</p>
-					<div class="vdPrototipo">
-						<iframe src="https://www.youtube.com/embed/0BRKYP3UEd0" title="Propotipo del proyecto de fin de ciclo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-					</div>
-					<h3>Parte Visual</h3>
-					<p>Como este es mi punto flaco, me gustaría decir que conte con el consejo de Jose Antonio Villar para solucionar mis dudas y para tomar decisiones complicadas en cuanto al diseño.
-					Para comenzar pense en el tono del proyecto. La idea inicial era que fuera una especia de laberinto y una metáfora sobre lo que pueden
-					ser los pensamientos intrusivos que te pueden provocar la ansiedad o depresión, por lo que tenía claro que tenia que ser un juego con tonos oscuros. Al final me decidí por tonos de morado u negro
-					como color del proyecto.</p>
-					<p>
-					Como uno de mis hobbies es el bordado, pense en realizar los sprites en punto de cruz y luego exportarlos e insertarlos en Unity, pero, tras realizar el primer sprite en punto de cruz, me di cuenta
-					que el tiempo no era suficiente como para poder realizar el resto de sprites.</p>
-					<div class="imagenesCuadradas">
-						<img src="multimedia/spritePWM1PC.jpg" alt="Sprite en punto de cruz" title="Sprite en punto de cruz"/><br>
-						<img src="multimedia/spritePWM1woB.png" alt="Sprite en bits" title="Sprite en bits"/>
-					</div>
-					</p>
-					<p>
-					Aunque el diseño del menú comenzaron siendo unos simples botones fue evolucionando hasta convertirse en un menú interactivo con un 
-					video en bluque de fondo para darle sensación de dinamismo.
-					</p>
-					<div class="imagenes">
-						<img src="multimedia/menuproyectodam1.jpg" alt="Imagen menú 1" title="Imagen menú 1"/><br>
-						<img src="multimedia/menuproyectodam2.jpg" alt="Imagen menú 2" title="Imagen menú 2"/>
-					</div>
-					<h3>Presentación final</h3>
-					<p>Como parte del proyecto debemos realizar una  presentación que adjunto a continuación, donde se puede
-					observar el resultado final del proyecto.</p>
-					<div class="vdPrototipo">
-						<iframe src="https://www.youtube.com/embed/45zkpXCYDM4" title="Exposición proyecto Mario Galán 2 DAM Distancia 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-					</div>
-					</p>
-				</article>
-				<article>
-					<h2>Proyecto final Desarrollo de Aplicaciones Web. Kettei</h2>
-					<p>Este proyecto consiste en un juego web basado en toma de decisiones para gestionar un país. La web 
-					nos irá indicando situaciones donde el usuario debe elegir las distintas posibilidades. El nombre
-					del proyecto es debido a que "Kettei" en japonés significa "decisión" o "determinación. Desgraciadamente es uno de los proyectos que he perdido.</p>
-					<p>La web requiere un inicio de sesión donde el usuario debe registrarse. Este inicio de sesión permite guardar
-					el progreso de casa usuario, las partidas perdidas o ganadas y las decisiones tomadas, estos valores eran guardados en una
-					base de datos y cada vez que el usuario modificaba un valor se realizaba una modificación en la base de datos.</p>
-					<p>Al tomar una decisión uno 
-					de los tres valores (llamado poderes en el juego) aumentará o disminuirá, y si alguno sobrepasa un determinado valor (100) 
-					o dismuniye por debajo de 0, el usuario perderá. Para reflejarlo de forma visual he creado 3 barras mediante CSS
-					que aumenton o disminuyen en función del valor base del poder en cuestión.</p>
-					<img class="imagenesRectangulares" src="multimedia/proyectoDAW.png" alt="Imagen del proyecto DAW" title="imagen del proyecto DAW"/>
-				</article>
-				<article>
-					<h2>Proyecto Posts</h2>
-					<p>El objetivo de este proyecto era entender la lógica detras de las redes sociales como Twitter o Threads, para ello comencé
-					creando una página simple de inicio de sesión y medificación de usuario. A continuación cree los campos necesarios en la base de datos
-					para que los usuarios puedan crear, eliminar o modificar sus datos a traves de PHP y realizando las consultas en SQL.</p>
-					<p>Para continuar, estudie la insercción de campos BLOB en la base de datos para poder implementar las imágenes de perfil
-					y la capacidad de insertarlas en los posts publicados.</p>
-					<p>Finalmente decidí que fuera una red social más "personal" por lo que existe un identificar único de cada usuario que permite
-					seguir y observar los posts de ese usuario, por lo que podemos elegir y buscar a nuestros amigos de forma que solo tengamos que ver
-					los posts de las personas que queremos.</p>
-					<p>Para comprobar su funcionamiento use a mis conocidos de testers y, como podemos ver en la imagen, salieron a relucir errores
-					como la longitud del texto. Estos errores se solucionaron mediante un salto de linea y relacionar la altura del cuadro del post 
-					con el número de caracteres. Desgraciadamente es otra de las apliaciones que he perdido debido a la eliminación de mis webs.</p>
-					<img class="imagenesRectangulares" src="multimedia/proyectoPosts.jpg" alt="Imagen del proyecto Posts" title="imagen del proyecto Posts"/>
-				</article>
-				<article>
-					<h2>Desarrollo multiplataforma</h2>
-					<p>En este módulo nos centramos en las distintas plataformas posibles para desarrollo, comenzamos el año creando aplicaciones android
-					en el lenguaje JAVA. En esta parte del desarrollo decidí crear una aplicación que permita llevar los datos
-					de los distintos libros leidos, ya que es uno de mis hobbies y siempre he pensado que todas las Apps que existen 
-					para llevar el control de los libros leidos son innecesariamente complejas. El objetivo de esta App era crear
-					una aplicaciones que sencillamente pudiera guardar el título del libro, el autor y si ya se ha leido o no.</p>
-					<img src="multimedia/ejPDPM1.jpg" title="Ejercicio 1 PDPM" alt="Ejercicio 1 PDPM"/>
-					<p>Cuando finalizamos la parte de desarrollo en Android pasamos a programar en Unity. Mi objetivo durante 
-					esta parte del curso fue hacer un juego de plataformas donde el usuario debiera coger X objetos o saltar X plataformas que tras 
-					unos segundos desaparecerá antes de poder llegar a la meta y,
-					una vez llegado, que la puntuación depende del tiempo que ha tardado. La mayor dificultad fue la de acomodar las físicas de salto y gravedad
-					a mi gusto ya que sentía que una gravedad "lineal" no tenía mucho sentido, por lo que tuve que buscar la forma de una gravedad
-					"exponencial", que cada vez que el usuario saltara desacelerara. Sirvió como práctica para lo que sería el proyecto de fin de ciclo.
-					<div class="vdPrototipo">
-						<iframe src="https://www.youtube.com/embed/5CMnPWzFuvA" title="Proyecto PDPM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-					</div>
-				</article>
-				<article>
-					<h2>Acceso a Datos</h2>
-					<p>Este proyecto forma parte del módulo de Acceso a Datos. Se ha programado mediante C# y el entorno de desarrollo Visual Studio 210 y 2022
-					Este módulo consiste en aprender y utilizar las distintas formas de acceder
-					a datos externos e interpretar y exportar datos internos además del control de errores que pueden ocurrir mientras realizamos este tipo de
-					tratamientos. El programa consiste en introducir datos de ciudades e indicar la población y si es capital. Al ser un trabajo de clase está
-					extensamente explicado en el siguiente video.</p>
-					<img class="imagenPantalla" src="multimedia/proyectoACD.png" title="proyecto de acceso a datos" alt="proyecto de acceso a datos"/>
-					<div class="vdPrototipo">
-						<iframe src="https://www.youtube.com/embed/wsNPmjM3CCU" title="Explicación del ejercicio evaluable de la segunda evaluación del módulo de DAM Acceso a datos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-					</div>
-					<p>Este módulo es uno de los que más he practicado ya que, a parte de la complicación del control de errores, pienso que
-					su utilidad en cualquier ámbito (como tiendas locales, gestiones, transporte, etc) puede ser extensa y muy útil para los usuarios.
-					Cualquier trabajador agradece funcionalidades como la capacidad de exportar datos en distintos formatos o importar datos obtenidos
-					desde distintas fuentes. Adjuntaré capturas de alguno de los programas a continuación.</p>
-					<div id="imgAcd">
-						<img src="multimedia/ejACD1.png" title="Ejercicio 1 Acceso a datos" alt="Ejercicio 1 Acceso a datos"/>
-						<img src="multimedia/ejACD2.png" title="Ejercicio 2 Acceso a datos" alt="Ejercicio 2 Acceso a datos"/>
-						<img src="multimedia/ejACD3.png" title="Ejercicio 3 Acceso a datos" alt="Ejercicio 3 Acceso a datos"/>
-						<img src="multimedia/ejACD4.png" title="Ejercicio 4 Acceso a datos" alt="Ejercicio 4 Acceso a datos"/>
-					</div>
-				</article>
-				<article>
-					<h2>Diseño y desarrollo de interfaces</h2>
-					<p>
-					En este módulo estudiamos sobre el proceso de desarrollar interfaces que sean "user friendly". Para ello primero creamos interfaces en java, creando
-					diferentes tipos de menú que afecte a determinados contenidos como imágenes, textos u variables. La siguiente imagen es la práctica sobre
-					las distintas posibilidades de una menú programado en JAVA mediante la clase JFrame, JMenu, JLabel y demás.</p>
-					<img src="multimedia/ejDesin1.png" title="Ejercicio 1 DESIN" alt="Ejercicio 1 DESIN"/>
-					<p>
-					Después pasamos al entorno Visual Studio 2019 y el lenguaje C#. En este tipo de programas
-					practiqué todo tipo de eventos y consecuencias, creando distintos tipos de interfaces, tanto por
-					deber siendo deberes como por gusto (de hecho, mientras buscaba piso, decidí hacer un programa
-					en este entorno y junto con Acceso a Datos para ir guardando los pisos encontrados y los datos de estos,
-					ya que estudiamos y conectamos los programas a bases de datos Access).
-					Algunos de estos programas son los siguientes.</p>
-					<img src="multimedia/ejDesin2.png" title="Ejercicio 2 DESIN" alt="Ejercicio 2 DESIN"/>
-					<img class="imagenPantalla" src="multimedia/ejDesin3.jpg" title="Ejercicio 3 DESIN" alt="Ejercicio 3 DESIN"/>
-					<div class="vdPrototipo">
-						<iframe src="https://www.youtube.com/embed/59bSe3ygyDY" title="Explicación Proyecto DESIN 2º Cuatrimestre Mario Galán" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-					</div>
-					
-				</article>
-				<article>
-					<h2>Sistemas de gestión empresarial</h2>
-					<p>Sistemas de gestión empresarial es un módulo que se centra en el uso de ERPs y el desarrollo en estos.
-					En concreto desarrollamos en "Odoo" varios tipos de aplicaciones, como por ejemplo, una lista de tareas
-					(llamada To-do) que nos permite añadir tareas, filtrarlas y borrarlas. En la siguiente imagen podemos ver
-					una este módulo filtrando por tareas hechas o no hechas.</p>
-					<img src="multimedia/ej1Sgem.png" title="Ejercicio 1 SGEM" alt="Ejercicio 1 SGEM"/>
-					<p>Después de estudiar este sistema de gestión estudiamos "Microsoft Dynamics 365 Business Central". Creamos
-					una aplicación que nos permita gestionar (insertar, modificar, o eliminar) mascotas con determinados datos y 
-					se nos mostrara en una parte del sistema de gestión mediante una lista.</p>
-					<img src="multimedia/ej2Sgem.png" title="Ejercicio 2 SGEM" alt="Ejercicio 2 SGEM"/>
-					<img src="multimedia/ej3Sgem.png" title="Ejercicio 3 SGEM" alt="Ejercicio 3 SGEM"/>
-				</article>
-				<article>
-					<h2>Programación de servicios y procesos</h2>
-					<p>
-						Este módulo se centra en la programación y el entrenamiento de la lógica, entrelazando procesos y servicios 
-						online para poder realizar distintos objetivos, por lo que no puedo sacar capturas de la interfaz, ya que 
-						todo la programación se realiza el código JAVA y se introducen los datos y muestran los mensajes mediante la consola de 
-						comandos, por lo que no existen capturas (aunque si que tengo el código).</p>
-					<p>
-						Explicaré alguno de los programas realizados. Un ejemplo es el desarrollo de "semáforos", estos recursos
-						permiten utilizar recursos compartidos y acceder a ellos mediante un buffer. Esto se realiza mediante la implementación
-						de la clase "Buffer" en java, además del uso de la clase "Semaphore" para utilizar los semáfotos donde deseemos. 
-						La mayoría de ejercicios relacionados con este tema se centran en el problema de "Productor-consumidor", donde 
-						existe una clase que produce un recurso (un objeto con determinados atributos)  y una clase que los consume, como por ejemplo
-						un supermercado con proveedores y clientes o un local de comida con cocineros y clientes. A continuación usamos monitores para seguir practicando. 
-						Los monitores son un mecanismo de sincronización de nivel más alto que los semáforos y se encarga de la sincronización directamente 
-						el programa ejecutor.Solo un hilo o proceso puede estar ejecutándose dentro del monitor, bloqueándose el siguiente hasta que se desocupe.
-					</p>
-					<p>Otro tipo de programas realizados son los relacionados con conexiones en red y con el modelo "Cliente/Servidor". Para este tipo de ejercicios
-					primero debemos seleccionar el tipo de modelo que queremos (cuantas capas queremos) y que tipo de red. Primero programamos mediante
-					el uso de Sockets y el modelo TCP/IP. Mediante estos requisitos programamos un chat síncrono.</p>
-				</article>
-			</section>
-			<section>
-			<h2>Apuntes</h2>
-			<p>Todas las aplicaciones centradas en la F.P. cuentan con apuntes extensamente detallados
-			sobre todos y cada uno de los desarrollos, comenzando por el inicio más simple (como crear
-			un botón) hasta aplicaciones completas.</p>
-			</section>
-		</main>
-	</body>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desarrollos — Mario Galán Pedrayes</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav class="main-nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="../index.html">MGP</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Curriculum</a></li>
+      <li><a href="index.html" class="active">Desarrollos</a></li>
+      <li><a href="../Laboratorio/index.html">Laboratorio</a></li>
+      <li><a href="../Hobbies/index.html">Hobbies</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page">
+
+  <div class="page-hero">
+    <h1>Desarrollos</h1>
+    <p>Proyectos en los que he trabajado de forma autodidacta en distintos lenguajes y entornos. 
+      Algunos se han perdido por el cierre de hostings gratuitos, pero aquí recojo los más significativos 
+      junto con capturas, vídeos y reflexiones del proceso.</p>
+  </div>
+
+  <!-- PROYECTO 1: ALEGORÍA -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">01</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">C# · Unity</span>
+          <span class="pill accent" style="font-size:0.78rem;">DAM</span>
+        </div>
+        <h2>Alegoría — Proyecto fin de ciclo DAM</h2>
+      </div>
+    </div>
+
+    <p>Videojuego desarrollado en C# y Unity como proyecto final de Desarrollo de Aplicaciones Multiplataforma. 
+    La idea era crear un juego de plataformas con sistema de guardado de partida, ranking exportable en varios 
+    formatos (serializado y JSON) y varios niveles. El título refleja su temática: una metáfora visual sobre 
+    los pensamientos intrusivos y la ansiedad, con tonos oscuros de morado y negro.</p>
+
+    <p>El proyecto nació de la necesidad de dominar el guardado de datos en C#, algo que me había fallado en un examen. 
+    No paré hasta entenderlo al 100% y poder serializarlo correctamente. Aprendí C# de forma autodidacta, por lo que 
+    el proyecto también me sirvió para conocer más a fondo las limitaciones y posibilidades del lenguaje.</p>
+
+    <h3>Parte jugable</h3>
+    <p>El personaje se mueve con WASD, recoge potenciadores (invencibilidad, velocidad, eliminación de enemigos), 
+    evita enemigos que reducen puntuación y vida, y llega a una meta que carga la siguiente escena transfiriendo datos.</p>
+
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/0BRKYP3UEd0" title="Prototipo Alegoría" allowfullscreen></iframe>
+    </div>
+
+    <h3>Parte visual</h3>
+    <p>El mayor reto fue el diseño, mi punto más débil. Conté con el asesoramiento de José Antonio Villar. 
+    Quería sprites en punto de cruz —uno de mis hobbies— pero el tiempo no alcanzó para todos. 
+    El menú evolucionó de simples botones a un menú interactivo con vídeo en bucle de fondo.</p>
+
+    <div class="media-grid">
+      <img src="multimedia/spritePWM1PC.jpg" alt="Sprite en punto de cruz">
+      <img src="multimedia/spritePWM1woB.png" alt="Sprite en píxeles">
+    </div>
+    <div class="media-grid">
+      <img src="multimedia/menuproyectodam1.jpg" alt="Menú principal v1">
+      <img src="multimedia/menuproyectodam2.jpg" alt="Menú principal v2">
+    </div>
+
+    <h3>Presentación final</h3>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/45zkpXCYDM4" title="Exposición proyecto Mario Galán DAM 2024" allowfullscreen></iframe>
+    </div>
+  </article>
+
+  <!-- PROYECTO 2: KETTEI -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">02</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">PHP · SQL · HTML/CSS</span>
+          <span class="pill" style="font-size:0.78rem;">Perdido</span>
+        </div>
+        <h2>Kettei — Proyecto fin de ciclo DAW</h2>
+      </div>
+    </div>
+
+    <p>Juego web de toma de decisiones para gestionar un país. <em>Kettei</em> (決定) significa "decisión" en japonés. 
+    El sistema presentaba situaciones al usuario, quien debía elegir entre varias opciones. Cada decisión alteraba 
+    uno de tres "poderes" representados por barras CSS. Si alguno superaba 100 o bajaba de 0, el jugador perdía.</p>
+
+    <p>Incluía inicio de sesión con registro de usuarios, guardado de progreso, historial de partidas y decisiones 
+    en base de datos. Desgraciadamente se perdió al cerrar el hosting gratuito donde estaba alojado.</p>
+
+    <img src="multimedia/proyectoDAW.png" alt="Captura del proyecto Kettei" style="border-radius:8px;border:1px solid var(--border);width:100%;margin-top:0.5rem;">
+  </article>
+
+  <!-- PROYECTO 3: POSTS -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">03</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">PHP · SQL · BLOB</span>
+          <span class="pill" style="font-size:0.78rem;">Perdido</span>
+        </div>
+        <h2>Proyecto Posts — Red social minimalista</h2>
+      </div>
+    </div>
+
+    <p>Red social personal cuyo objetivo era entender la lógica de plataformas como Twitter o Threads. 
+    Los usuarios podían crear, modificar y eliminar posts e imágenes de perfil (almacenadas como campos BLOB en la base de datos). 
+    Cada usuario tenía un identificador único para seguir a amigos y ver solo sus publicaciones.</p>
+
+    <p>Usé a mis conocidos como testers y se detectaron errores reales (como la longitud del texto) que se corrigieron 
+    relacionando dinámicamente la altura del cuadro del post con el número de caracteres.</p>
+
+    <img src="multimedia/proyectoPosts.jpg" alt="Captura del proyecto Posts" style="border-radius:8px;border:1px solid var(--border);width:100%;margin-top:0.5rem;">
+  </article>
+
+  <!-- PROYECTO 4: PDPM -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">04</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">Java · Unity</span>
+          <span class="pill accent" style="font-size:0.78rem;">DAM</span>
+        </div>
+        <h2>Desarrollo Multiplataforma — Android y Unity</h2>
+      </div>
+    </div>
+
+    <p>El módulo comenzó con desarrollo Android en Java. Creé una app de seguimiento de lecturas, sencilla 
+    por diseño: título, autor y estado de lectura. Las apps existentes para esto me parecían innecesariamente complejas.</p>
+
+    <img src="multimedia/ejPDPM1.jpg" alt="App Android lecturas" style="border-radius:8px;border:1px solid var(--border);max-width:340px;margin:0.75rem 0;">
+
+    <p>La segunda parte fue en Unity: un juego de plataformas donde recoger objetos o saltar plataformas (que desaparecen 
+    progresivamente) para llegar a la meta. La mayor dificultad fue implementar una gravedad exponencial —que desacelere 
+    el salto progresivamente— en lugar de la lineal por defecto. Sirvió de práctica para Alegoría.</p>
+
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/5CMnPWzFuvA" title="Proyecto PDPM Unity" allowfullscreen></iframe>
+    </div>
+  </article>
+
+  <!-- PROYECTO 5: ACCESO A DATOS -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">05</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">C# · Visual Studio</span>
+          <span class="pill accent" style="font-size:0.78rem;">DAM</span>
+        </div>
+        <h2>Acceso a Datos</h2>
+      </div>
+    </div>
+
+    <p>Módulo centrado en las distintas formas de acceder, interpretar y exportar datos externos, con control de errores. 
+    La aplicación principal gestiona ciudades con su población y capital. El módulo me pareció especialmente útil 
+    por su aplicabilidad práctica en cualquier negocio.</p>
+
+    <img src="multimedia/proyectoACD.png" alt="Proyecto Acceso a Datos" style="border-radius:8px;border:1px solid var(--border);width:100%;margin:0.75rem 0;">
+
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/wsNPmjM3CCU" title="Explicación ejercicio evaluable Acceso a Datos" allowfullscreen></iframe>
+    </div>
+
+    <div class="media-grid">
+      <img src="multimedia/ejACD1.png" alt="Ejercicio ACD 1">
+      <img src="multimedia/ejACD2.png" alt="Ejercicio ACD 2">
+      <img src="multimedia/ejACD3.png" alt="Ejercicio ACD 3">
+      <img src="multimedia/ejACD4.png" alt="Ejercicio ACD 4">
+    </div>
+  </article>
+
+  <!-- PROYECTO 6: DESIN -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">06</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">Java · C# · Visual Studio</span>
+          <span class="pill accent" style="font-size:0.78rem;">DAM</span>
+        </div>
+        <h2>Diseño y Desarrollo de Interfaces</h2>
+      </div>
+    </div>
+
+    <p>Módulo sobre el diseño de interfaces <em>user friendly</em>. Primero en Java con JFrame, JMenu y JLabel; 
+    después en C# con Visual Studio. Practiqué todo tipo de eventos y consecuencias, y desarrollé por iniciativa 
+    propia una app para gestionar pisos durante mi búsqueda de alquiler, conectada a una base de datos Access.</p>
+
+    <div class="media-grid">
+      <img src="multimedia/ejDesin1.png" alt="Interfaz Java DESIN">
+      <img src="multimedia/ejDesin2.png" alt="Interfaz C# DESIN">
+    </div>
+    <img src="multimedia/ejDesin3.jpg" alt="Interfaz C# DESIN 3" style="border-radius:8px;border:1px solid var(--border);width:100%;margin:0.75rem 0;">
+
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/59bSe3ygyDY" title="Proyecto DESIN 2º Cuatrimestre" allowfullscreen></iframe>
+    </div>
+  </article>
+
+  <!-- PROYECTO 7: SGEM -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">07</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">Odoo · Dynamics 365</span>
+          <span class="pill accent" style="font-size:0.78rem;">DAM</span>
+        </div>
+        <h2>Sistemas de Gestión Empresarial</h2>
+      </div>
+    </div>
+
+    <p>Módulo centrado en ERPs. Desarrollamos en <strong>Odoo</strong> una lista de tareas con filtros y gestión CRUD, 
+    y en <strong>Microsoft Dynamics 365 Business Central</strong> una aplicación para gestionar mascotas con sus datos 
+    en una vista de lista integrada en el ERP.</p>
+
+    <div class="media-grid">
+      <img src="multimedia/ej1Sgem.png" alt="Odoo To-do">
+      <img src="multimedia/ej2Sgem.png" alt="Dynamics 365 mascotas">
+    </div>
+    <img src="multimedia/ej3Sgem.png" alt="Dynamics 365 detalle" style="border-radius:8px;border:1px solid var(--border);width:100%;margin-top:0.75rem;">
+  </article>
+
+  <!-- PROYECTO 8: PSP -->
+  <article class="project">
+    <div class="project-header">
+      <span class="project-num">08</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+          <span class="pill accent" style="font-size:0.78rem;">Java · Sockets · TCP/IP</span>
+          <span class="pill accent" style="font-size:0.78rem;">DAM</span>
+        </div>
+        <h2>Programación de Servicios y Procesos</h2>
+      </div>
+    </div>
+
+    <p>Módulo centrado en la lógica de procesos concurrentes y servicios en red. Trabajamos con semáforos 
+    (problema productor-consumidor), monitores (sincronización de hilos de alto nivel) y conexiones TCP/IP 
+    mediante Sockets, llegando a implementar un chat síncrono con modelo Cliente/Servidor multicapa.</p>
+
+    <p>Al ser programación de consola no existen capturas de interfaz, pero el código fuente está disponible 
+    y el módulo fue de los más exigentes a nivel lógico del ciclo.</p>
+  </article>
+
+  <!-- APUNTES -->
+  <section class="section" style="margin-top:3rem;">
+    <p class="section-label">Documentación</p>
+    <div class="card">
+      <h3 style="font-family:'DM Serif Display',serif;font-size:1.2rem;font-weight:400;color:var(--text);margin-bottom:0.6rem;">Apuntes de desarrollo</h3>
+      <p style="font-size:0.95rem;color:var(--text-muted);">Todas las aplicaciones del ciclo DAM cuentan con apuntes extensamente detallados, 
+      desde los pasos más básicos (cómo crear un botón) hasta aplicaciones completas. 
+      Los apuntes del ciclo de Laboratorio superan los 600 folios escritos a mano.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2025 Mario Galán Pedrayes</p>
+</footer>
+
+</body>
 </html>
-		
