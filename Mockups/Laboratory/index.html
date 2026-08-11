@@ -1,180 +1,504 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laboratorios Vêra — Cosmética de formulación</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AB Cosmetics — Desarrollo integral de marcas cosméticas</title>
+<meta name="description" content="AB Cosmetics: estructura de desarrollo de marcas cosméticas. Formulación, regulación europea, marca y producción escalable.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,480;0,9..144,600;1,9..144,420&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#142019;
+    --paper:#edeee3;
+    --paper-2:#e3e5d6;
+    --forest:#1f3d2f;
+    --forest-2:#163024;
+    --sage:#7c9885;
+    --amber:#b8763a;
+    --line: rgba(20,32,25,0.14);
+    --line-soft: rgba(20,32,25,0.08);
+    --max: 1180px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:480;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--forest);
+    opacity:0.75;
+  }
+  a{color:inherit;}
+  section{scroll-margin-top:84px;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 32px;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(237,238,227,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    max-width:var(--max); margin:0 auto; padding:18px 32px;
+  }
+  .wordmark{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.05rem;
+    letter-spacing:-0.01em;
+  }
+  .wordmark span{color:var(--amber);}
+  .navlinks{display:flex; gap:34px; list-style:none; margin:0; padding:0;}
+  .navlinks a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.74rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    text-decoration:none;
+    color:var(--ink);
+    opacity:0.72;
+    transition:opacity .2s ease;
+  }
+  .navlinks a:hover{opacity:1;}
+  .navtoggle{display:none; background:none; border:none; cursor:pointer; padding:6px;}
+  .navtoggle span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:100px 0 96px;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:48px;
+    align-items:end;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 5.4vw, 4.4rem);
+    line-height:1.03;
+    max-width:11.5em;
+  }
+  .hero h1 em{font-style:italic; color:var(--forest);}
+  .hero .lede{
+    margin-top:26px;
+    max-width:36ch;
+    font-size:1.08rem;
+    color:rgba(20,32,25,0.78);
+  }
+  .hero .tagline{
+    margin-top:34px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--forest);
+  }
+  .equilibrium{width:100%; max-width:420px; justify-self:end;}
+  .equilibrium path, .equilibrium circle, .equilibrium line{
+    stroke:var(--forest);
+  }
+  .eq-draw{
+    stroke-dasharray:900;
+    stroke-dashoffset:900;
+    animation:draw 2.4s ease forwards .3s;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  /* ---------- Section shell ---------- */
+  .section{padding:104px 0;}
+  .section-head{
+    display:grid;
+    grid-template-columns:0.85fr 1.15fr;
+    gap:48px;
+    margin-bottom:56px;
+    border-top:1px solid var(--line);
+    padding-top:22px;
+  }
+  .section-head h2{font-size:clamp(1.9rem, 3vw, 2.6rem);}
+  .section-head .eyebrow{margin-bottom:14px; display:block;}
+
+  /* ---------- Quiénes somos ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:56px;
+    align-items:start;
+  }
+  .about-copy p{font-size:1.04rem; color:rgba(20,32,25,0.86); max-width:52ch;}
+  .about-copy p + p{margin-top:16px;}
+  .ficha{border-top:1px solid var(--line);}
+  .ficha-item{
+    display:grid;
+    grid-template-columns:52px 1fr;
+    gap:18px;
+    padding:26px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .ficha-item .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.85rem;
+    color:var(--amber);
+    padding-top:3px;
+  }
+  .ficha-item h3{font-size:1.12rem; font-weight:480; margin-bottom:6px;}
+  .ficha-item p{margin:0; font-size:0.95rem; color:rgba(20,32,25,0.72); max-width:42ch;}
+
+  /* ---------- Qué hacemos ---------- */
+  .areas{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .area-card{
+    background:var(--paper);
+    padding:30px 26px;
+    min-height:230px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .area-card .mark{
+    width:30px; height:30px;
+    border:1px solid var(--forest);
+    border-radius:50%;
+    position:relative;
+    margin-bottom:26px;
+  }
+  .area-card .mark::after{
+    content:"";
+    position:absolute; inset:7px;
+    border:1px solid var(--amber);
+    border-radius:50%;
+  }
+  .area-card h3{font-size:1.05rem; font-weight:480; margin-bottom:10px;}
+  .area-card p{margin:0; font-size:0.88rem; color:rgba(20,32,25,0.68);}
+
+  .principle{
+    margin-top:64px;
+    border-top:1px solid var(--line);
+    padding-top:34px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:420;
+    font-size:1.3rem;
+    max-width:38ch;
+    color:var(--forest);
+  }
+
+  /* ---------- Contacto ---------- */
+  .contact{
+    background:var(--forest);
+    color:var(--paper);
+    border-radius:2px;
+  }
+  .contact .section-head{border-top:1px solid rgba(237,238,227,0.2);}
+  .contact .eyebrow{color:var(--paper); opacity:0.6;}
+  .contact h2{color:var(--paper);}
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+  }
+  .contact-lede{font-size:1.05rem; color:rgba(237,238,227,0.82); max-width:42ch;}
+  .contact-list{list-style:none; margin:38px 0 0; padding:0;}
+  .contact-list li{border-top:1px solid rgba(237,238,227,0.18); padding:18px 0;}
+  .contact-list li:last-child{border-bottom:1px solid rgba(237,238,227,0.18);}
+  .contact-list .k{
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:6px;
+  }
+  .contact-list a{
+    font-family:'Fraunces', serif;
+    font-size:1.4rem;
+    text-decoration:none;
+    color:var(--paper);
+    border-bottom:1px solid transparent;
+    transition:border-color .2s ease;
+  }
+  .contact-list a:hover{border-color:var(--amber);}
+  .cta-btn{
+    display:inline-block;
+    margin-top:40px;
+    padding:15px 30px;
+    background:var(--amber);
+    color:var(--forest-2);
+    text-decoration:none;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    border-radius:2px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:36px 0;
+    border-top:1px solid var(--line);
+  }
+  .foot-row{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:12px;
+  }
+  .foot-row .eyebrow{opacity:0.55;}
+
+  /* ---------- Reveal ---------- */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.is-visible{opacity:1; transform:none;}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    .eq-draw{animation:none; stroke-dashoffset:0;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:860px){
+    .navlinks{
+      position:absolute; top:100%; left:0; right:0;
+      background:var(--paper);
+      flex-direction:column; gap:0;
+      border-bottom:1px solid var(--line-soft);
+      display:none;
+    }
+    .navlinks.open{display:flex;}
+    .navlinks a{display:block; padding:16px 32px; border-top:1px solid var(--line-soft);}
+    .navtoggle{display:block;}
+    .hero-grid{grid-template-columns:1fr;}
+    .equilibrium{justify-self:start; max-width:280px; margin-top:40px;}
+    .section-head{grid-template-columns:1fr;}
+    .about-grid{grid-template-columns:1fr;}
+    .areas{grid-template-columns:1fr 1fr;}
+    .contact-grid{grid-template-columns:1fr;}
+    .wrap{padding:0 22px;}
+  }
+  @media (max-width:520px){
+    .areas{grid-template-columns:1fr;}
+  }
+</style>
 </head>
 <body>
 
-<header class="site-header">
-  <div class="wrap header-inner">
-    <a href="#top" class="logo">Laboratorios <span>Vêra</span></a>
-    <nav class="nav">
-      <a href="#quienes-somos">Quiénes somos</a>
-      <a href="#proceso">Formulación</a>
-      <a href="#contacto">Contacto</a>
-    </nav>
-    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+<header>
+  <nav class="nav">
+    <a href="#top" class="wordmark">AB<span>·</span>COSMETICS</a>
+    <button class="navtoggle" aria-label="Abrir menú" aria-expanded="false" id="navToggle">
       <span></span><span></span><span></span>
     </button>
-  </div>
+    <ul class="navlinks" id="navLinks">
+      <li><a href="#quienes-somos">Quiénes somos</a></li>
+      <li><a href="#que-hacemos">Qué hacemos</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
 </header>
 
 <main id="top">
 
   <!-- HERO -->
   <section class="hero">
-    <div class="wrap hero-inner">
-      <p class="formula-tag">FÓRMULA Nº 07 · pH 5.5 · LOTE VR-2026</p>
-      <h1>La ciencia detrás<br>de cada gota.</h1>
-      <p class="hero-lead">
-        Texto de relleno: Laboratorios Vêra desarrolla fórmulas cosméticas
-        respaldadas por evidencia, pensadas para la piel real y fabricadas
-        con materias primas trazables de origen europeo.
-      </p>
-      <div class="hero-actions">
-        <a href="#quienes-somos" class="btn btn-primary">Conocer el laboratorio</a>
-        <a href="#contacto" class="btn btn-ghost">Hablar con nosotros</a>
+    <div class="wrap hero-grid">
+      <div>
+        <h1>No lanzamos productos.<br><em>Construimos marcas.</em></h1>
+        <p class="lede">Formulación · Regulación · Marca · Mercado. Diseñamos sistemas cosméticos con criterio técnico real, listos para competir.</p>
+        <p class="tagline">Science · Nature · Balance</p>
       </div>
-    </div>
-    <div class="hero-graphic" aria-hidden="true">
-      <svg viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M80 20H120V90L165 210C170 222 161 235 148 235H52C39 235 30 222 35 210L80 90V20Z" stroke="currentColor" stroke-width="2.5"/>
-        <line x1="70" y1="20" x2="130" y2="20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="48" y1="150" x2="152" y2="150" stroke="currentColor" stroke-width="2" stroke-dasharray="4 6"/>
-        <circle cx="100" cy="185" r="4" fill="currentColor"/>
-        <circle cx="118" cy="200" r="3" fill="currentColor"/>
-        <circle cx="85" cy="205" r="2.5" fill="currentColor"/>
+      <svg class="equilibrium" viewBox="0 0 380 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <line x1="30" y1="110" x2="350" y2="110" stroke-width="1" class="eq-draw"/>
+        <line x1="110" y1="110" x2="110" y2="60" stroke-width="1" class="eq-draw"/>
+        <line x1="270" y1="110" x2="270" y2="160" stroke-width="1" class="eq-draw"/>
+        <circle cx="110" cy="46" r="14" stroke-width="1.2" class="eq-draw"/>
+        <circle cx="270" cy="174" r="20" stroke-width="1.2" class="eq-draw"/>
+        <circle cx="270" cy="174" r="6" fill="#b8763a" stroke="none"/>
+        <circle cx="30" cy="110" r="3.5" fill="#1f3d2f" stroke="none"/>
+        <circle cx="350" cy="110" r="3.5" fill="#1f3d2f" stroke="none"/>
+        <path d="M60 150 Q 110 190 160 150" stroke-width="1" class="eq-draw"/>
       </svg>
     </div>
   </section>
 
   <!-- QUIENES SOMOS -->
-  <section id="quienes-somos" class="section who">
-    <div class="wrap who-grid">
-      <div class="section-label">
-        <span class="eyebrow">Quiénes somos</span>
+  <section class="section" id="quienes-somos">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Ficha 01 — Quiénes somos</span>
+          <h2>Una estructura de desarrollo de marca, no un fabricante al uso.</h2>
+        </div>
       </div>
-      <div class="who-content">
-        <h2>Formulamos con criterio clínico y sensibilidad cosmética.</h2>
-        <p>
-          Texto de relleno: fundado por un equipo de químicos y farmacéuticos,
-          nuestro laboratorio nace de la idea de que la cosmética eficaz no
-          está reñida con la experiencia sensorial. Cada fórmula pasa por
-          un proceso de validación dermatológica antes de salir de nuestras
-          instalaciones.
-        </p>
-        <p>
-          Texto de relleno: trabajamos con marcas y proyectos que buscan
-          desarrollar su propia línea cosmética, ofreciendo desde la
-          investigación de activos hasta el envasado final.
-        </p>
-        <div class="stats">
-          <div class="stat">
-            <span class="stat-number">120+</span>
-            <span class="stat-label">Fórmulas desarrolladas</span>
+
+      <div class="about-grid">
+        <div class="about-copy reveal">
+          <p>AB Cosmetics no fabrica cosmética al uso: construimos marcas rentables. Operamos como una estructura de desarrollo, con el objetivo de crear productos y marcas con identidad propia, listos para competir en el mercado real.</p>
+          <p>Cada proyecto se acompaña de principio a fin, con criterio técnico real en cada activo y trazabilidad completa dentro del marco normativo europeo.</p>
+        </div>
+
+        <div class="ficha reveal">
+          <div class="ficha-item">
+            <span class="num">01</span>
+            <div>
+              <h3>Desarrollo</h3>
+              <p>Formulación, diseño de marca y packaging, para un producto funcional y diferenciable.</p>
+            </div>
           </div>
-          <div class="stat">
-            <span class="stat-number">14</span>
-            <span class="stat-label">Años de trayectoria</span>
+          <div class="ficha-item">
+            <span class="num">02</span>
+            <div>
+              <h3>Regulación</h3>
+              <p>Cumplimiento legal europeo y validación técnica, para comercializar con total seguridad.</p>
+            </div>
           </div>
-          <div class="stat">
-            <span class="stat-number">98%</span>
-            <span class="stat-label">Materias primas de origen UE</span>
+          <div class="ficha-item">
+            <span class="num">03</span>
+            <div>
+              <h3>Producción</h3>
+              <p>Fabricación optimizada y escalable, pensada para generar un margen real.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PROCESO / VALORES -->
-  <section id="proceso" class="section process">
+  <!-- QUE HACEMOS -->
+  <section class="section" id="que-hacemos">
     <div class="wrap">
-      <span class="eyebrow">Cómo trabajamos</span>
-      <h2 class="process-title">De la molécula al frasco.</h2>
-      <div class="process-grid">
-        <article class="process-card">
-          <p class="formula-tag formula-tag--small">ACTIVO · I+D</p>
-          <h3>Investigación</h3>
-          <p>Texto de relleno: seleccionamos activos con respaldo científico y los adaptamos a cada tipo de piel.</p>
-        </article>
-        <article class="process-card">
-          <p class="formula-tag formula-tag--small">CONTROL · QA</p>
-          <h3>Control de calidad</h3>
-          <p>Texto de relleno: cada lote se somete a análisis fisicoquímico y microbiológico antes de su distribución.</p>
-        </article>
-        <article class="process-card">
-          <p class="formula-tag formula-tag--small">ENVASE · FINAL</p>
-          <h3>Envasado sostenible</h3>
-          <p>Texto de relleno: priorizamos materiales reciclables y proveedores con compromiso medioambiental.</p>
-        </article>
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Ficha 02 — Qué hacemos</span>
+          <h2>Cubrimos todo el espectro cosmético.</h2>
+        </div>
       </div>
+
+      <div class="areas reveal">
+        <div class="area-card">
+          <div class="mark"></div>
+          <div>
+            <h3>Cosmética funcional</h3>
+            <p>Tratamientos dermocosméticos, antiaging y reparación de barrera.</p>
+          </div>
+        </div>
+        <div class="area-card">
+          <div class="mark"></div>
+          <div>
+            <h3>Cosmética estructural</h3>
+            <p>Bálsamos, ceras activas y aceites funcionales de alta concentración.</p>
+          </div>
+        </div>
+        <div class="area-card">
+          <div class="mark"></div>
+          <div>
+            <h3>Higiene y capilar</h3>
+            <p>Champús, geles de baño y mascarillas.</p>
+          </div>
+        </div>
+        <div class="area-card">
+          <div class="mark"></div>
+          <div>
+            <h3>Dermocosmética animal</h3>
+            <p>Formulación específica para el cuidado de mascotas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="principle reveal">"El equilibrio antes que la acumulación." — cada activo tiene una función demostrable y documentada.</p>
     </div>
   </section>
 
   <!-- CONTACTO -->
-  <section id="contacto" class="section contact">
-    <div class="wrap contact-grid">
-      <div class="contact-info">
-        <span class="eyebrow eyebrow--light">Contacto</span>
-        <h2>Hablemos de tu proyecto cosmético.</h2>
-        <p class="contact-lead">
-          Texto de relleno: escríbenos si quieres desarrollar tu propia
-          línea de cosmética o simplemente resolver dudas sobre nuestro
-          trabajo.
-        </p>
-        <ul class="contact-list">
+  <section class="section contact" id="contacto">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Ficha 03 — Contacto</span>
+          <h2>Hablemos de tu marca.</h2>
+        </div>
+      </div>
+
+      <div class="contact-grid">
+        <div class="reveal">
+          <p class="contact-lede">Cuéntanos tu proyecto y te acompañamos desde la formulación hasta el mercado.</p>
+          <a class="cta-btn" href="mailto:info@abcosmetics.es">Escríbenos</a>
+        </div>
+        <ul class="contact-list reveal">
           <li>
-            <span class="contact-label">Email</span>
-            <a href="mailto:hola@laboratoriosvera.com">hola@laboratoriosvera.com</a>
+            <span class="k">Email</span>
+            <a href="mailto:info@abcosmetics.es">info@abcosmetics.es</a>
           </li>
           <li>
-            <span class="contact-label">Teléfono</span>
-            <a href="tel:+34900000000">+34 900 000 000</a>
+            <span class="k">Teléfono</span>
+            <a href="tel:+34685661442">+34 685 661 442</a>
           </li>
           <li>
-            <span class="contact-label">Dirección</span>
-            <span>Calle de la Innovación, 12 · Gijón, Asturias</span>
+            <span class="k">Web</span>
+            <a href="https://www.abcosmetics.es" target="_blank" rel="noopener">www.abcosmetics.es</a>
           </li>
         </ul>
       </div>
-
-      <form class="contact-form" onsubmit="return false;">
-        <div class="form-row">
-          <label for="name">Nombre</label>
-          <input type="text" id="name" name="name" placeholder="Tu nombre">
-        </div>
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="tu@email.com">
-        </div>
-        <div class="form-row">
-          <label for="message">Mensaje</label>
-          <textarea id="message" name="message" rows="4" placeholder="Cuéntanos tu proyecto"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-form">Enviar mensaje</button>
-        <p class="form-note">Formulario de ejemplo — aún no está conectado a un envío real.</p>
-      </form>
     </div>
   </section>
 
 </main>
 
-<footer class="site-footer">
-  <div class="wrap footer-inner">
-    <span>© 2026 Laboratorios Vêra. Contenido de ejemplo — borrador para revisión.</span>
-    <div class="footer-links">
-      <a href="#quienes-somos">Quiénes somos</a>
-      <a href="#contacto">Contacto</a>
-    </div>
+<footer>
+  <div class="wrap foot-row">
+    <span class="eyebrow">© <span id="year"></span> AB Cosmetics — Science · Nature · Balance</span>
+    <span class="eyebrow">Formulación · Regulación · Marca · Mercado</span>
   </div>
 </footer>
 
-<script src="script.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  toggle.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ links.classList.remove('open'); });
+  });
+
+  if ('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
+  }
+</script>
+
 </body>
 </html>
