@@ -7,18 +7,18 @@
 <meta name="description" content="AB Cosmetics: estructura de desarrollo de marcas cosméticas. Formulación, regulación europea, marca y producción escalable.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,480;0,9..144,600;1,9..144,420&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#142019;
-    --paper:#edeee3;
-    --paper-2:#e3e5d6;
-    --forest:#1f3d2f;
-    --forest-2:#163024;
-    --sage:#7c9885;
-    --amber:#b8763a;
-    --line: rgba(20,32,25,0.14);
-    --line-soft: rgba(20,32,25,0.08);
+    --ink:#212224;
+    --paper:#f7f6f2;
+    --paper-2:#efeee6;
+    --olive:#63693a;
+    --olive-deep:#4c5029;
+    --charcoal:#212224;
+    --charcoal-2:#2b2c2e;
+    --line: rgba(33,34,36,0.14);
+    --line-soft: rgba(33,34,36,0.08);
     --max: 1180px;
   }
 
@@ -28,51 +28,54 @@
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:'Inter', sans-serif;
+    font-family:'Work Sans', sans-serif;
     font-size:16px;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
   h1,h2,h3{
-    font-family:'Fraunces', serif;
-    font-weight:480;
+    font-family:'Playfair Display', serif;
+    font-weight:700;
     letter-spacing:-0.01em;
     margin:0;
   }
   .eyebrow{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.72rem;
-    letter-spacing:0.14em;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:0.74rem;
+    letter-spacing:0.18em;
     text-transform:uppercase;
-    color:var(--forest);
-    opacity:0.75;
+    color:var(--olive);
   }
   a{color:inherit;}
-  section{scroll-margin-top:84px;}
+  img{max-width:100%; display:block;}
+  section{scroll-margin-top:76px;}
   .wrap{max-width:var(--max); margin:0 auto; padding:0 32px;}
 
   /* ---------- Header ---------- */
   header{
     position:sticky; top:0; z-index:50;
-    background:rgba(237,238,227,0.86);
+    background:rgba(247,246,242,0.9);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line-soft);
   }
   .nav{
     display:flex; align-items:center; justify-content:space-between;
-    max-width:var(--max); margin:0 auto; padding:18px 32px;
+    max-width:var(--max); margin:0 auto; padding:16px 32px;
   }
   .wordmark{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:1.05rem;
-    letter-spacing:-0.01em;
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:1.15rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
   }
-  .wordmark span{color:var(--amber);}
+  .wordmark span{color:var(--olive);}
   .navlinks{display:flex; gap:34px; list-style:none; margin:0; padding:0;}
   .navlinks a{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.74rem;
+    font-family:'Work Sans', sans-serif;
+    font-weight:500;
+    font-size:0.8rem;
     letter-spacing:0.08em;
     text-transform:uppercase;
     text-decoration:none;
@@ -81,13 +84,23 @@
     transition:opacity .2s ease;
   }
   .navlinks a:hover{opacity:1;}
-  .navtoggle{display:none; background:none; border:none; cursor:pointer; padding:6px;}
-  .navtoggle span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
+  .navtoggle{
+    display:none; background:none; border:none; cursor:pointer;
+    padding:8px; width:40px; height:40px;
+    position:relative; z-index:60;
+  }
+  .navtoggle span{
+    display:block; width:20px; height:2px; background:var(--ink);
+    margin:5px auto; transition:transform .25s ease, opacity .25s ease;
+  }
+  .navtoggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .navtoggle.open span:nth-child(2){opacity:0;}
+  .navtoggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
   /* ---------- Hero ---------- */
   .hero{
     position:relative;
-    padding:100px 0 96px;
+    padding:88px 0 80px;
     overflow:hidden;
   }
   .hero-grid{
@@ -97,74 +110,75 @@
     align-items:end;
   }
   .hero h1{
-    font-size:clamp(2.6rem, 5.4vw, 4.4rem);
-    line-height:1.03;
+    font-size:clamp(2.2rem, 5.4vw, 4.4rem);
+    line-height:1.06;
     max-width:11.5em;
   }
-  .hero h1 em{font-style:italic; color:var(--forest);}
+  .hero h1 em{font-style:italic; font-weight:500; color:var(--olive);}
   .hero .lede{
-    margin-top:26px;
+    margin-top:24px;
     max-width:36ch;
-    font-size:1.08rem;
-    color:rgba(20,32,25,0.78);
+    font-size:clamp(1rem, 1.6vw, 1.08rem);
+    color:rgba(33,34,36,0.75);
   }
   .hero .tagline{
-    margin-top:34px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.78rem;
-    letter-spacing:0.18em;
+    margin-top:30px;
+    font-weight:600;
+    font-size:0.8rem;
+    letter-spacing:0.2em;
     text-transform:uppercase;
-    color:var(--forest);
+    color:var(--olive);
   }
-  .equilibrium{width:100%; max-width:420px; justify-self:end;}
+  .equilibrium{width:100%; max-width:380px; justify-self:end;}
   .equilibrium path, .equilibrium circle, .equilibrium line{
-    stroke:var(--forest);
+    stroke:var(--olive);
   }
   .eq-draw{
     stroke-dasharray:900;
     stroke-dashoffset:900;
-    animation:draw 2.4s ease forwards .3s;
+    animation:draw 2.2s ease forwards .3s;
   }
   @keyframes draw{ to{ stroke-dashoffset:0; } }
 
   /* ---------- Section shell ---------- */
-  .section{padding:104px 0;}
+  .section{padding:88px 0;}
   .section-head{
     display:grid;
     grid-template-columns:0.85fr 1.15fr;
     gap:48px;
-    margin-bottom:56px;
+    margin-bottom:48px;
     border-top:1px solid var(--line);
-    padding-top:22px;
+    padding-top:20px;
   }
-  .section-head h2{font-size:clamp(1.9rem, 3vw, 2.6rem);}
+  .section-head h2{font-size:clamp(1.7rem, 3vw, 2.5rem); font-weight:700;}
   .section-head .eyebrow{margin-bottom:14px; display:block;}
 
   /* ---------- Quiénes somos ---------- */
   .about-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:56px;
+    gap:48px;
     align-items:start;
   }
-  .about-copy p{font-size:1.04rem; color:rgba(20,32,25,0.86); max-width:52ch;}
+  .about-copy p{font-size:1.02rem; color:rgba(33,34,36,0.86); max-width:52ch;}
   .about-copy p + p{margin-top:16px;}
   .ficha{border-top:1px solid var(--line);}
   .ficha-item{
     display:grid;
-    grid-template-columns:52px 1fr;
-    gap:18px;
-    padding:26px 0;
+    grid-template-columns:44px 1fr;
+    gap:16px;
+    padding:22px 0;
     border-bottom:1px solid var(--line);
   }
   .ficha-item .num{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.85rem;
-    color:var(--amber);
-    padding-top:3px;
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--olive);
+    padding-top:2px;
   }
-  .ficha-item h3{font-size:1.12rem; font-weight:480; margin-bottom:6px;}
-  .ficha-item p{margin:0; font-size:0.95rem; color:rgba(20,32,25,0.72); max-width:42ch;}
+  .ficha-item h3{font-size:1.08rem; font-weight:700; margin-bottom:6px;}
+  .ficha-item p{margin:0; font-size:0.94rem; color:rgba(33,34,36,0.68); max-width:42ch;}
 
   /* ---------- Qué hacemos ---------- */
   .areas{
@@ -176,103 +190,98 @@
   }
   .area-card{
     background:var(--paper);
-    padding:30px 26px;
-    min-height:230px;
+    padding:28px 24px;
+    min-height:210px;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
   }
   .area-card .mark{
-    width:30px; height:30px;
-    border:1px solid var(--forest);
-    border-radius:50%;
-    position:relative;
-    margin-bottom:26px;
+    width:26px; height:3px;
+    background:var(--olive);
+    margin-bottom:24px;
   }
-  .area-card .mark::after{
-    content:"";
-    position:absolute; inset:7px;
-    border:1px solid var(--amber);
-    border-radius:50%;
-  }
-  .area-card h3{font-size:1.05rem; font-weight:480; margin-bottom:10px;}
-  .area-card p{margin:0; font-size:0.88rem; color:rgba(20,32,25,0.68);}
+  .area-card h3{font-size:1.02rem; font-weight:700; margin-bottom:8px;}
+  .area-card p{margin:0; font-size:0.87rem; color:rgba(33,34,36,0.65);}
 
   .principle{
-    margin-top:64px;
+    margin-top:56px;
     border-top:1px solid var(--line);
-    padding-top:34px;
-    font-family:'Fraunces', serif;
+    padding-top:32px;
+    font-family:'Playfair Display', serif;
     font-style:italic;
-    font-weight:420;
-    font-size:1.3rem;
+    font-weight:500;
+    font-size:1.25rem;
     max-width:38ch;
-    color:var(--forest);
+    color:var(--olive-deep);
   }
 
   /* ---------- Contacto ---------- */
   .contact{
-    background:var(--forest);
+    background:var(--charcoal);
     color:var(--paper);
-    border-radius:2px;
   }
-  .contact .section-head{border-top:1px solid rgba(237,238,227,0.2);}
-  .contact .eyebrow{color:var(--paper); opacity:0.6;}
+  .contact .section-head{border-top:1px solid rgba(247,246,242,0.18);}
+  .contact .eyebrow{color:#c7c9ad;}
   .contact h2{color:var(--paper);}
   .contact-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:48px;
+    gap:40px;
   }
-  .contact-lede{font-size:1.05rem; color:rgba(237,238,227,0.82); max-width:42ch;}
-  .contact-list{list-style:none; margin:38px 0 0; padding:0;}
-  .contact-list li{border-top:1px solid rgba(237,238,227,0.18); padding:18px 0;}
-  .contact-list li:last-child{border-bottom:1px solid rgba(237,238,227,0.18);}
+  .contact-lede{font-size:1.02rem; color:rgba(247,246,242,0.8); max-width:42ch;}
+  .contact-list{list-style:none; margin:34px 0 0; padding:0;}
+  .contact-list li{border-top:1px solid rgba(247,246,242,0.16); padding:16px 0;}
+  .contact-list li:last-child{border-bottom:1px solid rgba(247,246,242,0.16);}
   .contact-list .k{
     display:block;
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.7rem;
-    letter-spacing:0.12em;
+    font-weight:600;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
     text-transform:uppercase;
-    color:var(--amber);
+    color:#a7ab7f;
     margin-bottom:6px;
   }
   .contact-list a{
-    font-family:'Fraunces', serif;
-    font-size:1.4rem;
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:clamp(1.15rem, 2.4vw, 1.4rem);
     text-decoration:none;
     color:var(--paper);
     border-bottom:1px solid transparent;
     transition:border-color .2s ease;
+    word-break:break-word;
   }
-  .contact-list a:hover{border-color:var(--amber);}
+  .contact-list a:hover{border-color:#a7ab7f;}
   .cta-btn{
     display:inline-block;
-    margin-top:40px;
+    margin-top:36px;
     padding:15px 30px;
-    background:var(--amber);
-    color:var(--forest-2);
+    background:var(--olive);
+    color:var(--paper);
     text-decoration:none;
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.78rem;
-    letter-spacing:0.1em;
+    font-weight:600;
+    font-size:0.82rem;
+    letter-spacing:0.08em;
     text-transform:uppercase;
     border-radius:2px;
+    transition:background .2s ease;
   }
+  .cta-btn:hover{background:#767d43;}
 
   /* ---------- Footer ---------- */
   footer{
-    padding:36px 0;
+    padding:30px 0;
     border-top:1px solid var(--line);
   }
   .foot-row{
     display:flex; justify-content:space-between; align-items:center;
-    flex-wrap:wrap; gap:12px;
+    flex-wrap:wrap; gap:10px;
   }
-  .foot-row .eyebrow{opacity:0.55;}
+  .foot-row .eyebrow{opacity:0.6;}
 
   /* ---------- Reveal ---------- */
-  .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
   .reveal.is-visible{opacity:1; transform:none;}
   @media (prefers-reduced-motion: reduce){
     .reveal{opacity:1; transform:none; transition:none;}
@@ -280,28 +289,62 @@
     html{scroll-behavior:auto;}
   }
 
-  /* ---------- Responsive ---------- */
-  @media (max-width:860px){
+  /* ================= RESPONSIVE ================= */
+
+  /* Tablet */
+  @media (max-width:900px){
+    .wrap{padding:0 26px;}
+    .hero{padding:64px 0 56px;}
+    .hero-grid{grid-template-columns:1fr; gap:36px;}
+    .equilibrium{justify-self:start; max-width:260px; margin-top:8px;}
+    .section{padding:64px 0;}
+    .section-head{grid-template-columns:1fr; gap:14px; margin-bottom:36px;}
+    .about-grid{grid-template-columns:1fr; gap:36px;}
+    .areas{grid-template-columns:1fr 1fr;}
+    .contact-grid{grid-template-columns:1fr; gap:30px;}
+  }
+
+  /* Mobile nav + layout */
+  @media (max-width:720px){
+    .nav{padding:14px 20px;}
+    .wordmark{font-size:1.02rem;}
     .navlinks{
-      position:absolute; top:100%; left:0; right:0;
+      position:fixed; inset:0 0 auto 0; top:60px;
       background:var(--paper);
       flex-direction:column; gap:0;
       border-bottom:1px solid var(--line-soft);
-      display:none;
+      box-shadow:0 12px 24px rgba(33,34,36,0.08);
+      max-height:0; overflow:hidden;
+      transition:max-height .28s ease;
     }
-    .navlinks.open{display:flex;}
-    .navlinks a{display:block; padding:16px 32px; border-top:1px solid var(--line-soft);}
+    .navlinks.open{max-height:260px;}
+    .navlinks a{
+      display:block; padding:18px 24px;
+      border-top:1px solid var(--line-soft);
+      font-size:0.85rem;
+    }
     .navtoggle{display:block;}
-    .hero-grid{grid-template-columns:1fr;}
-    .equilibrium{justify-self:start; max-width:280px; margin-top:40px;}
-    .section-head{grid-template-columns:1fr;}
-    .about-grid{grid-template-columns:1fr;}
-    .areas{grid-template-columns:1fr 1fr;}
-    .contact-grid{grid-template-columns:1fr;}
-    .wrap{padding:0 22px;}
+    .wrap{padding:0 20px;}
+    .cta-btn{width:100%; text-align:center;}
+    .contact-list a{font-size:1.25rem;}
   }
-  @media (max-width:520px){
+
+  /* Small phones */
+  @media (max-width:480px){
+    .wrap{padding:0 18px;}
+    .hero{padding:48px 0 44px;}
+    .hero .lede{max-width:none;}
+    .section{padding:52px 0;}
     .areas{grid-template-columns:1fr;}
+    .area-card{min-height:auto; padding:24px 20px;}
+    .ficha-item{grid-template-columns:34px 1fr; gap:12px; padding:18px 0;}
+    .principle{font-size:1.1rem;}
+    .foot-row{flex-direction:column; align-items:flex-start;}
+  }
+
+  /* Large desktop refinement */
+  @media (min-width:1400px){
+    .max{--max: 1280px;}
   }
 </style>
 </head>
@@ -337,9 +380,9 @@
         <line x1="270" y1="110" x2="270" y2="160" stroke-width="1" class="eq-draw"/>
         <circle cx="110" cy="46" r="14" stroke-width="1.2" class="eq-draw"/>
         <circle cx="270" cy="174" r="20" stroke-width="1.2" class="eq-draw"/>
-        <circle cx="270" cy="174" r="6" fill="#b8763a" stroke="none"/>
-        <circle cx="30" cy="110" r="3.5" fill="#1f3d2f" stroke="none"/>
-        <circle cx="350" cy="110" r="3.5" fill="#1f3d2f" stroke="none"/>
+        <circle cx="270" cy="174" r="6" fill="#63693a" stroke="none"/>
+        <circle cx="30" cy="110" r="3.5" fill="#212224" stroke="none"/>
+        <circle cx="350" cy="110" r="3.5" fill="#212224" stroke="none"/>
         <path d="M60 150 Q 110 190 160 150" stroke-width="1" class="eq-draw"/>
       </svg>
     </div>
@@ -350,7 +393,7 @@
     <div class="wrap">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Ficha 01 — Quiénes somos</span>
+          <span class="eyebrow">Quiénes somos</span>
           <h2>Una estructura de desarrollo de marca, no un fabricante al uso.</h2>
         </div>
       </div>
@@ -393,7 +436,7 @@
     <div class="wrap">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Ficha 02 — Qué hacemos</span>
+          <span class="eyebrow">Qué hacemos</span>
           <h2>Cubrimos todo el espectro cosmético.</h2>
         </div>
       </div>
@@ -438,7 +481,7 @@
     <div class="wrap">
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Ficha 03 — Contacto</span>
+          <span class="eyebrow">Contacto</span>
           <h2>Hablemos de tu marca.</h2>
         </div>
       </div>
@@ -482,10 +525,15 @@
   var links = document.getElementById('navLinks');
   toggle.addEventListener('click', function(){
     var open = links.classList.toggle('open');
+    toggle.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', open);
   });
   links.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){ links.classList.remove('open'); });
+    a.addEventListener('click', function(){
+      links.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
   });
 
   if ('IntersectionObserver' in window){
