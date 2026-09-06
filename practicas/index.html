@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Índice de prácticas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>📚 Índice de prácticas</h1>
+    <p>Todas las páginas de práctica generadas, con su link y una breve descripción. Esta página se actualiza sola a partir de <code>manifest.json</code> — no hace falta tocar el HTML cada vez.</p>
+  </header>
+
+  <main>
+    <div id="filtros" class="filtros"></div>
+    <div id="contenido">
+      <p class="cargando">Cargando prácticas…</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Generado y mantenido automáticamente por la skill de despliegue en GitHub Pages.</p>
+  </footer>
+
+  <script>
+    let TODAS = [];
+    let temaActivo = "todos";
+
+    function badgeTecnologia(tecnologia, ejecutable) {
+      const clase = ejecutable ? "badge badge-live" : "badge badge-ref";
+      const etiqueta = ejecutable ? `${tecnologia} · en vivo` : `${tecnologia} · referencia`;
+      return `<span class="${clase}">${etiqueta}</span>`;
+    }
+
+    function tarjeta(item) {
+      return `
+        <a class="tarjeta" href="${item.url}">
+          <div class="tarjeta-top">
+            <h3>${item.titulo}</h3>
+            ${badgeTecnologia(item.tecnologia, item.ejecutable_en_navegador)}
+          </div>
+          <p class="descripcion">${item.descripcion}</p>
+          <div class="tarjeta-meta">
+            <span>${item.tema}</span>
+            <span>${item.fecha}</span>
+          </div>
+        </a>
+      `;
+    }
+
+    function render() {
+      const contenido = document.getElementById("contenido");
+
+      if (TODAS.length === 0) {
+        contenido.innerHTML = `<p class="vacio">Todavía no hay prácticas publicadas. ¡La primera aparecerá aquí en cuanto se cree!</p>`;
+        return;
+      }
+
+      const filtradas = temaActivo === "todos"
+        ? TODAS
+        : TODAS.filter(item => item.tema === temaActivo);
+
+      // Agrupar por tema para mostrar secciones
+      const grupos = {};
+      filtradas.forEach(item => {
+        if (!grupos[item.tema]) grupos[item.tema] = [];
+        grupos[item.tema].push(item);
+      });
+
+      let html = "";
+      Object.keys(grupos).forEach(tema => {
+        html += `<section class="grupo">
+          <h2>${tema}</h2>
+          <div class="grid">
+            ${grupos[tema].map(tarjeta).join("")}
+          </div>
+        </section>`;
+      });
+
+      contenido.innerHTML = html;
+    }
+
+    function renderFiltros() {
+      const temas = ["todos", ...new Set(TODAS.map(item => item.tema))];
+      const filtros = document.getElementById("filtros");
+      filtros.innerHTML = temas.map(tema => `
+        <button class="filtro-btn ${tema === temaActivo ? "activo" : ""}" data-tema="${tema}">
+          ${tema === "todos" ? "Todos" : tema}
+        </button>
+      `).join("");
+
+      filtros.querySelectorAll(".filtro-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          temaActivo = btn.dataset.tema;
+          renderFiltros();
+          render();
+        });
+      });
+    }
+
+    async function cargar() {
+      try {
+        const resp = await fetch("manifest.json", { cache: "no-store" });
+        if (!resp.ok) throw new Error("No se pudo cargar manifest.json");
+        TODAS = await resp.json();
+        // Más recientes primero
+        TODAS.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
+        renderFiltros();
+        render();
+      } catch (err) {
+        document.getElementById("contenido").innerHTML =
+          `<p class="vacio">No se ha podido cargar el índice todavía. Prueba a recargar en un minuto.</p>`;
+        console.error(err);
+      }
+    }
+
+    cargar();
+  </script>
+</body>
+</html>
