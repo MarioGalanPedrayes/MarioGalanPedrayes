@@ -1,0 +1,12 @@
+[
+  {
+    "tema": "Programación",
+    "tecnologia": "JavaScript + C++/C#",
+    "carpeta": "programacion",
+    "titulo": "Área de prácticas: primos y Fibonacci",
+    "descripcion": "Demos interactivas en JavaScript (comprobador de números primos y calculadora de Fibonacci) que corren en el navegador, más ejemplos de referencia en C++ y C# descargables para ejecutar en local.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/programacion/",
+    "fecha": "2026-09-06"
+  }
+]
