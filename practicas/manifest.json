@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Programación",
+    "tecnologia": "PHP",
+    "carpeta": "programacion/php",
+    "titulo": "Adivina el número",
+    "descripcion": "Juego de consola en PHP: el programa piensa un número del 1 al 100 y da pistas de más alto/más bajo. Código real y descargable, se ejecuta con \"php codigo.php\" en tu ordenador (GitHub Pages no ejecuta PHP).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/programacion/php/",
+    "fecha": "2026-09-06"
+  },
+  {
     "tema": "Matemáticas",
     "tecnologia": "Python",
     "carpeta": "matematicas/python",
