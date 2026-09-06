@@ -1,1 +1,113 @@
-test
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación · Área de prácticas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🧠 Área de prácticas de programación</h1>
+    <p>Ejemplos y ejercicios en JavaScript, C++ y C# para ir practicando.</p>
+  </header>
+
+  <nav>
+    <a href="#js">JavaScript</a>
+    <a href="#cpp">C++</a>
+    <a href="#csharp">C#</a>
+  </nav>
+
+  <main>
+
+    <section id="js">
+      <h2>JavaScript (se ejecuta aquí mismo)</h2>
+      <p>GitHub Pages solo puede ejecutar HTML, CSS y JavaScript en el navegador, así que esta sección es interactiva de verdad.</p>
+
+      <div class="demo-box">
+        <h3>Demo: número primo</h3>
+        <input type="number" id="numInput" placeholder="Escribe un número" value="17">
+        <button onclick="comprobarPrimo()">Comprobar</button>
+        <p id="resultadoPrimo" class="resultado"></p>
+      </div>
+
+      <div class="demo-box">
+        <h3>Demo: contador con Fibonacci</h3>
+        <input type="number" id="fibInput" placeholder="Posición" value="10">
+        <button onclick="calcularFibonacci()">Calcular</button>
+        <p id="resultadoFib" class="resultado"></p>
+      </div>
+    </section>
+
+    <section id="cpp">
+      <h2>C++ (referencia, no se ejecuta en el navegador)</h2>
+      <p>El navegador no puede compilar ni ejecutar C++. Este código es para copiarlo en tu compilador local o en un editor online (por ejemplo, <a href="https://godbolt.org/" target="_blank" rel="noopener">Compiler Explorer</a>).</p>
+      <pre><code id="cppCode">#include &lt;iostream&gt;
+using namespace std;
+
+bool esPrimo(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+
+int main() {
+    int numero;
+    cout &lt;&lt; "Introduce un numero: ";
+    cin &gt;&gt; numero;
+
+    if (esPrimo(numero))
+        cout &lt;&lt; numero &lt;&lt; " es primo." &lt;&lt; endl;
+    else
+        cout &lt;&lt; numero &lt;&lt; " no es primo." &lt;&lt; endl;
+
+    return 0;
+}
+</code></pre>
+      <p><a href="examples/hello.cpp" download>Descargar hello.cpp</a></p>
+    </section>
+
+    <section id="csharp">
+      <h2>C# (referencia, no se ejecuta en el navegador)</h2>
+      <p>Igual que con C++, cópialo en Visual Studio, VS Code con el SDK de .NET, o un editor online como <a href="https://dotnetfiddle.net/" target="_blank" rel="noopener">.NET Fiddle</a>.</p>
+      <pre><code id="csCode">using System;
+
+class Program
+{
+    static bool EsPrimo(int n)
+    {
+        if (n < 2) return false;
+        for (int i = 2; i * i <= n; i++)
+        {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+
+    static void Main()
+    {
+        Console.Write("Introduce un numero: ");
+        int numero = int.Parse(Console.ReadLine());
+
+        if (EsPrimo(numero))
+            Console.WriteLine($"{numero} es primo.");
+        else
+            Console.WriteLine($"{numero} no es primo.");
+    }
+}
+</code></pre>
+      <p><a href="examples/hello.cs" download>Descargar hello.cs</a></p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Carpeta de prácticas — sube tus propios ejercicios aquí cuando quieras.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
