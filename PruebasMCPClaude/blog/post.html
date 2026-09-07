@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>✍️ Blog</h1>
+  </header>
+
+  <nav class="site-nav">
+    <a href="index.html">Inicio</a>
+    <a href="admin.html">Escribir</a>
+    <a href="../practicas/">Prácticas de programación</a>
+  </nav>
+
+  <main>
+    <article class="post" id="post">
+      <p class="vacio">Cargando…</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Volver al blog</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    async function cargarPost() {
+      const contenedor = document.getElementById("post");
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get("slug");
+
+      if (!slug) {
+        contenedor.innerHTML = `<p class="vacio">No se ha especificado ninguna entrada.</p>`;
+        return;
+      }
+
+      try {
+        const resp = await fetch(`posts/${slug}.json`, { cache: "no-store" });
+        if (!resp.ok) throw new Error("no encontrado");
+        const post = await resp.json();
+
+        document.title = post.titulo + " · Blog";
+
+        contenedor.innerHTML = `
+          <h1>${escapeHtml(post.titulo)}</h1>
+          <div class="fecha">${formatearFecha(post.fecha)}</div>
+          ${post.portada ? `<img class="cover" src="${post.portada}" alt="">` : ""}
+          <div class="contenido-post">${markdownToHtml(post.contenido)}</div>
+        `;
+      } catch (err) {
+        contenedor.innerHTML = `<p class="vacio">No se ha encontrado esta entrada.</p>`;
+        console.error(err);
+      }
+    }
+
+    cargarPost();
+  </script>
+</body>
+</html>
