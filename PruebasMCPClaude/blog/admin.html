@@ -28,6 +28,13 @@
     </div>
 
     <div class="admin-box">
+      <h3 style="margin-top:0">Entradas existentes</h3>
+      <div id="listaAdmin"><p class="ayuda">Cargando…</p></div>
+    </div>
+
+    <div class="admin-box">
+      <div id="modoEdicion" class="mensaje info" style="display:none"></div>
+
       <label for="titulo">Título</label>
       <input type="text" id="titulo" placeholder="Título de la entrada">
 
@@ -45,7 +52,8 @@
       </div>
 
       <div class="fila-botones">
-        <button type="button" onclick="publicar(event)">Publicar entrada</button>
+        <button type="button" onclick="publicar(event)" id="btnPublicar">Publicar entrada</button>
+        <button type="button" class="secundario" onclick="nuevaEntrada()">Nueva entrada (limpiar)</button>
       </div>
 
       <div id="mensaje"></div>
