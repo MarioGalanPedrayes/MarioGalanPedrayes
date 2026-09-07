@@ -8,6 +8,7 @@ const EXTENSIONES_PERMITIDAS = ["jpg", "jpeg", "png", "gif", "webp", "svg", "mp4
 const TAMANO_MAXIMO_MB = 20;
 
 let slugActual = null;
+let portadaExistente = null;
 
 function obtenerToken() {
   return document.getElementById("token").value.trim();
@@ -90,6 +91,20 @@ async function ghPutFile(path, contenidoBase64, mensaje, sha) {
   return resp.json();
 }
 
+async function ghDeleteFile(path, sha, mensaje) {
+  const resp = await ghApi(path, {
+    method: "DELETE",
+    body: JSON.stringify({ message: mensaje, sha, branch: GH_BRANCH }),
+  });
+  if (!resp.ok) {
+    const detalle = await resp.json().catch(() => ({}));
+    if (resp.status === 401) throw new Error("Token inválido o caducado.");
+    if (resp.status === 403) throw new Error("El token no tiene permiso de escritura.");
+    throw new Error(detalle.message || `Error borrando ${path} (HTTP ${resp.status})`);
+  }
+  return resp.json();
+}
+
 function validarArchivo(file) {
   const ext = extensionDe(file.name);
   if (!EXTENSIONES_PERMITIDAS.includes(ext)) {
@@ -149,6 +164,143 @@ function actualizarPreview() {
   document.getElementById("preview").innerHTML = markdownToHtml(contenido);
 }
 
+// ---- Listado, edición y borrado de entradas existentes ----
+
+async function cargarListaAdmin() {
+  const cont = document.getElementById("listaAdmin");
+  cont.innerHTML = '<p class="ayuda">Cargando…</p>';
+  try {
+    const resp = await fetch(`posts.json?_=${Date.now()}`, { cache: "no-store" });
+    if (!resp.ok) throw new Error();
+    const posts = await resp.json();
+
+    if (posts.length === 0) {
+      cont.innerHTML = '<p class="ayuda">Todavía no hay entradas publicadas.</p>';
+      return;
+    }
+
+    posts.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
+
+    cont.innerHTML = posts.map(p => `
+      <div class="item-existente">
+        <div>
+          <strong>${escapeHtml(p.titulo)}</strong>
+          <div class="ayuda">${formatearFecha(p.fecha)}</div>
+        </div>
+        <div class="fila-botones">
+          <button type="button" class="secundario btn-editar" data-slug="${escapeHtml(p.slug)}">Editar</button>
+          <button type="button" class="secundario btn-borrar" data-slug="${escapeHtml(p.slug)}" data-titulo="${escapeHtml(p.titulo)}">Borrar</button>
+        </div>
+      </div>
+    `).join("");
+
+    cont.querySelectorAll(".btn-editar").forEach(btn =>
+      btn.addEventListener("click", () => cargarParaEditar(btn.dataset.slug))
+    );
+    cont.querySelectorAll(".btn-borrar").forEach(btn =>
+      btn.addEventListener("click", () => borrarPost(btn.dataset.slug, btn.dataset.titulo))
+    );
+  } catch (err) {
+    cont.innerHTML = '<p class="ayuda">Todavía no hay entradas publicadas.</p>';
+  }
+}
+
+async function cargarParaEditar(slug) {
+  try {
+    const resp = await fetch(`posts/${slug}.json?_=${Date.now()}`, { cache: "no-store" });
+    if (!resp.ok) throw new Error("No se pudo cargar la entrada.");
+    const post = await resp.json();
+
+    document.getElementById("titulo").value = post.titulo;
+    document.getElementById("contenido").value = post.contenido;
+    document.getElementById("portada").value = "";
+
+    slugActual = slug;
+    portadaExistente = post.portada || null;
+
+    const aviso = document.getElementById("modoEdicion");
+    aviso.style.display = "block";
+    aviso.textContent = `✏️ Editando "${post.titulo}". Publica para sobrescribir esta entrada, o pulsa "Nueva entrada" para cancelar.${post.portada ? " (Se conserva la portada actual si no subes una nueva.)" : ""}`;
+
+    actualizarPreview();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    mostrarMensaje("No se pudo cargar la entrada para editar.", "error");
+    console.error(err);
+  }
+}
+
+function nuevaEntrada() {
+  slugActual = null;
+  portadaExistente = null;
+  document.getElementById("titulo").value = "";
+  document.getElementById("contenido").value = "";
+  document.getElementById("portada").value = "";
+  document.getElementById("modoEdicion").style.display = "none";
+  document.getElementById("mensaje").textContent = "";
+  actualizarPreview();
+}
+
+async function borrarCarpetaMediaSiExiste(slug) {
+  try {
+    const resp = await ghApi(`${GH_BASE}/media/${slug}?ref=${GH_BRANCH}`);
+    if (!resp.ok) return; // no existe o no se puede listar: mejor esfuerzo, seguimos
+    const archivos = await resp.json();
+    if (!Array.isArray(archivos)) return;
+    for (const archivo of archivos) {
+      try {
+        await ghDeleteFile(`${GH_BASE}/media/${slug}/${archivo.name}`, archivo.sha, `Blog: borra media de ${slug}`);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function borrarPost(slug, titulo) {
+  if (!obtenerToken()) {
+    mostrarMensaje("Pega primero tu token de GitHub.", "error");
+    return;
+  }
+  if (!confirm(`¿Seguro que quieres borrar "${titulo}"? Esta acción no se puede deshacer.`)) {
+    return;
+  }
+
+  mostrarMensaje("Borrando entrada…", "info");
+
+  try {
+    const postFile = await ghGetFile(`${GH_BASE}/posts/${slug}.json`);
+    if (postFile) {
+      await ghDeleteFile(`${GH_BASE}/posts/${slug}.json`, postFile.sha, `Blog: borra "${titulo}"`);
+    }
+
+    await borrarCarpetaMediaSiExiste(slug);
+
+    const manifestActual = await ghGetFile(`${GH_BASE}/posts.json`);
+    const posts = manifestActual ? JSON.parse(manifestActual.contenido) : [];
+    const nuevas = posts.filter(p => p.slug !== slug);
+
+    await ghPutFile(
+      `${GH_BASE}/posts.json`,
+      btoa(unescape(encodeURIComponent(JSON.stringify(nuevas, null, 2)))),
+      `Blog: elimina "${titulo}" del índice`,
+      manifestActual ? manifestActual.sha : undefined
+    );
+
+    mostrarMensaje(`🗑️ "${titulo}" borrada, junto con sus archivos multimedia.`, "ok");
+
+    if (slugActual === slug) {
+      nuevaEntrada();
+    }
+    cargarListaAdmin();
+  } catch (err) {
+    mostrarMensaje(`Error al borrar: ${err.message}`, "error");
+    console.error(err);
+  }
+}
+
 async function publicar(event) {
   const boton = event.target;
   const titulo = document.getElementById("titulo").value.trim();
@@ -174,7 +326,7 @@ async function publicar(event) {
   try {
     const slug = obtenerSlug();
 
-    let rutaPortada = null;
+    let rutaPortada = portadaExistente || null;
     if (portadaInput.files[0]) {
       mostrarMensaje("Subiendo imagen de portada…", "info");
       rutaPortada = await subirMedia(portadaInput.files[0]);
@@ -226,6 +378,8 @@ async function publicar(event) {
 
     const urlPublica = `https://${GH_OWNER}.github.io/${GH_REPO}/${GH_BASE}/post.html?slug=${slug}`;
     mostrarMensaje(`✅ Publicado. Puede tardar 1-2 minutos en verse. Link: ${urlPublica}`, "ok");
+    portadaExistente = rutaPortada;
+    cargarListaAdmin();
   } catch (err) {
     mostrarMensaje(`Error: ${err.message}`, "error");
     console.error(err);
@@ -235,3 +389,4 @@ async function publicar(event) {
 }
 
 document.getElementById("contenido").addEventListener("input", actualizarPreview);
+cargarListaAdmin();
