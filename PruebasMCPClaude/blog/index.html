@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>✍️ Blog</h1>
+    <p>Notas, fotos y vídeos.</p>
+  </header>
+
+  <nav class="site-nav">
+    <a href="index.html">Inicio</a>
+    <a href="admin.html">Escribir</a>
+    <a href="../practicas/">Prácticas de programación</a>
+  </nav>
+
+  <main>
+    <div id="listado">
+      <p class="vacio">Cargando entradas…</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Publicado con GitHub Pages.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    async function cargarPosts() {
+      const contenedor = document.getElementById("listado");
+      try {
+        const resp = await fetch("posts.json", { cache: "no-store" });
+        if (!resp.ok) throw new Error("sin posts.json");
+        const posts = await resp.json();
+
+        if (posts.length === 0) {
+          contenedor.innerHTML = `<p class="vacio">Todavía no hay entradas. <a href="admin.html">Escribe la primera</a>.</p>`;
+          return;
+        }
+
+        posts.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
+
+        contenedor.innerHTML = `<div class="grid-posts">${posts.map(p => `
+          <a class="tarjeta-post" href="post.html?slug=${encodeURIComponent(p.slug)}">
+            ${p.portada ? `<img class="cover" src="${p.portada}" alt="">` : ""}
+            <div class="cuerpo">
+              <h2>${escapeHtml(p.titulo)}</h2>
+              <div class="fecha">${formatearFecha(p.fecha)}</div>
+              <p class="extracto">${escapeHtml(p.extracto)}</p>
+            </div>
+          </a>
+        `).join("")}</div>`;
+      } catch (err) {
+        contenedor.innerHTML = `<p class="vacio">Todavía no hay entradas. <a href="admin.html">Escribe la primera</a>.</p>`;
+        console.error(err);
+      }
+    }
+
+    cargarPosts();
+  </script>
+</body>
+</html>
