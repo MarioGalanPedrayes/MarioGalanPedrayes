@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciencia/Física · Python: Tiro parabólico</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🚀 Simulador de tiro parabólico</h1>
+    <p>Elige una velocidad inicial y un ángulo, y calcula el alcance, la altura máxima y el tiempo de vuelo. El cálculo lo hace Python de verdad en tu navegador, gracias a <strong>Pyodide</strong> (WebAssembly) — sin resistencia del aire, para mantenerlo simple.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box">
+      <h2>Pruébalo</h2>
+      <label>Velocidad inicial (m/s): <input type="number" id="velInput" value="20" min="0" max="500"></label>
+      <label>Ángulo (grados): <input type="number" id="anguloInput" value="45" min="0" max="90"></label>
+      <button id="btnCalcular" onclick="ejecutar()">Calcular</button>
+      <p id="estado" class="resultado"></p>
+
+      <div id="resultados" class="grid-resultados"></div>
+
+      <canvas id="canvasTrayectoria" width="600" height="300"></canvas>
+    </section>
+
+    <section>
+      <h2>Código Python</h2>
+      <p>Esto es lo que corre en la demo de arriba:</p>
+      <pre><code id="codigoPython">import math
+
+G = 9.81
+
+def tiro_parabolico(velocidad, angulo_grados):
+    angulo_rad = math.radians(angulo_grados)
+    tiempo_vuelo = (2 * velocidad * math.sin(angulo_rad)) / G
+    altura_maxima = (velocidad ** 2) * (math.sin(angulo_rad) ** 2) / (2 * G)
+    alcance = (velocidad ** 2) * math.sin(2 * angulo_rad) / G
+    return {
+        "tiempo_vuelo": tiempo_vuelo,
+        "altura_maxima": altura_maxima,
+        "alcance": alcance,
+    }
+
+def trayectoria(velocidad, angulo_grados, num_puntos=40):
+    angulo_rad = math.radians(angulo_grados)
+    resultado = tiro_parabolico(velocidad, angulo_grados)
+    t_total = resultado["tiempo_vuelo"]
+    puntos = []
+    for i in range(num_puntos + 1):
+        t = (t_total / num_puntos) * i
+        x = velocidad * math.cos(angulo_rad) * t
+        y = velocidad * math.sin(angulo_rad) * t - 0.5 * G * t ** 2
+        puntos.append((x, max(y, 0)))
+    return puntos
+</code></pre>
+      <p><a href="codigo.py" download>Descargar codigo.py</a> (versión de consola, para ejecutar con <code>python codigo.py</code> en tu ordenador).</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
