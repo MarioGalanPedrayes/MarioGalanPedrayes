@@ -258,6 +258,33 @@ button:disabled {
 .mensaje.ok { background: rgba(110,231,183,0.12); border: 1px solid var(--accent); color: var(--accent); }
 .mensaje.error { background: rgba(248,113,113,0.12); border: 1px solid var(--danger); color: var(--danger); }
 
+.item-existente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #2a2d3a;
+}
+
+.item-existente:last-child {
+  border-bottom: none;
+}
+
+.item-existente .fila-botones {
+  margin-top: 0;
+  flex-wrap: nowrap;
+}
+
+button.borrar, .btn-borrar {
+  border-color: var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+button.borrar:hover, .btn-borrar:hover {
+  background: rgba(248,113,113,0.12) !important;
+}
+
 .ayuda {
   font-size: 0.85rem;
   color: var(--muted);
