@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escribir · Blog</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>✍️ Escribir entrada</h1>
+    <p>Esta página publica directamente en GitHub. Tu token no se guarda en ningún sitio: solo vive en esta pestaña mientras la tengas abierta.</p>
+  </header>
+
+  <nav class="site-nav">
+    <a href="index.html">Inicio</a>
+    <a href="admin.html">Escribir</a>
+    <a href="../practicas/">Prácticas de programación</a>
+  </nav>
+
+  <main>
+
+    <div class="admin-box">
+      <label for="token">Token de GitHub (permiso "Contents: Read and write")</label>
+      <input type="password" id="token" placeholder="github_pat_...">
+      <p class="ayuda">No se guarda entre sesiones ni se envía a ningún sitio salvo a la API de GitHub. Si recargas la página, tendrás que volver a pegarlo.</p>
+    </div>
+
+    <div class="admin-box">
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" placeholder="Título de la entrada">
+
+      <label for="portada">Imagen de portada (opcional)</label>
+      <input type="file" id="portada" accept="image/*">
+
+      <label for="contenido">Contenido (Markdown básico: # títulos, **negrita**, *cursiva*, - listas, [enlace](url), ![alt](url))</label>
+      <textarea id="contenido" placeholder="Escribe aquí tu entrada..."></textarea>
+      <p class="ayuda">Para insertar una foto o vídeo dentro del texto: coloca el cursor donde quieras y usa el botón de abajo.</p>
+
+      <label for="archivoInline">Insertar imagen/vídeo/audio en el texto</label>
+      <input type="file" id="archivoInline" accept="image/*,video/*,audio/*">
+      <div class="fila-botones">
+        <button type="button" class="secundario" onclick="insertarMedia()">Subir e insertar en el cursor</button>
+      </div>
+
+      <div class="fila-botones">
+        <button type="button" onclick="publicar(event)">Publicar entrada</button>
+      </div>
+
+      <div id="mensaje"></div>
+    </div>
+
+    <div class="admin-box">
+      <h3 style="margin-top:0">Vista previa</h3>
+      <div class="contenido-post" id="preview"></div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Volver al blog</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
