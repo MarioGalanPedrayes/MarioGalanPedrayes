@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Ciencia/Física",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/ciencia-fisica/python",
+    "titulo": "Simulador de tiro parabólico",
+    "descripcion": "Calcula el alcance, la altura máxima y el tiempo de vuelo de un proyectil según su velocidad y ángulo de lanzamiento, y dibuja la trayectoria; corre en vivo en el navegador con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/ciencia-fisica/python/",
+    "fecha": "2026-09-07"
+  },
+  {
     "tema": "Programación",
     "tecnologia": "PHP",
     "carpeta": "PruebasMCPClaude/programacion/php",
