@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Mitos asturianos",
+    "tecnologia": "Java",
+    "carpeta": "PruebasMCPClaude/mitos-asturianos/java",
+    "titulo": "Quiz de mitos asturianos",
+    "descripcion": "Quiz de consola con 5 preguntas de opción múltiple sobre seres de la mitología asturiana (Xanas, Cuélebres, el Trasgu, el Nuberu, el Busgosu). Código Java real y descargable, se ejecuta con \"javac Codigo.java && java Codigo\" en tu ordenador (GitHub Pages no ejecuta Java).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/mitos-asturianos/java/",
+    "fecha": "2026-09-08"
+  },
+  {
     "tema": "Ciencia/Física",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/ciencia-fisica/python",
