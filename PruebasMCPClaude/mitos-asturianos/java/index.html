@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mitos asturianos · Java: Quiz de mitología</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🐉 Quiz de mitos asturianos (Java)</h1>
+    <p>Un quiz de consola sobre seres de la mitología asturiana: Xanas, Cuélebres, el Trasgu, el Nuberu y el Busgosu. Responde a 5 preguntas de opción múltiple y descubre cuánto sabes de las leyendas de Asturias.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box aviso">
+      <h2>⚠️ Este código no se ejecuta en esta página</h2>
+      <p>GitHub Pages solo puede ejecutar HTML, CSS y JavaScript en el navegador — no tiene servidor, así que no puede correr Java. El código de abajo es <strong>real y funcional</strong>, pero para jugar tienes que ejecutarlo en tu ordenador:</p>
+      <ol>
+        <li>Instala un JDK si no lo tienes (<a href="https://adoptium.net/es/" target="_blank" rel="noopener">Adoptium</a>, o <code>sudo apt install default-jdk</code> en Linux).</li>
+        <li>Descarga <code>Codigo.java</code> (link abajo).</li>
+        <li>Abre una terminal en esa carpeta y ejecuta:</li>
+      </ol>
+      <pre><code>javac Codigo.java &amp;&amp; java Codigo</code></pre>
+      <p><a href="Codigo.java" download>⬇ Descargar Codigo.java</a></p>
+    </section>
+
+    <section>
+      <h2>Código completo</h2>
+      <pre><code>import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * Quiz sobre mitos y seres de la mitología asturiana.
+ * Juego de consola autocontenido: sin dependencias externas,
+ * sin acceso a red ni a ficheros del sistema.
+ */
+public class Codigo {
+
+    private static final class Pregunta {
+        final String enunciado;
+        final String[] opciones;
+        final int correcta; // índice 0-based
+
+        Pregunta(String enunciado, String[] opciones, int correcta) {
+            this.enunciado = enunciado;
+            this.opciones = opciones;
+            this.correcta = correcta;
+        }
+    }
+
+    private static List&lt;Pregunta&gt; crearPreguntas() {
+        List&lt;Pregunta&gt; preguntas = new ArrayList&lt;&gt;();
+
+        preguntas.add(new Pregunta(
+            &quot;¿Cómo se llama el ser protector de los bosques y las minas en la mitología asturiana, &quot;
+                + &quot;descrito como un anciano pequeño y peludo?&quot;,
+            new String[] {&quot;El Nuberu&quot;, &quot;El Busgosu&quot;, &quot;El Cuélebre&quot;, &quot;El Trasgu&quot;},
+            1
+        ));
+
+        preguntas.add(new Pregunta(
+            &quot;El Cuélebre es una gran serpiente alada que, según la leyenda, vigila un tesoro y &quot;
+                + &quot;vive muchos años. ¿Qué guardián suele acompañarlo o enfrentarse a él?&quot;,
+            new String[] {&quot;La Xana&quot;, &quot;El Sumiciu&quot;, &quot;El Ñuberu&quot;, &quot;El Diañu Burlón&quot;},
+            0
+        ));
+
+        preguntas.add(new Pregunta(
+            &quot;¿Qué es una Xana en el folclore asturiano?&quot;,
+            new String[] {
+                &quot;Un gigante de piedra&quot;,
+                &quot;Un hada que habita en fuentes y ríos&quot;,
+                &quot;Un espíritu del fuego&quot;,
+                &quot;Un dragón marino&quot;
+            },
+            1
+        ));
+
+        preguntas.add(new Pregunta(
+            &quot;El Trasgu es un duende travieso muy conocido en Asturias. ¿Qué se dice que hay que &quot;
+                + &quot;hacer para librarse de sus travesuras en casa?&quot;,
+            new String[] {
+                &quot;Regalarle un gorro rojo&quot;,
+                &quot;Dejarle miel en la puerta&quot;,
+                &quot;Barrer al revés o esparcir semillas de mijo para que las cuente&quot;,
+                &quot;Cantarle una nana&quot;
+            },
+            2
+        ));
+
+        preguntas.add(new Pregunta(
+            &quot;¿A qué ser mitológico asturiano se le atribuye el control de las tormentas y el granizo?&quot;,
+            new String[] {&quot;El Nuberu&quot;, &quot;El Busgosu&quot;, &quot;La Guaxa&quot;, &quot;El Trasgu&quot;},
+            0
+        ));
+
+        return preguntas;
+    }
+
+    private static void barajar(List&lt;Pregunta&gt; preguntas) {
+        Collections.shuffle(preguntas);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List&lt;Pregunta&gt; preguntas = crearPreguntas();
+        barajar(preguntas);
+
+        int aciertos = 0;
+
+        System.out.println(&quot;=== Quiz de mitos asturianos ===&quot;);
+        System.out.println(&quot;Responde con el número de la opción correcta.\n&quot;);
+
+        for (int i = 0; i &lt; preguntas.size(); i++) {
+            Pregunta p = preguntas.get(i);
+            System.out.println(&quot;Pregunta &quot; + (i + 1) + &quot;/&quot; + preguntas.size() + &quot;: &quot; + p.enunciado);
+            for (int j = 0; j &lt; p.opciones.length; j++) {
+                System.out.println(&quot;  &quot; + (j + 1) + &quot;) &quot; + p.opciones[j]);
+            }
+
+            int respuesta = leerOpcion(scanner, p.opciones.length);
+
+            if (respuesta - 1 == p.correcta) {
+                System.out.println(&quot;¡Correcto!\n&quot;);
+                aciertos++;
+            } else {
+                System.out.println(&quot;Incorrecto. La respuesta correcta era: &quot;
+                    + p.opciones[p.correcta] + &quot;\n&quot;);
+            }
+        }
+
+        System.out.println(&quot;=== Resultado final ===&quot;);
+        System.out.println(&quot;Aciertos: &quot; + aciertos + &quot; de &quot; + preguntas.size());
+        System.out.println(mensajeFinal(aciertos, preguntas.size()));
+
+        scanner.close();
+    }
+
+    private static int leerOpcion(Scanner scanner, int numOpciones) {
+        int valor = -1;
+        while (valor &lt; 1 || valor &gt; numOpciones) {
+            System.out.print(&quot;Tu respuesta (1-&quot; + numOpciones + &quot;): &quot;);
+            String linea = scanner.nextLine().trim();
+            try {
+                valor = Integer.parseInt(linea);
+            } catch (NumberFormatException e) {
+                valor = -1;
+            }
+            if (valor &lt; 1 || valor &gt; numOpciones) {
+                System.out.println(&quot;Opción no válida, inténtalo de nuevo.&quot;);
+            }
+        }
+        return valor;
+    }
+
+    private static String mensajeFinal(int aciertos, int total) {
+        double ratio = (double) aciertos / total;
+        if (ratio == 1.0) {
+            return &quot;¡Excelente! Conoces bien la mitología asturiana.&quot;;
+        } else if (ratio &gt;= 0.6) {
+            return &quot;Buen resultado, pero aún hay mitos por descubrir.&quot;;
+        } else {
+            return &quot;Te vendría bien repasar las leyendas asturianas.&quot;;
+        }
+    }
+}
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li>Una clase interna estática (<code>Pregunta</code>) para modelar cada pregunta con sus opciones y la respuesta correcta.</li>
+        <li><code>Collections.shuffle()</code> para variar el orden de las preguntas en cada partida.</li>
+        <li>Lectura y validación robusta de la entrada del usuario con <code>Scanner</code>, repitiendo la pregunta si la respuesta no es un número válido dentro de rango.</li>
+        <li>Cálculo de un mensaje final distinto según el porcentaje de aciertos.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales, ficheros del sistema ni conexiones externas: es un programa autocontenido pensado solo para practicar Java.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+</body>
+</html>
