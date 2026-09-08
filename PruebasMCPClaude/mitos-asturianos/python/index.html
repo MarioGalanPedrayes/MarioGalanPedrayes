@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mitos asturianos · Python: Quiz de mitología</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🐉 Quiz de mitos asturianos (Python)</h1>
+    <p>La misma idea que la versión en Java, pero corriendo de verdad en tu navegador: 5 preguntas sobre Xanas, Cuélebres, el Trasgu, el Nuberu y el Busgosu. El cálculo lo hace Python de verdad gracias a <strong>Pyodide</strong> (WebAssembly), sin servidor de por medio.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box">
+      <h2>Pruébalo</h2>
+
+      <div id="estado" class="resultado"></div>
+
+      <div id="intro">
+        <p>Pulsa el botón para barajar las preguntas y empezar la partida.</p>
+        <button id="btnEmpezar" onclick="iniciarQuiz()">Empezar quiz</button>
+      </div>
+
+      <div id="quiz-box" style="display:none;">
+        <p id="progreso" class="muted"></p>
+        <h3 id="enunciado"></h3>
+        <div id="opciones" class="opciones-grid"></div>
+        <p id="feedback" class="resultado"></p>
+        <button id="btnSiguiente" onclick="siguientePregunta()" style="display:none;">Siguiente →</button>
+      </div>
+
+      <div id="final-box" style="display:none;">
+        <h3 id="resultado-final"></h3>
+        <p id="mensaje-final"></p>
+        <button onclick="reiniciar()">Jugar otra vez</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Código Python (versión navegador)</h2>
+      <p>Esto es lo que corre en la demo de arriba — funciones puras que JavaScript llama a través de Pyodide para cada pregunta y cada respuesta:</p>
+      <pre><code id="codigoPython">import random
+
+PREGUNTAS = [
+    {
+        &quot;enunciado&quot;: &quot;¿Cómo se llama el ser protector de los bosques y las minas en la mitología asturiana, descrito como un anciano pequeño y peludo?&quot;,
+        &quot;opciones&quot;: [&quot;El Nuberu&quot;, &quot;El Busgosu&quot;, &quot;El Cuélebre&quot;, &quot;El Trasgu&quot;],
+        &quot;correcta&quot;: 1,
+    },
+    {
+        &quot;enunciado&quot;: &quot;El Cuélebre es una gran serpiente alada que, según la leyenda, vigila un tesoro y vive muchos años. ¿Qué guardián suele acompañarlo o enfrentarse a él?&quot;,
+        &quot;opciones&quot;: [&quot;La Xana&quot;, &quot;El Sumiciu&quot;, &quot;El Ñuberu&quot;, &quot;El Diañu Burlón&quot;],
+        &quot;correcta&quot;: 0,
+    },
+    {
+        &quot;enunciado&quot;: &quot;¿Qué es una Xana en el folclore asturiano?&quot;,
+        &quot;opciones&quot;: [&quot;Un gigante de piedra&quot;, &quot;Un hada que habita en fuentes y ríos&quot;, &quot;Un espíritu del fuego&quot;, &quot;Un dragón marino&quot;],
+        &quot;correcta&quot;: 1,
+    },
+    {
+        &quot;enunciado&quot;: &quot;El Trasgu es un duende travieso muy conocido en Asturias. ¿Qué se dice que hay que hacer para librarse de sus travesuras en casa?&quot;,
+        &quot;opciones&quot;: [&quot;Regalarle un gorro rojo&quot;, &quot;Dejarle miel en la puerta&quot;, &quot;Barrer al revés o esparcir semillas de mijo para que las cuente&quot;, &quot;Cantarle una nana&quot;],
+        &quot;correcta&quot;: 2,
+    },
+    {
+        &quot;enunciado&quot;: &quot;¿A qué ser mitológico asturiano se le atribuye el control de las tormentas y el granizo?&quot;,
+        &quot;opciones&quot;: [&quot;El Nuberu&quot;, &quot;El Busgosu&quot;, &quot;La Guaxa&quot;, &quot;El Trasgu&quot;],
+        &quot;correcta&quot;: 0,
+    },
+]
+
+_barajadas = []
+
+
+def iniciar_quiz():
+    &quot;&quot;&quot;Baraja las preguntas y las deja listas para la partida. Devuelve el total.&quot;&quot;&quot;
+    global _barajadas
+    _barajadas = PREGUNTAS.copy()
+    random.shuffle(_barajadas)
+    return len(_barajadas)
+
+
+def pregunta_actual(indice):
+    &quot;&quot;&quot;Devuelve el enunciado y las opciones de la pregunta en esa posición, sin desvelar la correcta.&quot;&quot;&quot;
+    p = _barajadas[indice]
+    return {&quot;enunciado&quot;: p[&quot;enunciado&quot;], &quot;opciones&quot;: p[&quot;opciones&quot;]}
+
+
+def comprobar_respuesta(indice_pregunta, indice_opcion):
+    &quot;&quot;&quot;Comprueba si la opción elegida es la correcta y devuelve el texto de la respuesta correcta.&quot;&quot;&quot;
+    p = _barajadas[indice_pregunta]
+    return {
+        &quot;correcta&quot;: indice_opcion == p[&quot;correcta&quot;],
+        &quot;respuesta_correcta&quot;: p[&quot;opciones&quot;][p[&quot;correcta&quot;]],
+    }
+
+
+def mensaje_final(aciertos, total):
+    ratio = aciertos / total
+    if ratio == 1:
+        return &quot;¡Excelente! Conoces bien la mitología asturiana.&quot;
+    if ratio &gt;= 0.6:
+        return &quot;Buen resultado, pero aún hay mitos por descubrir.&quot;
+    return &quot;Te vendría bien repasar las leyendas asturianas.&quot;
+</code></pre>
+      <p><a href="codigo.py" download>⬇ Descargar codigo.py</a> (versión de consola con <code>input()</code>, para ejecutar con <code>python codigo.py</code> en tu ordenador).</p>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li><code>random.shuffle()</code> para variar el orden de las preguntas en cada partida.</li>
+        <li>Funciones puras en Python (sin <code>input()</code>/<code>print()</code>) que JavaScript invoca directamente con <code>pyodide.runPythonAsync()</code>, pasando el estado del quiz por parámetros en vez de por consola.</li>
+        <li>Conversión de diccionarios Python a objetos JavaScript con <code>toJs({ dict_converter: Object.fromEntries })</code>.</li>
+        <li>Comparación con la versión en Java de la misma carpeta padre: mismo contenido, dos formas distintas de ejecutarlo (en el navegador vs. en tu ordenador).</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales ni conexiones externas: es un ejemplo autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../java/">Ver la versión en Java</a> · <a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
