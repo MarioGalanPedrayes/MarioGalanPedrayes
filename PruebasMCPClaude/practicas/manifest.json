@@ -1,6 +1,16 @@
 [
   {
     "tema": "Mitos asturianos",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/mitos-asturianos/python",
+    "titulo": "Quiz de mitos asturianos (jugable)",
+    "descripcion": "La misma idea que la versión en Java, pero jugable de verdad en el navegador: quiz de 5 preguntas sobre Xanas, Cuélebres, el Trasgu, el Nuberu y el Busgosu, con botones y puntuación en vivo; corre con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/mitos-asturianos/python/",
+    "fecha": "2026-09-08"
+  },
+  {
+    "tema": "Mitos asturianos",
     "tecnologia": "Java",
     "carpeta": "PruebasMCPClaude/mitos-asturianos/java",
     "titulo": "Quiz de mitos asturianos",
