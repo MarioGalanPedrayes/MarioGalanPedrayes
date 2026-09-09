@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversor de unidades · Python</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>📐 Conversor de unidades</h1>
+    <p>Convierte entre unidades de longitud, peso y temperatura. El cálculo lo hace Python de verdad en tu navegador, gracias a <strong>Pyodide</strong> (WebAssembly) — sin servidor de por medio.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box">
+      <h2>Pruébalo</h2>
+
+      <div id="estado" class="resultado"></div>
+
+      <label>Categoría:
+        <select id="categoriaSelect" onchange="cambiarCategoria()">
+          <option value="longitud">Longitud</option>
+          <option value="peso">Peso</option>
+          <option value="temperatura">Temperatura</option>
+        </select>
+      </label>
+
+      <label>Valor:
+        <input type="number" id="valorInput" value="1" step="any">
+      </label>
+
+      <label>De:
+        <select id="desdeSelect"></select>
+      </label>
+
+      <label>A:
+        <select id="hastaSelect"></select>
+      </label>
+
+      <button id="btnConvertir" onclick="convertir()">Convertir</button>
+
+      <p id="resultado" class="resultado"></p>
+    </section>
+
+    <section>
+      <h2>Código Python (versión navegador)</h2>
+      <p>Esto es lo que corre en la demo de arriba — funciones puras que JavaScript llama a través de Pyodide en cada conversión:</p>
+      <pre><code id="codigoPython">LONGITUD_A_METROS = {
+    &quot;m&quot;: 1.0,
+    &quot;km&quot;: 1000.0,
+    &quot;cm&quot;: 0.01,
+    &quot;mm&quot;: 0.001,
+    &quot;milla&quot;: 1609.344,
+    &quot;pie&quot;: 0.3048,
+    &quot;pulgada&quot;: 0.0254,
+}
+
+PESO_A_KG = {
+    &quot;kg&quot;: 1.0,
+    &quot;g&quot;: 0.001,
+    &quot;mg&quot;: 0.000001,
+    &quot;libra&quot;: 0.45359237,
+    &quot;onza&quot;: 0.028349523125,
+}
+
+UNIDADES_TEMPERATURA = [&quot;C&quot;, &quot;F&quot;, &quot;K&quot;]
+
+
+def convertir_longitud(valor, desde, hasta):
+    metros = valor * LONGITUD_A_METROS[desde]
+    return metros / LONGITUD_A_METROS[hasta]
+
+
+def convertir_peso(valor, desde, hasta):
+    kg = valor * PESO_A_KG[desde]
+    return kg / PESO_A_KG[hasta]
+
+
+def _a_celsius(valor, unidad):
+    if unidad == &quot;C&quot;:
+        return valor
+    if unidad == &quot;F&quot;:
+        return (valor - 32) * 5 / 9
+    return valor - 273.15  # K
+
+
+def _desde_celsius(valor_c, unidad):
+    if unidad == &quot;C&quot;:
+        return valor_c
+    if unidad == &quot;F&quot;:
+        return valor_c * 9 / 5 + 32
+    return valor_c + 273.15  # K
+
+
+def convertir_temperatura(valor, desde, hasta):
+    return _desde_celsius(_a_celsius(valor, desde), hasta)
+
+
+def unidades_disponibles(categoria):
+    if categoria == &quot;longitud&quot;:
+        return list(LONGITUD_A_METROS.keys())
+    if categoria == &quot;peso&quot;:
+        return list(PESO_A_KG.keys())
+    if categoria == &quot;temperatura&quot;:
+        return UNIDADES_TEMPERATURA
+    raise ValueError(f&quot;Categoría desconocida: {categoria}&quot;)
+
+
+def convertir(categoria, valor, desde, hasta):
+    if categoria == &quot;longitud&quot;:
+        resultado = convertir_longitud(valor, desde, hasta)
+    elif categoria == &quot;peso&quot;:
+        resultado = convertir_peso(valor, desde, hasta)
+    elif categoria == &quot;temperatura&quot;:
+        resultado = convertir_temperatura(valor, desde, hasta)
+    else:
+        raise ValueError(f&quot;Categoría desconocida: {categoria}&quot;)
+    return round(resultado, 4)
+</code></pre>
+      <p><a href="codigo.py" download>⬇ Descargar codigo.py</a> (versión de consola con <code>input()</code>, para ejecutar con <code>python codigo.py</code> en tu ordenador).</p>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li>Diccionarios de factores de conversión frente a una unidad base (metros para longitud, kilogramos para peso), para poder convertir entre cualquier par de unidades con una sola multiplicación y una división.</li>
+        <li>La temperatura se resuelve aparte porque no es una simple multiplicación: pasa siempre por Celsius como unidad intermedia.</li>
+        <li>Una función <code>unidades_disponibles()</code> que JavaScript llama para rellenar los desplegables dinámicamente según la categoría elegida, sin duplicar listas en HTML y en Python.</li>
+        <li><code>round()</code> para presentar resultados legibles con 4 decimales.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales ni conexiones externas: es un ejemplo autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
