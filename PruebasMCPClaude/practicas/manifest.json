@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Conversor de unidades",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/conversor-unidades/python",
+    "titulo": "Conversor de unidades (longitud, peso, temperatura)",
+    "descripcion": "Convierte valores entre unidades de longitud, peso y temperatura desde el navegador. Los desplegables se rellenan dinámicamente llamando a Python en vivo; corre con Pyodide, sin servidor de por medio.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/conversor-unidades/python/",
+    "fecha": "2026-09-09"
+  },
+  {
     "tema": "Mitos asturianos",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/mitos-asturianos/python",
