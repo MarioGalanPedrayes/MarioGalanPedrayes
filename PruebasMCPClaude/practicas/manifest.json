@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Chat asíncrono",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/chat-asincrono/python",
+    "titulo": "Chat asíncrono (simulación con asyncio)",
+    "descripcion": "Tres usuarios simulados escriben \"a la vez\" y sus mensajes llegan intercalados en tiempo real según un retraso aleatorio, usando asyncio.gather() y asyncio.sleep(). Corre de verdad en el navegador con Pyodide, llamando a JavaScript en vivo desde Python en cada mensaje.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/chat-asincrono/python/",
+    "fecha": "2026-09-10"
+  },
+  {
     "tema": "Conversor de unidades",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/conversor-unidades/python",
