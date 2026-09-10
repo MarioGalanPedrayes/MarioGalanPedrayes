@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat asíncrono · Python</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>💬 Chat asíncrono (simulación con asyncio)</h1>
+    <p>Tres usuarios "escriben a la vez": cada uno manda varios mensajes con un pequeño retraso aleatorio, y se ven llegar intercalados en tiempo real. No hay servidor ni red de por medio — es <code>asyncio</code> corriendo de verdad en tu navegador gracias a <strong>Pyodide</strong> (WebAssembly), usando el propio bucle de eventos del navegador para las esperas.</p>
+    <p class="muted">⚠️ No es un chat real entre distintas personas ni distintas pestañas: es una demo pensada para ver cómo <code>async</code>/<code>await</code> permite que varias tareas avancen "a la vez" sin bloquearse entre sí.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box">
+      <h2>Pruébalo</h2>
+
+      <div id="estado" class="resultado"></div>
+
+      <button id="btnIniciar" onclick="iniciarChat()">▶ Iniciar conversación</button>
+
+      <div id="chatLog" class="chat-log"></div>
+    </section>
+
+    <section>
+      <h2>Código Python (versión navegador)</h2>
+      <p>Esto es lo que corre en la demo de arriba: tres corrutinas ejecutándose a la vez con <code>asyncio.gather()</code>, cada una avisando a JavaScript en cuanto "llega" uno de sus mensajes:</p>
+      <pre><code id="codigoPython">import asyncio
+import random
+from datetime import datetime
+from js import agregarMensajeJS
+
+MENSAJES = {
+    &quot;Ana&quot;: [
+        &quot;¿Alguien ha visto el correo del cliente?&quot;,
+        &quot;Lo reviso ahora mismo&quot;,
+        &quot;Perfecto, gracias&quot;,
+    ],
+    &quot;Bruno&quot;: [
+        &quot;Estoy terminando el despliegue&quot;,
+        &quot;Ya está en producción&quot;,
+        &quot;Todo verde en el pipeline&quot;,
+    ],
+    &quot;Clara&quot;: [
+        &quot;¿Quedamos a las 17:00 para la reunión?&quot;,
+        &quot;Por mí vale&quot;,
+        &quot;Nos vemos entonces&quot;,
+    ],
+}
+
+
+async def enviar_mensajes(usuario, mensajes):
+    &quot;&quot;&quot;Cada mensaje espera su propio retraso aleatorio y, en cuanto
+    &#x27;llega&#x27;, avisa a JavaScript para pintarlo en el chat al instante.&quot;&quot;&quot;
+    for texto in mensajes:
+        retraso = random.uniform(0.3, 1.5)
+        await asyncio.sleep(retraso)
+        hora = datetime.now().strftime(&quot;%H:%M:%S&quot;)
+        agregarMensajeJS(usuario, texto, hora)
+
+
+async def iniciar_chat():
+    tareas = [
+        enviar_mensajes(usuario, mensajes)
+        for usuario, mensajes in MENSAJES.items()
+    ]
+    # Las tres conversaciones corren a la vez: el navegador sigue
+    # respondiendo mientras cada mensaje espera su turno.
+    await asyncio.gather(*tareas)
+</code></pre>
+      <p><a href="codigo.py" download>⬇ Descargar codigo.py</a> (versión de consola, para ejecutar con <code>python codigo.py</code> en tu ordenador).</p>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li><code>async def</code> / <code>await</code> para definir corrutinas: funciones que pueden "pausarse" en un <code>await</code> sin bloquear el resto del programa.</li>
+        <li><code>asyncio.sleep()</code> para simular la espera antes de cada mensaje, sin congelar la página — otras corrutinas siguen avanzando mientras una espera.</li>
+        <li><code>asyncio.gather()</code> para lanzar las tres conversaciones a la vez y esperar a que todas terminen.</li>
+        <li>En la versión de navegador, <code>from js import agregarMensajeJS</code> permite que Python llame directamente a una función JavaScript cada vez que un mensaje está listo, así que el chat se pinta en vivo según van llegando los mensajes, no todo de golpe al final.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales ni conexiones externas: es un ejemplo autocontenido pensado solo para practicar concurrencia con asyncio.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
