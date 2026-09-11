@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encuesta en vivo · PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>📊 Encuesta con resultados en vivo (PHP)</h1>
+    <p>Una encuesta de consola sobre lenguajes de programación favoritos: cada voto redibuja al instante las barras de porcentaje de todas las opciones, para ver los resultados actualizarse "en vivo" según se vota.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box aviso">
+      <h2>⚠️ Este código no se ejecuta en esta página</h2>
+      <p>GitHub Pages solo puede ejecutar HTML, CSS y JavaScript en el navegador — no tiene servidor, así que no puede correr PHP ni guardar votos de verdad entre distintas personas. El código de abajo es <strong>real y funcional</strong>, pero para probarlo tienes que ejecutarlo en tu ordenador:</p>
+      <ol>
+        <li>Instala PHP si no lo tienes (<a href="https://www.php.net/manual/es/install.php" target="_blank" rel="noopener">php.net</a>, o simplemente <code>sudo apt install php-cli</code> en Linux).</li>
+        <li>Descarga <code>codigo.php</code> (link abajo).</li>
+        <li>Abre una terminal en esa carpeta y ejecuta:</li>
+      </ol>
+      <pre><code>php codigo.php</code></pre>
+      <p><a href="codigo.php" download>⬇ Descargar codigo.php</a></p>
+      <p class="muted">"En vivo" aquí significa que los resultados se recalculan al instante en tu propia terminal tras cada voto que tú mismo metas, no que varias personas voten a la vez desde sitios distintos — eso ya requeriría un servidor con base de datos.</p>
+    </section>
+
+    <section>
+      <h2>Código completo</h2>
+      <pre><code>&lt;?php
+/**
+ * Encuesta con resultados en vivo (consola).
+ * Autocontenida: sin dependencias externas, sin acceso a red ni a
+ * ficheros del sistema. Los votos solo existen durante la ejecución.
+ */
+
+function pedirNumero(string $mensaje): int
+{
+    echo $mensaje;
+    $linea = trim(fgets(STDIN));
+    return (int) $linea;
+}
+
+function dibujarBarra(int $valor, int $total, int $ancho = 30): string
+{
+    if ($total === 0) {
+        return str_repeat(&#x27;░&#x27;, $ancho) . &#x27;   0.0%&#x27;;
+    }
+
+    $porcentaje = $valor / $total;
+    $llenas = (int) round($porcentaje * $ancho);
+    $barra = str_repeat(&#x27;█&#x27;, $llenas) . str_repeat(&#x27;░&#x27;, $ancho - $llenas);
+
+    return sprintf(&#x27;%s  %5.1f%%&#x27;, $barra, $porcentaje * 100);
+}
+
+function mostrarResultados(array $opciones, array $votos): void
+{
+    $total = array_sum($votos);
+    echo &quot;\n--- Resultados en vivo ({$total} votos) ---\n&quot;;
+
+    foreach ($opciones as $i =&gt; $opcion) {
+        $etiqueta = str_pad($opcion, 12);
+        echo &quot;{$etiqueta} &quot; . dibujarBarra($votos[$i], $total) . &quot; ({$votos[$i]})\n&quot;;
+    }
+
+    echo &quot;\n&quot;;
+}
+
+function main(): void
+{
+    $opciones = [&#x27;Python&#x27;, &#x27;JavaScript&#x27;, &#x27;PHP&#x27;, &#x27;Java&#x27;, &#x27;Otro&#x27;];
+    $votos = array_fill(0, count($opciones), 0);
+    $salir = count($opciones) + 1;
+
+    echo &quot;=== Encuesta en vivo: tu lenguaje favorito ===\n\n&quot;;
+
+    while (true) {
+        foreach ($opciones as $i =&gt; $opcion) {
+            echo ($i + 1) . &quot;) {$opcion}\n&quot;;
+        }
+        echo &quot;{$salir}) Terminar encuesta\n&quot;;
+
+        $eleccion = pedirNumero(&quot;Vota (numero): &quot;);
+
+        if ($eleccion === $salir) {
+            break;
+        }
+
+        $indice = $eleccion - 1;
+        if ($indice &lt; 0 || $indice &gt;= count($opciones)) {
+            echo &quot;Opcion no valida, intentalo de nuevo.\n\n&quot;;
+            continue;
+        }
+
+        $votos[$indice]++;
+        mostrarResultados($opciones, $votos);
+    }
+
+    echo &quot;=== Resultado final ===\n&quot;;
+    mostrarResultados($opciones, $votos);
+}
+
+main();
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li>Un array asociativo simple (<code>$votos</code>) indexado por posición, que hace de "base de datos" en memoria mientras el programa está en ejecución.</li>
+        <li>Una función <code>dibujarBarra()</code> que genera una barra de progreso ASCII a partir de un porcentaje, usando <code>str_repeat()</code> y <code>sprintf()</code> para el formato con decimales.</li>
+        <li><code>array_sum()</code> para calcular el total de votos y recalcular los porcentajes de todas las opciones en cada vuelta del bucle.</li>
+        <li>Bucle principal con menú que se repite hasta que el usuario decide terminar la encuesta, mostrando el resumen final al salir.</li>
+      </ul>
+      <p>Nada de bases de datos reales, credenciales ni conexiones externas: es un script autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+</body>
+</html>
