@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Encuesta en vivo",
+    "tecnologia": "PHP",
+    "carpeta": "PruebasMCPClaude/encuesta-en-vivo/php",
+    "titulo": "Encuesta con resultados en vivo",
+    "descripcion": "Encuesta de consola sobre lenguajes de programación favoritos: cada voto redibuja al instante las barras de porcentaje de todas las opciones con arte ASCII. Código PHP real y descargable, se ejecuta con \"php codigo.php\" en tu ordenador (GitHub Pages no ejecuta PHP).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/encuesta-en-vivo/php/",
+    "fecha": "2026-09-11"
+  },
+  {
     "tema": "Gestor de tareas",
     "tecnologia": "Java",
     "carpeta": "PruebasMCPClaude/gestor-tareas/java",
