@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Gestor de tareas",
+    "tecnologia": "Java",
+    "carpeta": "PruebasMCPClaude/gestor-tareas/java",
+    "titulo": "Gestor de tareas (to-do list)",
+    "descripcion": "Lista de tareas por consola con menú: añadir, ver, marcar como completadas y eliminar. Código Java real y descargable, se ejecuta con \"javac Codigo.java && java Codigo\" en tu ordenador (GitHub Pages no ejecuta Java).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/gestor-tareas/java/",
+    "fecha": "2026-09-11"
+  },
+  {
     "tema": "Chat asíncrono",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/chat-asincrono/python",
