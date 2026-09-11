@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestor de tareas · Java</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>✅ Gestor de tareas (Java)</h1>
+    <p>Una lista de tareas por consola con menú: añadir, ver, marcar como completadas y eliminar. Código Java real y funcional, con un pequeño modelo de datos y validación de entradas.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box aviso">
+      <h2>⚠️ Este código no se ejecuta en esta página</h2>
+      <p>GitHub Pages solo puede ejecutar HTML, CSS y JavaScript en el navegador — no tiene servidor, así que no puede correr Java. El código de abajo es <strong>real y funcional</strong>, pero para usarlo tienes que ejecutarlo en tu ordenador:</p>
+      <ol>
+        <li>Instala un JDK si no lo tienes (<a href="https://adoptium.net/es/" target="_blank" rel="noopener">Adoptium</a>, o <code>sudo apt install default-jdk</code> en Linux).</li>
+        <li>Descarga <code>Codigo.java</code> (link abajo).</li>
+        <li>Abre una terminal en esa carpeta y ejecuta:</li>
+      </ol>
+      <pre><code>javac Codigo.java &amp;&amp; java Codigo</code></pre>
+      <p><a href="Codigo.java" download>⬇ Descargar Codigo.java</a></p>
+    </section>
+
+    <section>
+      <h2>Código completo</h2>
+      <pre><code>import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * Gestor de tareas (to-do list) de consola.
+ * Autocontenido: sin dependencias externas, sin acceso a red ni a
+ * ficheros del sistema. Las tareas solo existen mientras el programa
+ * está en ejecución.
+ */
+public class Codigo {
+
+    private static final class Tarea {
+        final String descripcion;
+        boolean completada;
+
+        Tarea(String descripcion) {
+            this.descripcion = descripcion;
+            this.completada = false;
+        }
+
+        @Override
+        public String toString() {
+            String marca = completada ? &quot;[x]&quot; : &quot;[ ]&quot;;
+            return marca + &quot; &quot; + descripcion;
+        }
+    }
+
+    private final List&lt;Tarea&gt; tareas = new ArrayList&lt;&gt;();
+    private final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        new Codigo().ejecutar();
+    }
+
+    private void ejecutar() {
+        System.out.println(&quot;=== Gestor de tareas ===&quot;);
+        boolean seguir = true;
+
+        while (seguir) {
+            mostrarMenu();
+            String opcion = scanner.nextLine().trim();
+
+            switch (opcion) {
+                case &quot;1&quot;:
+                    agregarTarea();
+                    break;
+                case &quot;2&quot;:
+                    listarTareas();
+                    break;
+                case &quot;3&quot;:
+                    marcarCompletada();
+                    break;
+                case &quot;4&quot;:
+                    eliminarTarea();
+                    break;
+                case &quot;5&quot;:
+                    seguir = false;
+                    System.out.println(&quot;¡Hasta luego!&quot;);
+                    break;
+                default:
+                    System.out.println(&quot;Opción no válida, inténtalo de nuevo.\n&quot;);
+            }
+        }
+
+        scanner.close();
+    }
+
+    private void mostrarMenu() {
+        System.out.println(&quot;\n1) Añadir tarea&quot;);
+        System.out.println(&quot;2) Ver tareas&quot;);
+        System.out.println(&quot;3) Marcar tarea como completada&quot;);
+        System.out.println(&quot;4) Eliminar tarea&quot;);
+        System.out.println(&quot;5) Salir&quot;);
+        System.out.print(&quot;Elige una opción: &quot;);
+    }
+
+    private void agregarTarea() {
+        System.out.print(&quot;Descripción de la tarea: &quot;);
+        String descripcion = scanner.nextLine().trim();
+
+        if (descripcion.isEmpty()) {
+            System.out.println(&quot;La descripción no puede estar vacía.\n&quot;);
+            return;
+        }
+
+        tareas.add(new Tarea(descripcion));
+        System.out.println(&quot;Tarea añadida.\n&quot;);
+    }
+
+    private void listarTareas() {
+        if (tareas.isEmpty()) {
+            System.out.println(&quot;No hay tareas todavía.\n&quot;);
+            return;
+        }
+
+        System.out.println(&quot;\n--- Tareas ---&quot;);
+        for (int i = 0; i &lt; tareas.size(); i++) {
+            System.out.println((i + 1) + &quot;. &quot; + tareas.get(i));
+        }
+        System.out.println();
+    }
+
+    private void marcarCompletada() {
+        listarTareas();
+        if (tareas.isEmpty()) {
+            return;
+        }
+
+        int indice = leerIndiceValido(&quot;Número de la tarea a completar: &quot;);
+        if (indice == -1) {
+            return;
+        }
+
+        tareas.get(indice).completada = true;
+        System.out.println(&quot;Tarea marcada como completada.\n&quot;);
+    }
+
+    private void eliminarTarea() {
+        listarTareas();
+        if (tareas.isEmpty()) {
+            return;
+        }
+
+        int indice = leerIndiceValido(&quot;Número de la tarea a eliminar: &quot;);
+        if (indice == -1) {
+            return;
+        }
+
+        Tarea eliminada = tareas.remove(indice);
+        System.out.println(&quot;Tarea eliminada: &quot; + eliminada.descripcion + &quot;\n&quot;);
+    }
+
+    private int leerIndiceValido(String mensaje) {
+        System.out.print(mensaje);
+        String entrada = scanner.nextLine().trim();
+
+        int numero;
+        try {
+            numero = Integer.parseInt(entrada);
+        } catch (NumberFormatException e) {
+            System.out.println(&quot;Eso no es un número válido.\n&quot;);
+            return -1;
+        }
+
+        int indice = numero - 1;
+        if (indice &lt; 0 || indice &gt;= tareas.size()) {
+            System.out.println(&quot;No existe una tarea con ese número.\n&quot;);
+            return -1;
+        }
+
+        return indice;
+    }
+}
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li>Una clase interna estática (<code>Tarea</code>) con su propio <code>toString()</code> para representar cada tarea con su marca de completada.</li>
+        <li>Un <code>ArrayList&lt;Tarea&gt;</code> como almacén en memoria: las tareas solo existen mientras el programa está en ejecución.</li>
+        <li>Un bucle de menú con <code>switch</code> sobre la opción elegida, que se repite hasta que el usuario decide salir.</li>
+        <li>Validación robusta al leer números (índices de tarea), evitando que el programa se rompa si el usuario escribe algo que no es un número o un índice fuera de rango.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales, ficheros del sistema ni conexiones externas: es un programa autocontenido pensado solo para practicar Java.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+</body>
+</html>
