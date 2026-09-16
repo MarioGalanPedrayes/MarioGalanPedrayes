@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de contacto con validación · PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>✉️ Formulario de contacto con validación</h1>
+    <p>Rellena el formulario para ver la validación en vivo (nombre, email y longitud del mensaje). La comprobación visual de aquí abajo está hecha en JavaScript con las mismas reglas que el código PHP real que valida el envío en un servidor de verdad.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box">
+      <h2>Pruébalo</h2>
+
+      <form id="formularioContacto" novalidate>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+        <p class="error" id="error-nombre"></p>
+
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" placeholder="tucorreo@ejemplo.com">
+        <p class="error" id="error-email"></p>
+
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu mensaje (mínimo 10 caracteres)"></textarea>
+        <p class="error" id="error-mensaje"></p>
+
+        <button type="submit">Enviar</button>
+        <p id="resultado" class="resultado"></p>
+      </form>
+    </section>
+
+    <section class="demo-box aviso">
+      <h2>⚠️ El envío real necesita PHP en un servidor</h2>
+      <p>GitHub Pages solo puede ejecutar HTML, CSS y JavaScript en el navegador — no tiene servidor, así que la validación de arriba es solo una simulación visual en JS. El envío de verdad (y el filtrado contra datos maliciosos) tiene que hacerse en el servidor, nunca confiando solo en el navegador. Para probar el PHP real:</p>
+      <ol>
+        <li>Instala PHP si no lo tienes (<a href="https://www.php.net/manual/es/install.php" target="_blank" rel="noopener">php.net</a>, o <code>sudo apt install php-cli</code> en Linux).</li>
+        <li>Descarga <code>codigo.php</code> (link abajo).</li>
+        <li>Abre una terminal en esa carpeta y ejecuta:</li>
+      </ol>
+      <pre><code>php codigo.php</code></pre>
+      <p><a href="codigo.php" download>⬇ Descargar codigo.php</a></p>
+    </section>
+
+    <section>
+      <h2>Código PHP completo</h2>
+      <pre><code>&lt;?php
+declare(strict_types=1);
+
+/**
+ * Formulario de contacto con validación (demo de consola).
+ * Autocontenida: sin dependencias externas, sin acceso a red ni a
+ * ficheros del sistema. No envía correos de verdad.
+ */
+
+/** @return array{0: bool, 1: string} */
+function validarNombre(string $nombre): array
+{
+    $nombre = trim($nombre);
+
+    if ($nombre === &#x27;&#x27;) {
+        return [false, &#x27;El nombre no puede estar vacío.&#x27;];
+    }
+    if (mb_strlen($nombre) &lt; 2) {
+        return [false, &#x27;El nombre es demasiado corto.&#x27;];
+    }
+    if (!preg_match(&#x27;/^[\p{L}\s\&#x27;-]+$/u&#x27;, $nombre)) {
+        return [false, &#x27;El nombre solo puede contener letras, espacios, guiones y apóstrofes.&#x27;];
+    }
+
+    return [true, &#x27;&#x27;];
+}
+
+/** @return array{0: bool, 1: string} */
+function validarEmail(string $email): array
+{
+    $email = trim($email);
+
+    if ($email === &#x27;&#x27;) {
+        return [false, &#x27;El email no puede estar vacío.&#x27;];
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return [false, &#x27;El email no tiene un formato válido.&#x27;];
+    }
+
+    return [true, &#x27;&#x27;];
+}
+
+/** @return array{0: bool, 1: string} */
+function validarMensaje(string $mensaje): array
+{
+    $mensaje = trim($mensaje);
+    $longitud = mb_strlen($mensaje);
+
+    if ($longitud &lt; 10) {
+        return [false, &#x27;El mensaje debe tener al menos 10 caracteres.&#x27;];
+    }
+    if ($longitud &gt; 500) {
+        return [false, &#x27;El mensaje no puede superar los 500 caracteres.&#x27;];
+    }
+
+    return [true, &#x27;&#x27;];
+}
+
+/** @return array&lt;string, string&gt; Errores por campo, vacío si todo es válido */
+function validarFormulario(string $nombre, string $email, string $mensaje): array
+{
+    $errores = [];
+
+    [$okNombre, $errorNombre] = validarNombre($nombre);
+    if (!$okNombre) {
+        $errores[&#x27;nombre&#x27;] = $errorNombre;
+    }
+
+    [$okEmail, $errorEmail] = validarEmail($email);
+    if (!$okEmail) {
+        $errores[&#x27;email&#x27;] = $errorEmail;
+    }
+
+    [$okMensaje, $errorMensaje] = validarMensaje($mensaje);
+    if (!$okMensaje) {
+        $errores[&#x27;mensaje&#x27;] = $errorMensaje;
+    }
+
+    return $errores;
+}
+
+function procesarEnvio(string $nombre, string $email, string $mensaje): void
+{
+    echo &quot;--- Enviando formulario ---\n&quot;;
+    echo &quot;Nombre:  {$nombre}\n&quot;;
+    echo &quot;Email:   {$email}\n&quot;;
+    echo &quot;Mensaje: {$mensaje}\n&quot;;
+
+    $errores = validarFormulario($nombre, $email, $mensaje);
+
+    if (empty($errores)) {
+        echo &quot;OK Formulario valido. En un servidor real, aqui se enviaria el correo.\n\n&quot;;
+        return;
+    }
+
+    echo &quot;X Formulario con errores:\n&quot;;
+    foreach ($errores as $campo =&gt; $mensajeError) {
+        echo &quot;  - {$campo}: {$mensajeError}\n&quot;;
+    }
+    echo &quot;\n&quot;;
+}
+
+function main(): void
+{
+    echo &quot;=== Formulario de contacto con validacion (demo) ===\n\n&quot;;
+
+    $casos = [
+        [&#x27;Ana García&#x27;, &#x27;ana@example.com&#x27;, &#x27;Hola, quería preguntar por vuestros horarios de atención.&#x27;],
+        [&#x27;&#x27;, &#x27;ana@example.com&#x27;, &#x27;Mensaje de prueba con el nombre vacío.&#x27;],
+        [&#x27;Bruno&#x27;, &#x27;no-es-un-email&#x27;, &#x27;Otro mensaje de prueba para ver qué campo falla esta vez.&#x27;],
+        [&#x27;Clara 3000&#x27;, &#x27;clara@example.com&#x27;, &#x27;Hola&#x27;],
+        [&#x27;José Pérez&#x27;, &#x27;jose@example.com&#x27;, &#x27;Buenas tardes, me gustaría más información sobre el producto que anunciáis en la web.&#x27;],
+    ];
+
+    foreach ($casos as [$nombre, $email, $mensaje]) {
+        procesarEnvio($nombre, $email, $mensaje);
+    }
+}
+
+main();
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li><code>filter_var($valor, FILTER_VALIDATE_EMAIL)</code>, la función estándar de PHP para validar formato de email sin reinventar una expresión regular propensa a errores.</li>
+        <li>Expresiones regulares con el modificador <code>u</code> (Unicode) para aceptar nombres con acentos y "ñ" sin problemas.</li>
+        <li>Funciones puras que devuelven <code>[bool, string]</code> (válido/no válido + mensaje de error), fáciles de testear por separado.</li>
+        <li>El mismo conjunto de reglas repetido en JavaScript (solo para feedback visual instantáneo) y en PHP (la validación real y definitiva) — un recordatorio de que nunca hay que fiarse solo de la validación del navegador.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales ni conexiones externas: es un ejemplo autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
