@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Formulario de contacto",
+    "tecnologia": "PHP",
+    "carpeta": "PruebasMCPClaude/formulario-contacto/php",
+    "titulo": "Formulario de contacto con validación",
+    "descripcion": "Formulario real (nombre, email, mensaje) con validación en vivo en JavaScript mientras escribes, y el código PHP real equivalente que haría la validación definitiva en un servidor: filter_var() para el email, regex Unicode para el nombre, comprobación de longitud del mensaje.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/formulario-contacto/php/",
+    "fecha": "2026-09-16"
+  },
+  {
     "tema": "Encuesta en vivo",
     "tecnologia": "PHP",
     "carpeta": "PruebasMCPClaude/encuesta-en-vivo/php",
