@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estructura secuencial · COBOL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🧾 Estructura de control secuencial (COBOL)</h1>
+    <p>Un cálculo de pedido en cuatro pasos —precio, subtotal, IVA y total— donde cada instrucción se ejecuta exactamente una vez, en el orden en que está escrita. Ni bucles ni condicionales: la forma más pura de las tres estructuras de control básicas de la programación (secuencial, selección, iteración).</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box aviso">
+      <h2>⚠️ Este código no se ejecuta en esta página</h2>
+      <p>GitHub Pages solo puede ejecutar HTML, CSS y JavaScript en el navegador — no tiene servidor, así que no puede correr COBOL. El código de abajo es <strong>real y funcional</strong> (compilado y probado con GnuCOBOL), pero para ejecutarlo tienes que hacerlo en tu ordenador:</p>
+      <ol>
+        <li>Instala GnuCOBOL si no lo tienes (<a href="https://gnucobol.sourceforge.io/" target="_blank" rel="noopener">gnucobol.sourceforge.io</a>, o <code>sudo apt install gnucobol4</code> en Linux).</li>
+        <li>Descarga <code>codigo.cbl</code> (link abajo).</li>
+        <li>Abre una terminal en esa carpeta y ejecuta:</li>
+      </ol>
+      <pre><code>cobc -x -free codigo.cbl -o programa
+./programa</code></pre>
+      <p class="muted">El flag <code>-free</code> es necesario porque este código está escrito en formato libre en vez del formato clásico de columnas fijas de COBOL.</p>
+      <p><a href="codigo.cbl" download>⬇ Descargar codigo.cbl</a></p>
+    </section>
+
+    <section>
+      <h2>Código completo</h2>
+      <pre><code>      *&gt; Demostracion de la estructura de control secuencial:
+      *&gt; cada instruccion se ejecuta exactamente una vez, en el orden
+      *&gt; en que esta escrita, sin bucles ni condicionales.
+      *&gt; Autocontenido: sin ficheros externos ni entrada de usuario.
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. CALCULO-SECUENCIAL.
+
+       ENVIRONMENT DIVISION.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-PRECIO-UNITARIO     PIC 9(4)V99 VALUE 12.50.
+       01 WS-CANTIDAD            PIC 9(3)    VALUE 4.
+       01 WS-SUBTOTAL            PIC 9(6)V99 VALUE 0.
+       01 WS-PORCENTAJE-IVA      PIC 9V99    VALUE 0.21.
+       01 WS-IMPORTE-IVA         PIC 9(6)V99 VALUE 0.
+       01 WS-TOTAL               PIC 9(6)V99 VALUE 0.
+
+       PROCEDURE DIVISION.
+           DISPLAY &quot;=== Calculo secuencial de un pedido ===&quot;.
+           DISPLAY &quot; &quot;.
+
+           DISPLAY &quot;Paso 1: Datos de entrada&quot;.
+           DISPLAY &quot;  Precio unitario: &quot; WS-PRECIO-UNITARIO.
+           DISPLAY &quot;  Cantidad:        &quot; WS-CANTIDAD.
+           DISPLAY &quot; &quot;.
+
+           DISPLAY &quot;Paso 2: Calcular el subtotal (precio x cantidad)&quot;.
+           COMPUTE WS-SUBTOTAL = WS-PRECIO-UNITARIO * WS-CANTIDAD.
+           DISPLAY &quot;  Subtotal: &quot; WS-SUBTOTAL.
+           DISPLAY &quot; &quot;.
+
+           DISPLAY &quot;Paso 3: Calcular el IVA sobre el subtotal&quot;.
+           COMPUTE WS-IMPORTE-IVA = WS-SUBTOTAL * WS-PORCENTAJE-IVA.
+           DISPLAY &quot;  IVA (21%): &quot; WS-IMPORTE-IVA.
+           DISPLAY &quot; &quot;.
+
+           DISPLAY &quot;Paso 4: Calcular el total (subtotal + IVA)&quot;.
+           COMPUTE WS-TOTAL = WS-SUBTOTAL + WS-IMPORTE-IVA.
+           DISPLAY &quot;  TOTAL: &quot; WS-TOTAL.
+           DISPLAY &quot; &quot;.
+
+           DISPLAY &quot;=== Fin del calculo ===&quot;.
+
+           STOP RUN.
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li>Las cuatro divisiones clásicas de un programa COBOL: <code>IDENTIFICATION</code>, <code>ENVIRONMENT</code>, <code>DATA</code> y <code>PROCEDURE</code>.</li>
+        <li><code>WORKING-STORAGE SECTION</code> con cláusulas <code>PIC</code> para declarar variables numéricas con decimales fijos (por ejemplo, <code>PIC 9(6)V99</code> para un número de hasta 6 cifras enteras y 2 decimales).</li>
+        <li><code>COMPUTE</code> para las operaciones aritméticas, y <code>DISPLAY</code> para mostrar resultados por consola.</li>
+        <li>Todo el <code>PROCEDURE DIVISION</code> es una única secuencia de instrucciones de arriba a abajo — sin <code>IF</code>, sin <code>PERFORM</code> en bucle: el ejemplo más claro posible de estructura secuencial.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales, ficheros del sistema ni conexiones externas: es un programa autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+</body>
+</html>
