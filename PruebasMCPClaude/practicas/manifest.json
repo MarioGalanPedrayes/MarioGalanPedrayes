@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Estructura secuencial",
+    "tecnologia": "COBOL",
+    "carpeta": "PruebasMCPClaude/lenguaje-secuencial/cobol",
+    "titulo": "Estructura de control secuencial",
+    "descripcion": "Cálculo de un pedido en cuatro pasos (precio, subtotal, IVA, total) donde cada instrucción se ejecuta exactamente una vez y en orden, sin bucles ni condicionales: el ejemplo más puro de la estructura de control secuencial. Código COBOL real, compilado y probado con GnuCOBOL, se ejecuta con \"cobc -x -free codigo.cbl -o programa && ./programa\" (GitHub Pages no ejecuta COBOL).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/lenguaje-secuencial/cobol/",
+    "fecha": "2026-09-17"
+  },
+  {
     "tema": "Formulario de contacto",
     "tecnologia": "PHP",
     "carpeta": "PruebasMCPClaude/formulario-contacto/php",
