@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Generador de texto aleatorio",
+    "tecnologia": "COBOL",
+    "carpeta": "PruebasMCPClaude/generador-texto/cobol",
+    "titulo": "Generador de texto aleatorio",
+    "descripcion": "Construye 8 \"palabras\" sin sentido uniendo letras del alfabeto elegidas al azar, con longitud también aleatoria (3-10 letras); cada ejecución da un resultado distinto. Código COBOL real, compilado y probado con GnuCOBOL, usa FUNCTION RANDOM sembrada con la hora actual. Se ejecuta con \"cobc -x -free codigo.cbl -o programa && ./programa\" (GitHub Pages no ejecuta COBOL).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/generador-texto/cobol/",
+    "fecha": "2026-09-20"
+  },
+  {
     "tema": "Estructura secuencial",
     "tecnologia": "COBOL",
     "carpeta": "PruebasMCPClaude/lenguaje-secuencial/cobol",
