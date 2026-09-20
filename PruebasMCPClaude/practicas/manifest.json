@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Sumatorio de duraciones",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/sumatorio-tiempo/python",
+    "titulo": "Sumatorio de horas, minutos, segundos y milisegundos",
+    "descripcion": "Añade varias filas de duración (h/m/s/ms) y súmalas todas de golpe, con normalización automática del acarreo (por ejemplo, 70 segundos se convierten en 1 minuto y 10 segundos). Corre de verdad en el navegador con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/sumatorio-tiempo/python/",
+    "fecha": "2026-09-20"
+  },
+  {
     "tema": "Generador de texto aleatorio",
     "tecnologia": "COBOL",
     "carpeta": "PruebasMCPClaude/generador-texto/cobol",
