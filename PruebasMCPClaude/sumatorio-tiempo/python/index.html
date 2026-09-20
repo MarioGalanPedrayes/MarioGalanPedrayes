@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sumatorio de duraciones · Python</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>⏱️ Sumatorio de horas, minutos, segundos y milisegundos</h1>
+    <p>Añade varias duraciones y súmalas todas de golpe: el resultado se normaliza automáticamente (por ejemplo, 70 segundos se convierten en 1 minuto y 10 segundos). El cálculo lo hace Python de verdad en tu navegador, gracias a <strong>Pyodide</strong> (WebAssembly).</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box">
+      <h2>Pruébalo</h2>
+
+      <div id="estado" class="resultado"></div>
+
+      <div id="filas"></div>
+
+      <button type="button" onclick="crearFila()">+ Añadir duración</button>
+      <button id="btnCalcular" onclick="calcularTotal()">Calcular total</button>
+
+      <p id="resultado" class="resultado"></p>
+    </section>
+
+    <section>
+      <h2>Código Python (versión navegador)</h2>
+      <p>Esto es lo que corre en la demo de arriba — funciones puras que JavaScript llama a través de Pyodide con la lista de duraciones que hayas introducido:</p>
+      <pre><code id="codigoPython">def duracion_a_ms(horas, minutos, segundos, milisegundos):
+    return ((horas * 3600 + minutos * 60 + segundos) * 1000) + milisegundos
+
+
+def normalizar(total_ms):
+    total_ms = int(total_ms)
+    milisegundos = total_ms % 1000
+    total_s = total_ms // 1000
+    segundos = total_s % 60
+    total_m = total_s // 60
+    minutos = total_m % 60
+    horas = total_m // 60
+    return {&quot;horas&quot;: horas, &quot;minutos&quot;: minutos, &quot;segundos&quot;: segundos, &quot;milisegundos&quot;: milisegundos}
+
+
+def sumar_duraciones(duraciones):
+    &quot;&quot;&quot;duraciones: lista de listas [horas, minutos, segundos, milisegundos].&quot;&quot;&quot;
+    total_ms = 0
+    for h, m, s, ms in duraciones:
+        total_ms += duracion_a_ms(h, m, s, ms)
+
+    resultado = normalizar(total_ms)
+    resultado[&quot;total_ms&quot;] = total_ms
+    resultado[&quot;total_segundos&quot;] = round(total_ms / 1000, 3)
+    return resultado
+
+
+def formatear(horas, minutos, segundos, milisegundos):
+    return &quot;{:02d}:{:02d}:{:02d}.{:03d}&quot;.format(horas, minutos, segundos, milisegundos)
+</code></pre>
+      <p><a href="codigo.py" download>⬇ Descargar codigo.py</a> (versión de consola con <code>input()</code>, para ejecutar con <code>python codigo.py</code> en tu ordenador).</p>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li>Conversión de cada duración a un único número de milisegundos, para poder sumarlas todas sin manejar el acarreo (horas, minutos, segundos) manualmente durante la suma.</li>
+        <li>Una función <code>normalizar()</code> que, al final, deshace esa conversión repartiendo el total entre horas, minutos, segundos y milisegundos con divisiones y módulos (<code>//</code> y <code>%</code>).</li>
+        <li>Formato con ceros a la izquierda (<code>{:02d}</code>, <code>{:03d}</code>) para mostrar siempre "01:05:03.007" en vez de "1:5:3.7".</li>
+        <li>En el navegador, filas de inputs añadidas y eliminadas dinámicamente con JavaScript, convertidas a una lista de Python con <code>pyodide.toPy()</code> antes de pasarlas a <code>sumar_duraciones()</code>.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales ni conexiones externas: es un ejemplo autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
