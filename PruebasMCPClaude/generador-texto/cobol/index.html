@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de texto aleatorio · COBOL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🎲 Generador de texto aleatorio (COBOL)</h1>
+    <p>Construye 8 "palabras" sin sentido uniendo letras del alfabeto elegidas al azar, una por una, con una longitud también aleatoria (entre 3 y 10 letras). Cada ejecución da un resultado distinto.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box aviso">
+      <h2>⚠️ Este código no se ejecuta en esta página</h2>
+      <p>GitHub Pages solo puede ejecutar HTML, CSS y JavaScript en el navegador — no tiene servidor, así que no puede correr COBOL. El código de abajo es <strong>real y funcional</strong> (compilado y probado con GnuCOBOL), pero para ejecutarlo tienes que hacerlo en tu ordenador:</p>
+      <ol>
+        <li>Instala GnuCOBOL si no lo tienes (<a href="https://gnucobol.sourceforge.io/" target="_blank" rel="noopener">gnucobol.sourceforge.io</a>, o <code>sudo apt install gnucobol4</code> en Linux).</li>
+        <li>Descarga <code>codigo.cbl</code> (link abajo).</li>
+        <li>Abre una terminal en esa carpeta y ejecuta:</li>
+      </ol>
+      <pre><code>cobc -x -free codigo.cbl -o programa
+./programa</code></pre>
+      <p class="muted">El flag <code>-free</code> es necesario porque este código está escrito en formato libre en vez del formato clásico de columnas fijas de COBOL. Ejecútalo varias veces seguidas para ver que el resultado cambia cada vez.</p>
+      <p><a href="codigo.cbl" download>⬇ Descargar codigo.cbl</a></p>
+    </section>
+
+    <section>
+      <h2>Código completo</h2>
+      <pre><code>      *&gt; Generador de texto aleatorio: construye varias &quot;palabras&quot; sin
+      *&gt; sentido uniendo letras elegidas al azar, una por una.
+      *&gt; Autocontenido: sin ficheros externos ni entrada de usuario.
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. GENERADOR-ALEATORIO.
+
+       ENVIRONMENT DIVISION.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-FECHA-HORA        PIC X(21).
+       01 WS-SEMILLA           PIC 9(8).
+       01 WS-ALFABETO          PIC X(26)
+                                VALUE &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;.
+       01 WS-RANDOM            PIC 9V9(9).
+       01 WS-INDICE-LETRA      PIC 9(2).
+       01 WS-PALABRA           PIC X(12).
+       01 WS-LONGITUD-PALABRA  PIC 9(2).
+       01 WS-NUM-PALABRAS      PIC 9(2) VALUE 8.
+       01 WS-CONTADOR-PALABRA  PIC 9(2).
+       01 WS-CONTADOR-LETRA    PIC 9(2).
+
+       PROCEDURE DIVISION.
+           DISPLAY &quot;=== Generador de texto aleatorio ===&quot;.
+           DISPLAY &quot; &quot;.
+
+      *&gt;   Semilla distinta en cada ejecucion, tomada de la hora actual.
+           MOVE FUNCTION CURRENT-DATE TO WS-FECHA-HORA.
+           MOVE WS-FECHA-HORA(9:8) TO WS-SEMILLA.
+           COMPUTE WS-RANDOM = FUNCTION RANDOM(WS-SEMILLA).
+
+           PERFORM VARYING WS-CONTADOR-PALABRA FROM 1 BY 1
+                   UNTIL WS-CONTADOR-PALABRA &gt; WS-NUM-PALABRAS
+
+               MOVE SPACES TO WS-PALABRA
+
+      *&gt;       Longitud aleatoria de la palabra, entre 3 y 10 letras.
+               COMPUTE WS-RANDOM = FUNCTION RANDOM
+               COMPUTE WS-LONGITUD-PALABRA =
+                   FUNCTION MOD(FUNCTION INTEGER(WS-RANDOM * 1000000), 8)
+                   + 3
+
+               PERFORM VARYING WS-CONTADOR-LETRA FROM 1 BY 1
+                       UNTIL WS-CONTADOR-LETRA &gt; WS-LONGITUD-PALABRA
+
+      *&gt;           Una letra al azar del alfabeto, unida a la palabra.
+                   COMPUTE WS-RANDOM = FUNCTION RANDOM
+                   COMPUTE WS-INDICE-LETRA =
+                       FUNCTION MOD(FUNCTION INTEGER(WS-RANDOM * 1000000), 26)
+                       + 1
+                   MOVE WS-ALFABETO(WS-INDICE-LETRA:1)
+                       TO WS-PALABRA(WS-CONTADOR-LETRA:1)
+               END-PERFORM
+
+               DISPLAY WS-CONTADOR-PALABRA &quot;) &quot; WS-PALABRA
+                   &quot;  (&quot; WS-LONGITUD-PALABRA &quot; letras)&quot;
+           END-PERFORM.
+
+           DISPLAY &quot; &quot;.
+           DISPLAY &quot;=== Fin ===&quot;.
+
+           STOP RUN.
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li><code>FUNCTION CURRENT-DATE</code> para obtener la hora actual y usarla como semilla, de forma que el resultado cambie en cada ejecución en vez de repetirse siempre igual.</li>
+        <li><code>FUNCTION RANDOM(semilla)</code> para inicializar el generador y <code>FUNCTION RANDOM</code> (sin argumento) para pedir el siguiente número de la secuencia en cada letra.</li>
+        <li><code>FUNCTION MOD</code> y <code>FUNCTION INTEGER</code> para convertir ese número decimal en un índice entero dentro del alfabeto (1 a 26) o dentro del rango de longitudes (3 a 10).</li>
+        <li>Referencia por subíndice a un carácter concreto de una cadena, tanto para leer una letra del alfabeto (<code>WS-ALFABETO(indice:1)</code>) como para escribirla en la posición correspondiente de la palabra que se está construyendo.</li>
+        <li>Dos bucles <code>PERFORM VARYING</code> anidados: uno para las palabras, otro para las letras de cada palabra.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales, ficheros del sistema ni conexiones externas: es un programa autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+</body>
+</html>
