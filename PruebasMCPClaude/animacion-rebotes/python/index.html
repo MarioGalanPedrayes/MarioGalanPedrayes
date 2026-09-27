@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animación de rebotes · Python</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🎬 Animación de bolas rebotando</h1>
+    <p>Varias bolas caen por gravedad y rebotan en los bordes del lienzo, perdiendo energía en cada rebote hasta asentarse. Toda la física (gravedad, movimiento, rebote) la calcula Python de verdad en cada fotograma, gracias a <strong>Pyodide</strong> (WebAssembly); JavaScript solo se encarga de dibujar el resultado en el <code>&lt;canvas&gt;</code>.</p>
+  </header>
+
+  <main>
+
+    <section class="demo-box">
+      <h2>Pruébalo</h2>
+
+      <div id="estado" class="resultado"></div>
+
+      <label>Número de bolas:
+        <input type="number" id="cantidadBolas" min="1" max="20" value="8">
+      </label>
+      <button id="btnIniciar" onclick="iniciarAnimacion()">▶ Iniciar animación</button>
+
+      <canvas id="lienzo" width="600" height="400"></canvas>
+    </section>
+
+    <section>
+      <h2>Código Python (versión navegador)</h2>
+      <p>Esto es lo que corre en la demo de arriba — <code>avanzar()</code> se llama una vez por fotograma (hasta 60 veces por segundo) y devuelve la nueva posición de cada bola:</p>
+      <pre><code id="codigoPython">import random
+
+GRAVEDAD = 0.5
+REBOTE = 0.82
+
+_bolas = []
+
+
+def iniciar(cantidad, ancho, alto):
+    &quot;&quot;&quot;Crea &#x27;cantidad&#x27; bolas con posición, velocidad, radio y color al azar.&quot;&quot;&quot;
+    global _bolas
+    colores = [&quot;#6ee7b7&quot;, &quot;#60a5fa&quot;, &quot;#f0abfc&quot;, &quot;#fbbf24&quot;, &quot;#f87171&quot;, &quot;#a78bfa&quot;]
+    _bolas = []
+
+    for i in range(cantidad):
+        radio = random.uniform(12, 26)
+        bola = {
+            &quot;x&quot;: random.uniform(radio, ancho - radio),
+            &quot;y&quot;: random.uniform(radio, alto / 2),
+            &quot;vx&quot;: random.uniform(-5, 5),
+            &quot;vy&quot;: random.uniform(-2, 2),
+            &quot;radio&quot;: radio,
+            &quot;color&quot;: colores[i % len(colores)],
+        }
+        _bolas.append(bola)
+
+    return len(_bolas)
+
+
+def avanzar(ancho, alto):
+    &quot;&quot;&quot;Calcula el siguiente frame: aplica gravedad, mueve cada bola y
+    la hace rebotar en los bordes del lienzo. Devuelve el nuevo estado.&quot;&quot;&quot;
+    for bola in _bolas:
+        bola[&quot;vy&quot;] += GRAVEDAD
+        bola[&quot;x&quot;] += bola[&quot;vx&quot;]
+        bola[&quot;y&quot;] += bola[&quot;vy&quot;]
+
+        if bola[&quot;x&quot;] - bola[&quot;radio&quot;] &lt; 0:
+            bola[&quot;x&quot;] = bola[&quot;radio&quot;]
+            bola[&quot;vx&quot;] = -bola[&quot;vx&quot;] * REBOTE
+        elif bola[&quot;x&quot;] + bola[&quot;radio&quot;] &gt; ancho:
+            bola[&quot;x&quot;] = ancho - bola[&quot;radio&quot;]
+            bola[&quot;vx&quot;] = -bola[&quot;vx&quot;] * REBOTE
+
+        if bola[&quot;y&quot;] - bola[&quot;radio&quot;] &lt; 0:
+            bola[&quot;y&quot;] = bola[&quot;radio&quot;]
+            bola[&quot;vy&quot;] = -bola[&quot;vy&quot;] * REBOTE
+        elif bola[&quot;y&quot;] + bola[&quot;radio&quot;] &gt; alto:
+            bola[&quot;y&quot;] = alto - bola[&quot;radio&quot;]
+            bola[&quot;vy&quot;] = -bola[&quot;vy&quot;] * REBOTE
+
+    return _bolas
+</code></pre>
+      <p><a href="codigo.py" download>⬇ Descargar codigo.py</a> (versión de consola: la misma física, pero dibujada como animación ASCII en la terminal con <code>python codigo.py</code>).</p>
+    </section>
+
+    <section>
+      <h2>Qué usa este ejemplo</h2>
+      <ul>
+        <li>Un bucle de animación con <code>requestAnimationFrame</code> en JavaScript, que en cada fotograma llama directamente a la función Python <code>avanzar()</code> (sin pasar por <code>runPythonAsync</code>, para que sea lo bastante rápido para 60 fotogramas por segundo).</li>
+        <li>El estado de las bolas (posición, velocidad, radio, color) vive por completo en Python, como una variable global que se actualiza en cada llamada — JavaScript solo la lee para dibujar, nunca la modifica.</li>
+        <li>Física simple: se suma la gravedad a la velocidad vertical en cada paso, se actualiza la posición, y al chocar con un borde se invierte la velocidad multiplicándola por un factor de rebote menor que 1 (para que pierda energía y acabe asentándose).</li>
+        <li>Conversión de la lista de diccionarios de Python a objetos JavaScript con <code>toJs({ dict_converter: Object.fromEntries })</code> para poder dibujarlos con la API de <code>canvas</code>.</li>
+      </ul>
+      <p>Nada de bases de datos, credenciales ni conexiones externas: es un ejemplo autocontenido pensado solo para practicar.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a href="../../practicas/">← Volver al índice de prácticas</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
