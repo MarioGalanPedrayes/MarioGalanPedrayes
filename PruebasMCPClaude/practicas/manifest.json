@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Animación de rebotes",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/animacion-rebotes/python",
+    "titulo": "Animación de bolas rebotando",
+    "descripcion": "Varias bolas caen por gravedad y rebotan en los bordes de un <canvas>, perdiendo energía en cada rebote hasta asentarse. Toda la física se calcula en Python en cada fotograma (hasta 60 veces por segundo) llamando directamente a una función Python desde el bucle de animación de JavaScript; corre de verdad en el navegador con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/animacion-rebotes/python/",
+    "fecha": "2026-09-27"
+  },
+  {
     "tema": "Sumatorio de duraciones",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/sumatorio-tiempo/python",
