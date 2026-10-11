@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quién es quién en Python</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <p><a href="../../practicas/">← Índice de prácticas</a></p>
+    <h1>Quién es quién en Python</h1>
+    <p>
+      El ordenador piensa en un <strong>tipo de dato de Python</strong>
+      (<code>int</code>, <code>str</code>, <code>list</code>, <code>dict</code>, <code>set</code>...)
+      y va haciendo preguntas de sí/no, descartando candidatos hasta quedarse con uno,
+      igual que en el juego «¿Quién es quién?».
+    </p>
+    <p class="badge">▶ Se ejecuta en vivo en tu navegador con Pyodide</p>
+
+    <button id="jugar" disabled>Cargando Python…</button>
+    <pre id="salida" aria-live="polite">Pulsa «Jugar» para ver una partida.</pre>
+
+    <h2>Código</h2>
+    <pre><code id="codigo">Cargando…</code></pre>
+    <p><a href="codigo.py" download>⬇ Descargar codigo.py</a>
+       · En local: <code>python codigo.py</code></p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
