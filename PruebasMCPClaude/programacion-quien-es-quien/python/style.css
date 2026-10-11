@@ -1,0 +1,28 @@
+:root{--bg:#0f1117;--panel:#1a1d29;--accent:#6ee7b7;--accent2:#60a5fa;--text:#e5e7eb;--muted:#9ca3af;--ref:#f9a8d4;--no:#f87171}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{padding:2.5rem 1rem 1.5rem;text-align:center;background:linear-gradient(135deg,#1a1d29,#12141c);border-bottom:1px solid #2a2d3a}
+header h1{margin:0 0 .5rem;font-size:1.9rem}
+header p{color:var(--muted);margin:0 auto;max-width:640px}
+main{max-width:960px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.badge{display:inline-block;padding:.15rem .7rem;border-radius:99px;background:#064e3b;color:var(--accent);font-size:.8rem;margin-top:.8rem}
+.panel{background:var(--panel);border:1px solid #2a2d3a;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem}
+.panel h2{margin:.2rem 0 .8rem;font-size:1.1rem;color:var(--accent2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.7rem}
+.card{background:#12141c;border:2px solid #2a2d3a;border-radius:10px;padding:.8rem .4rem;text-align:center;cursor:pointer;color:var(--text);font:inherit;transition:.15s}
+.card:hover:not(:disabled){border-color:var(--accent)}
+.card .n{display:block;font-weight:700;font-size:1.05rem}
+.card .s{display:block;font-size:.75rem;color:var(--muted)}
+.card.out{opacity:.25;text-decoration:line-through;border-style:dashed}
+.preg{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+select,button.btn{background:#0b0d13;color:var(--text);border:1px solid #2a2d3a;border-radius:8px;padding:.5rem .8rem;font:inherit}
+button.btn{background:var(--accent);color:#06281d;font-weight:700;cursor:pointer;border:0}
+button.btn:disabled{opacity:.4;cursor:not-allowed}
+#log{list-style:none;margin:.5rem 0 0;padding:0;font-size:.95rem}
+#log li{padding:.2rem 0;border-bottom:1px solid #20232f}
+.si{color:var(--accent)}.no{color:var(--no)}
+#msg{font-weight:700;min-height:1.6em}
+pre{background:#0b0d13;padding:1rem;border-radius:8px;overflow:auto;font-size:.82rem;max-height:340px}
+a{color:var(--accent2)}
+.note{color:var(--muted);font-size:.9rem}
+footer{text-align:center;color:var(--muted);padding:1rem}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Quién es quién? de lenguajes · Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+</head>
+<body>
+<header>
+  <h1>🕵️ ¿Quién es quién? de lenguajes de programación</h1>
+  <p>Adivina qué lenguaje he elegido en secreto haciendo preguntas de sí/no. Toda la lógica del juego está escrita en Python y se ejecuta en tu navegador con Pyodide.</p>
+  <span class="badge">▶ Se ejecuta en vivo en el navegador</span>
+  <p class="note" id="estado">Cargando Python…</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Haz una pregunta</h2>
+    <div class="preg">
+      <select id="pregunta" aria-label="Pregunta"></select>
+      <button class="btn" id="btnPreguntar" disabled>Preguntar</button>
+      <button class="btn" id="btnNuevo" style="background:#60a5fa">Nueva partida</button>
+    </div>
+    <p id="msg"></p>
+    <ul id="log"></ul>
+  </section>
+  <section class="panel">
+    <h2>Candidatos <span class="note">(pulsa uno para arriesgar tu respuesta final)</span></h2>
+    <div class="grid" id="tablero"></div>
+  </section>
+  <section class="panel">
+    <h2>Código Python</h2>
+    <p class="note">Este es el archivo que se ejecuta: <a href="codigo.py" download>descargar codigo.py</a>. Puedes importarlo en tu ordenador con <code>python -i codigo.py</code> y probar <code>nuevo_juego()</code>, <code>preguntar("tipado", "estático")</code>, etc.</p>
+    <pre><code id="codigoPython"></code></pre>
+  </section>
+</main>
+<footer><a href="../../practicas/">← Volver al índice de prácticas</a></footer>
+<script src="script.js"></script>
+</body>
+</html>

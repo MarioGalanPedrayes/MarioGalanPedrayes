@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Programación: quién es quién",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/programacion-quien-es-quien/python",
+    "titulo": "¿Quién es quién? de lenguajes de programación",
+    "descripcion": "Juego de adivinar un lenguaje de programación secreto (Python, Java, Rust, C#...) haciendo preguntas de sí/no sobre su tipado, ejecución, época y uso, descartando candidatos del tablero. Toda la lógica está en Python y corre de verdad en el navegador con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/programacion-quien-es-quien/python/",
+    "fecha": "2026-10-11"
+  },
+  {
     "tema": "Quién es quién en Python",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/quien-es-quien/python",
