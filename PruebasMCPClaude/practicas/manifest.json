@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Programación",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/programacion/python",
+    "titulo": "Piedra, papel o tijeras",
+    "descripcion": "Juego contra el ordenador donde las reglas, la jugada aleatoria y el marcador están escritos en Python (diccionario de reglas, funciones y random). Corre de verdad en el navegador con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/programacion/python/",
+    "fecha": "2026-10-16"
+  },
+  {
     "tema": "Programación: quién es quién",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/programacion-quien-es-quien/python",

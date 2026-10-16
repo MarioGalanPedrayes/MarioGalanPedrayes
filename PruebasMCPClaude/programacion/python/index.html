@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programación · Python: Piedra, papel o tijeras</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+</head>
+<body>
+<header>
+  <h1>✊ Piedra, papel o tijeras (Python)</h1>
+  <p>Juega contra el ordenador. La decisión de la máquina y el reparto de puntos los calcula un programa en Python que se ejecuta en tu propio navegador.</p>
+  <span class="badge">▶ Se ejecuta en vivo en el navegador</span>
+  <p class="note" id="estado">Cargando Python…</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Objetivo de la práctica</h2>
+    <p>Practicar lo básico de Python con un caso pequeño y completo: listas, diccionarios, funciones, condicionales y números aleatorios. Además, ver cómo Python se puede conectar con una página web usando Pyodide.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Juega</h2>
+    <div class="opciones">
+      <button class="opcion" data-op="piedra" disabled>✊ Piedra</button>
+      <button class="opcion" data-op="papel" disabled>✋ Papel</button>
+      <button class="opcion" data-op="tijeras" disabled>✌️ Tijeras</button>
+    </div>
+    <div id="jugadas"></div>
+    <p id="msg">Elige una jugada cuando Python termine de cargar.</p>
+    <div class="marcador">
+      <div><b id="mJugador">0</b><span>Tú</span></div>
+      <div><b id="mEmpates">0</b><span>Empates</span></div>
+      <div><b id="mOrdenador">0</b><span>Ordenador</span></div>
+    </div>
+    <p style="text-align:center"><button class="btn" id="btnReiniciar" disabled>Reiniciar marcador</button></p>
+  </section>
+
+  <section class="panel">
+    <h2>Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> guarda las reglas en un diccionario (<code>VENCE_A</code>): cada jugada vence a una sola. Así no hace falta escribir nueve comparaciones.</li>
+      <li>La función <code>resolver()</code> compara las dos jugadas y devuelve quién gana.</li>
+      <li>La función <code>jugar()</code> elige la jugada del ordenador con <code>random.choice()</code>, actualiza el marcador y devuelve el resultado en JSON.</li>
+      <li><code>script.js</code> carga Pyodide, ejecuta <code>codigo.py</code> y llama a sus funciones cuando pulsas un botón. No hay servidor: todo ocurre en tu navegador.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Qué se busca con ella</h2>
+    <p>Que se entienda que la lógica del juego (Python) está separada de la presentación (HTML, CSS y JavaScript). Con ese patrón se puede cambiar el aspecto sin tocar las reglas, y viceversa.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Código Python</h2>
+    <p class="note">Este es el archivo que se ejecuta: <a href="codigo.py" download>descargar codigo.py</a>. En tu ordenador puedes probarlo con <code>python codigo.py</code>.</p>
+    <pre><code id="codigoPython"></code></pre>
+  </section>
+</main>
+<footer>
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma · Página creada con ayuda de una herramienta de IA (Claude).</small>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
