@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programación · Java: Ahorcado</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🪢 Ahorcado en consola (Java)</h1>
+  <p>El clásico juego de adivinar una palabra letra a letra, escrito en Java y pensado para ejecutarse en la terminal de tu ordenador.</p>
+  <span class="badge ref">📄 Código de referencia para ejecutar en tu ordenador</span>
+</header>
+<main>
+  <section class="panel aviso">
+    <h2>⚠️ Este código no se ejecuta en esta página</h2>
+    <p>El código es real y funcional (compilado y probado), pero GitHub Pages solo sirve archivos estáticos y no puede ejecutar Java. Para probarlo: <a href="Codigo.java" download>descarga Codigo.java</a> y, con el JDK instalado, ejecuta en una terminal:</p>
+    <pre><code>javac Codigo.java &amp;&amp; java Codigo</code></pre>
+  </section>
+
+  <section class="panel">
+    <h2>Objetivo de la práctica</h2>
+    <p>Repasar los fundamentos de Java con un programa pequeño y completo: arrays, bucles <code>while</code> y <code>for</code>, condicionales, métodos estáticos, <code>String</code> y <code>StringBuilder</code>, y lectura del teclado con <code>Scanner</code>.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Cómo está hecho</h2>
+    <ul>
+      <li>Un array <code>PALABRAS</code> guarda las palabras posibles (todas sobre programación) y <code>Random</code> elige una.</li>
+      <li>Un array de <code>boolean</code> indica qué posiciones de la palabra ya se han acertado.</li>
+      <li><code>mostrar()</code> dibuja la palabra con guiones bajos, <code>probarLetra()</code> marca las coincidencias y <code>completa()</code> comprueba si ya se ganó.</li>
+      <li>El bucle principal pide una letra, valida que sea una sola letra y que no esté repetida, y cuenta los fallos (máximo 6).</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Qué se busca con ella</h2>
+    <p>Que se vea cómo se divide un problema en métodos pequeños y reutilizables, en lugar de escribirlo todo dentro de <code>main</code>. También sirve para practicar la validación de lo que escribe el usuario.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Código Java</h2>
+    <pre><code>import java.util.Random;
+import java.util.Scanner;
+
+/**
+ * Ahorcado en consola. Practica: variables, arrays, bucles, condicionales,
+ * métodos, String/StringBuilder y lectura con Scanner.
+ */
+public class Codigo {
+
+    static final String[] PALABRAS = {
+        &quot;variable&quot;, &quot;bucle&quot;, &quot;funcion&quot;, &quot;objeto&quot;, &quot;clase&quot;,
+        &quot;compilador&quot;, &quot;herencia&quot;, &quot;excepcion&quot;, &quot;interfaz&quot;, &quot;paquete&quot;
+    };
+    static final int MAX_FALLOS = 6;
+
+    // Devuelve la palabra mostrando solo las letras ya acertadas.
+    static String mostrar(String palabra, boolean[] acertadas) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i &lt; palabra.length(); i++) {
+            sb.append(acertadas[i] ? palabra.charAt(i) : &#x27;_&#x27;).append(&#x27; &#x27;);
+        }
+        return sb.toString().trim();
+    }
+
+    // Marca las posiciones donde aparece la letra; devuelve cuántas halló.
+    static int probarLetra(String palabra, boolean[] acertadas, char letra) {
+        int hallazgos = 0;
+        for (int i = 0; i &lt; palabra.length(); i++) {
+            if (palabra.charAt(i) == letra &amp;&amp; !acertadas[i]) {
+                acertadas[i] = true;
+                hallazgos++;
+            }
+        }
+        return hallazgos;
+    }
+
+    static boolean completa(boolean[] acertadas) {
+        for (boolean a : acertadas) {
+            if (!a) return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner teclado = new Scanner(System.in);
+        String palabra = PALABRAS[new Random().nextInt(PALABRAS.length)];
+        boolean[] acertadas = new boolean[palabra.length()];
+        StringBuilder usadas = new StringBuilder();
+        int fallos = 0;
+
+        System.out.println(&quot;=== AHORCADO (tema: programación) ===&quot;);
+
+        while (fallos &lt; MAX_FALLOS &amp;&amp; !completa(acertadas)) {
+            System.out.println(&quot;\nPalabra: &quot; + mostrar(palabra, acertadas));
+            System.out.println(&quot;Fallos: &quot; + fallos + &quot;/&quot; + MAX_FALLOS
+                    + &quot;  Usadas: &quot; + usadas);
+            System.out.print(&quot;Escribe una letra: &quot;);
+
+            if (!teclado.hasNextLine()) break;
+            String linea = teclado.nextLine().trim().toLowerCase();
+            if (linea.length() != 1 || !Character.isLetter(linea.charAt(0))) {
+                System.out.println(&quot;Escribe una sola letra.&quot;);
+                continue;
+            }
+            char letra = linea.charAt(0);
+            if (usadas.indexOf(String.valueOf(letra)) &gt;= 0) {
+                System.out.println(&quot;Esa letra ya la has probado.&quot;);
+                continue;
+            }
+            usadas.append(letra);
+
+            if (probarLetra(palabra, acertadas, letra) == 0) {
+                fallos++;
+                System.out.println(&quot;No está.&quot;);
+            } else {
+                System.out.println(&quot;¡Bien!&quot;);
+            }
+        }
+
+        if (completa(acertadas)) {
+            System.out.println(&quot;\n¡Ganaste! La palabra era: &quot; + palabra);
+        } else {
+            System.out.println(&quot;\nPerdiste. La palabra era: &quot; + palabra);
+        }
+    }
+}
+</code></pre>
+  </section>
+</main>
+<footer>
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma · Página creada con ayuda de una herramienta de IA (Claude).</small>
+</footer>
+</body>
+</html>

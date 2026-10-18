@@ -1,6 +1,16 @@
 [
   {
     "tema": "Programación",
+    "tecnologia": "Java",
+    "carpeta": "PruebasMCPClaude/programacion/java",
+    "titulo": "Ahorcado en consola",
+    "descripcion": "Juego del ahorcado con palabras sobre programación: arrays, bucles, métodos y Scanner para leer letras del teclado. Código Java real, compilado y probado; se ejecuta con \"javac Codigo.java && java Codigo\" (GitHub Pages no ejecuta Java).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/programacion/java/",
+    "fecha": "2026-10-18"
+  },
+  {
+    "tema": "Programación",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/programacion/python",
     "titulo": "Piedra, papel o tijeras",
