@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Juegos",
+    "tecnologia": "Go",
+    "carpeta": "PruebasMCPClaude/juegos/go",
+    "titulo": "Tres en raya en consola",
+    "descripcion": "Tres en raya contra el ordenador, que gana si puede, bloquea tus jugadas y si no juega al azar. Practica arrays, métodos, bucles y bufio. Código Go real, compilado y probado; se ejecuta con \"go run codigo.go\" (GitHub Pages no ejecuta Go).",
+    "ejecutable_en_navegador": false,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/go/",
+    "fecha": "2026-10-21"
+  },
+  {
     "tema": "Programación",
     "tecnologia": "Java",
     "carpeta": "PruebasMCPClaude/programacion/java",
