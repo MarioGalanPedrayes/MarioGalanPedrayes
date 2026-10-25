@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador de energía potencial y cinética · Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+</head>
+<body>
+<header>
+  <h1>🎢 Simulador de energía potencial y cinética</h1>
+  <p>Un péndulo que oscila mientras ves cómo la energía pasa de potencial a cinética y de nuevo a potencial. La física se calcula en Python, que se ejecuta en tu propio navegador con Pyodide.</p>
+  <span class="badge">▶ Se ejecuta en vivo en el navegador</span>
+  <p class="note" id="estado">Cargando Python…</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Objetivo de la práctica</h2>
+    <p>Entender con un experimento visual qué son la energía potencial (por la altura) y la cinética (por la velocidad), y comprobar que sin rozamiento su suma se conserva. Además, practicar Python con funciones, diccionarios, módulo <code>math</code> y un bucle de simulación.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Simulación</h2>
+    <div class="sim">
+      <div>
+        <canvas id="lienzo" width="480" height="380" aria-label="Péndulo oscilando"></canvas>
+      </div>
+      <div>
+        <div class="ctrl">
+          <label>Masa <b id="vMasa"></b></label>
+          <input type="range" id="masa" min="0.5" max="5" step="0.5" value="2">
+          <label>Longitud de la cuerda <b id="vLongitud"></b></label>
+          <input type="range" id="longitud" min="1" max="3" step="0.25" value="2">
+          <label>Ángulo inicial <b id="vAngulo"></b></label>
+          <input type="range" id="angulo" min="10" max="80" step="5" value="60">
+          <label>Rozamiento <b id="vRoce"></b></label>
+          <input type="range" id="roce" min="0" max="0.5" step="0.05" value="0">
+        </div>
+        <div class="fila">
+          <button class="btn" id="btnSoltar" disabled>Soltar</button>
+          <button class="btn" id="btnPausa" disabled>Pausa</button>
+        </div>
+        <div class="barra"><span>Energía potencial (Ep = m·g·h) <b id="tEp">0.00 J</b></span><div class="fondo"><div class="relleno ep" id="bEp"></div></div></div>
+        <div class="barra"><span>Energía cinética (Ec = ½·m·v²) <b id="tEc">0.00 J</b></span><div class="fondo"><div class="relleno ec" id="bEc"></div></div></div>
+        <div class="barra"><span>Energía total (Ep + Ec) <b id="tEt">0.00 J</b></span><div class="fondo"><div class="relleno et" id="bEt"></div></div></div>
+        <p class="note" id="datos"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> guarda el estado del péndulo (ángulo, velocidad angular, masa, longitud) en un diccionario y calcula en cada paso la aceleración: gravedad más un rozamiento proporcional a la velocidad.</li>
+      <li>Cada fotograma se divide en 20 pasos pequeños para que la simulación sea estable. Primero se actualiza la velocidad y después la posición, un método sencillo que conserva muy bien la energía.</li>
+      <li>De la posición salen la altura <code>h = L·(1 − cos θ)</code> y la velocidad <code>v = L·ω</code>, y con ellas <code>Ep = m·g·h</code> y <code>Ec = ½·m·v²</code>.</li>
+      <li><code>script.js</code> carga Pyodide, llama a <code>avanzar()</code> con <code>requestAnimationFrame</code> y dibuja el péndulo y las barras. Python devuelve los datos como texto JSON.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Qué se busca con ella</h2>
+    <p>Que se vea que la energía no desaparece, sino que se transforma: arriba del todo es toda potencial, abajo es toda cinética y la barra total no cambia. Prueba a activar el rozamiento y verás cómo la total se va perdiendo hasta que el péndulo se para. También puedes comprobar que la masa no cambia el movimiento, solo la cantidad de energía.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Código Python</h2>
+    <p class="note">Este es el archivo que se ejecuta: <a href="codigo.py" download>descargar codigo.py</a>. En tu ordenador puedes probarlo con <code>python codigo.py</code>.</p>
+    <pre><code id="codigoPython"></code></pre>
+  </section>
+</main>
+<footer>
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma · Página creada con ayuda de una herramienta de IA (Claude).</small>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

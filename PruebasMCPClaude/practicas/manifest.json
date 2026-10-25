@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Simulador de energía potencial y cinética",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/simulador-energia/python",
+    "titulo": "Simulador de energía potencial y cinética",
+    "descripcion": "Péndulo con deslizadores de masa, longitud, ángulo y rozamiento: mientras oscila, barras en vivo muestran cómo la energía pasa de potencial a cinética y que la total se conserva (o se pierde con rozamiento). Toda la física se calcula en Python en cada fotograma; corre de verdad en el navegador con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/simulador-energia/python/",
+    "fecha": "2026-10-25"
+  },
+  {
     "tema": "Juegos",
     "tecnologia": "Go",
     "carpeta": "PruebasMCPClaude/juegos/go",
