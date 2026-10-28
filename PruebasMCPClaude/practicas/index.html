@@ -10,7 +10,7 @@
 
   <header>
     <h1>📚 Índice de prácticas</h1>
-    <p>Todas las páginas de práctica generadas, con su link y una breve descripción. Esta página se actualiza sola a partir de <code>manifest.json</code> — no hace falta tocar el HTML cada vez.</p>
+    <p>Prácticas organizadas por lenguaje de programación, cada una con su link y una breve descripción. Esta página se actualiza sola a partir de <code>manifest.json</code> — no hace falta tocar el HTML cada vez.</p>
   </header>
 
   <main>
@@ -26,28 +26,51 @@
 
   <script>
     let TODAS = [];
-    let temaActivo = "todos";
+    let lenguajeActivo = "todos";
 
-    function badgeTecnologia(tecnologia, ejecutable) {
-      const clase = ejecutable ? "badge badge-live" : "badge badge-ref";
-      const etiqueta = ejecutable ? `${tecnologia} · en vivo` : `${tecnologia} · referencia`;
-      return `<span class="${clase}">${etiqueta}</span>`;
+    // Un item puede tener varios lenguajes ("JavaScript + C++/C#"): se separan
+    // por " + " y por "/" para que salga en el grupo de cada uno.
+    function lenguajesDe(item) {
+      return item.tecnologia
+        .split(" + ")
+        .flatMap(parte => parte.split("/"))
+        .map(l => l.trim())
+        .filter(Boolean);
+    }
+
+    function esc(texto) {
+      const d = document.createElement("div");
+      d.textContent = texto;
+      return d.innerHTML;
+    }
+
+    function badgeEstado(ejecutable) {
+      return ejecutable
+        ? `<span class="badge badge-live">en vivo</span>`
+        : `<span class="badge badge-ref">referencia</span>`;
     }
 
     function tarjeta(item) {
       return `
-        <a class="tarjeta" href="${item.url}">
+        <a class="tarjeta" href="${esc(item.url)}">
           <div class="tarjeta-top">
-            <h3>${item.titulo}</h3>
-            ${badgeTecnologia(item.tecnologia, item.ejecutable_en_navegador)}
+            <h3>${esc(item.titulo)}</h3>
+            ${badgeEstado(item.ejecutable_en_navegador)}
           </div>
-          <p class="descripcion">${item.descripcion}</p>
+          <p class="descripcion">${esc(item.descripcion)}</p>
           <div class="tarjeta-meta">
-            <span>${item.tema}</span>
-            <span>${item.fecha}</span>
+            <span>${esc(item.tema)}</span>
+            <span>${esc(item.fecha)}</span>
           </div>
         </a>
       `;
+    }
+
+    // Lenguajes ordenados por nº de prácticas (de más a menos) y luego por nombre
+    function lenguajesOrdenados() {
+      const cuenta = {};
+      TODAS.forEach(item => lenguajesDe(item).forEach(l => { cuenta[l] = (cuenta[l] || 0) + 1; }));
+      return Object.keys(cuenta).sort((a, b) => cuenta[b] - cuenta[a] || a.localeCompare(b, "es"));
     }
 
     function render() {
@@ -58,42 +81,29 @@
         return;
       }
 
-      const filtradas = temaActivo === "todos"
-        ? TODAS
-        : TODAS.filter(item => item.tema === temaActivo);
+      const lenguajes = lenguajesOrdenados().filter(l => lenguajeActivo === "todos" || l === lenguajeActivo);
 
-      // Agrupar por tema para mostrar secciones
-      const grupos = {};
-      filtradas.forEach(item => {
-        if (!grupos[item.tema]) grupos[item.tema] = [];
-        grupos[item.tema].push(item);
-      });
-
-      let html = "";
-      Object.keys(grupos).forEach(tema => {
-        html += `<section class="grupo">
-          <h2>${tema}</h2>
-          <div class="grid">
-            ${grupos[tema].map(tarjeta).join("")}
-          </div>
+      contenido.innerHTML = lenguajes.map(lenguaje => {
+        const items = TODAS.filter(item => lenguajesDe(item).includes(lenguaje));
+        return `<section class="grupo">
+          <h2>${esc(lenguaje)} <span class="contador">${items.length}</span></h2>
+          <div class="grid">${items.map(tarjeta).join("")}</div>
         </section>`;
-      });
-
-      contenido.innerHTML = html;
+      }).join("");
     }
 
     function renderFiltros() {
-      const temas = ["todos", ...new Set(TODAS.map(item => item.tema))];
+      const lenguajes = ["todos", ...lenguajesOrdenados()];
       const filtros = document.getElementById("filtros");
-      filtros.innerHTML = temas.map(tema => `
-        <button class="filtro-btn ${tema === temaActivo ? "activo" : ""}" data-tema="${tema}">
-          ${tema === "todos" ? "Todos" : tema}
+      filtros.innerHTML = lenguajes.map(l => `
+        <button class="filtro-btn ${l === lenguajeActivo ? "activo" : ""}" data-lenguaje="${esc(l)}">
+          ${l === "todos" ? "Todos" : esc(l)}
         </button>
       `).join("");
 
       filtros.querySelectorAll(".filtro-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-          temaActivo = btn.dataset.tema;
+          lenguajeActivo = btn.dataset.lenguaje;
           renderFiltros();
           render();
         });
@@ -105,7 +115,7 @@
         const resp = await fetch("manifest.json", { cache: "no-store" });
         if (!resp.ok) throw new Error("No se pudo cargar manifest.json");
         TODAS = await resp.json();
-        // Más recientes primero
+        // Más recientes primero dentro de cada lenguaje
         TODAS.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
         renderFiltros();
         render();

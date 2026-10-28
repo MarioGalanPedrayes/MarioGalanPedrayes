@@ -167,3 +167,14 @@ footer {
   color: var(--muted);
   border-top: 1px solid #2a2d3a;
 }
+
+.contador {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: #0b0d13;
+  border: 1px solid #2a2d3a;
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  vertical-align: middle;
+}
