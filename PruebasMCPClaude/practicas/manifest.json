@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Física",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/fisica/python",
+    "titulo": "Choques entre carritos",
+    "descripcion": "Dos carritos chocan en una pista: eliges masas, velocidades y elasticidad del choque, y una tabla compara momento y energía cinética antes y después (el momento siempre se conserva; la energía solo si el choque es elástico). La física se calcula en Python y corre de verdad en el navegador con Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/fisica/python/",
+    "fecha": "2026-10-28"
+  },
+  {
     "tema": "Simulador de energía potencial y cinética",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/simulador-energia/python",

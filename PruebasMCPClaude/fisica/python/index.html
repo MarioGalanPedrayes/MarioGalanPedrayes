@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Física · Python: Choques entre carritos</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+</head>
+<body>
+<header>
+  <h1>🛒 Choques entre carritos</h1>
+  <p>Dos carritos chocan en una pista recta. Tú eliges sus masas, sus velocidades y lo elástico que es el choque, y Python calcula qué pasa con el movimiento y la energía. Se ejecuta en tu navegador con Pyodide.</p>
+  <span class="badge">▶ Se ejecuta en vivo en el navegador</span>
+  <p class="note" id="estado">Cargando Python…</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Objetivo de la práctica</h2>
+    <p>Comprobar con un experimento visual la conservación del momento lineal (<code>p = m·v</code>) y ver que la energía cinética solo se conserva en los choques elásticos. Además, practicar Python con funciones, diccionarios y fórmulas físicas.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Simulación</h2>
+    <canvas id="lienzo" width="600" height="200" aria-label="Dos carritos en una pista"></canvas>
+    <p id="aviso">Cargando…</p>
+    <div class="sim" style="margin-top:.6rem">
+      <div class="ctrl">
+        <label>Masa del carrito 1 <b id="vm1"></b></label>
+        <input type="range" id="m1" min="1" max="5" step="0.5" value="2">
+        <label>Velocidad del carrito 1 <b id="vv1"></b></label>
+        <input type="range" id="v1" min="0.5" max="5" step="0.5" value="3">
+        <label>Masa del carrito 2 <b id="vm2"></b></label>
+        <input type="range" id="m2" min="1" max="5" step="0.5" value="1">
+        <label>Velocidad del carrito 2 <b id="vv2"></b></label>
+        <input type="range" id="v2" min="-5" max="2" step="0.5" value="-1">
+        <label>Elasticidad (e) <b id="ve"></b></label>
+        <input type="range" id="e" min="0" max="1" step="0.25" value="1">
+        <div class="fila">
+          <button class="btn" id="btnLanzar" disabled>Lanzar</button>
+          <button class="btn" id="btnPausa" disabled>Pausa</button>
+        </div>
+      </div>
+      <div>
+        <table class="tabla">
+          <thead><tr><th>Choque</th><th>Antes</th><th>Después</th></tr></thead>
+          <tbody>
+            <tr><td>Velocidad 1 (m/s)</td><td id="v1a">—</td><td id="v1d">—</td></tr>
+            <tr><td>Velocidad 2 (m/s)</td><td id="v2a">—</td><td id="v2d">—</td></tr>
+            <tr><td>Momento total (kg·m/s)</td><td id="pa">—</td><td id="pd">—</td></tr>
+            <tr><td>Energía cinética (J)</td><td id="ea">—</td><td id="ed">—</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Ahora mismo: momento total <b id="pc">—</b> · energía cinética <b id="ec">—</b></p>
+        <p class="note">Los valores positivos van hacia la derecha y los negativos hacia la izquierda. Las flechas del dibujo indican la velocidad de cada carrito.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> guarda el estado de los carritos (posición, velocidad, masa) en un diccionario y mueve cada uno con <code>x = x + v·dt</code>.</li>
+      <li>Cuando se tocan y se están acercando, <code>resolver_choque()</code> calcula las velocidades de después con las fórmulas del coeficiente de restitución <code>e</code>: con <code>e = 1</code> el choque es elástico, con <code>e = 0</code> los carritos salen con la misma velocidad.</li>
+      <li>En ese instante se guardan los valores de antes y de después para rellenar la tabla.</li>
+      <li><code>script.js</code> carga Pyodide, llama a <code>avanzar()</code> con <code>requestAnimationFrame</code> y dibuja los carritos en un <code>&lt;canvas&gt;</code>. Python devuelve los datos como texto JSON.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Qué se busca con ella</h2>
+    <p>Que se vea que el momento total es el mismo antes y después, pase lo que pase, y que la energía cinética que «falta» en un choque inelástico se ha convertido en deformación y calor. Prueba a poner dos masas iguales con <code>e = 1</code>: los carritos se intercambian las velocidades. Con <code>e = 0</code> salen unidos.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Código Python</h2>
+    <p class="note">Este es el archivo que se ejecuta: <a href="codigo.py" download>descargar codigo.py</a>. En tu ordenador puedes probarlo con <code>python codigo.py</code>.</p>
+    <pre><code id="codigoPython"></code></pre>
+  </section>
+</main>
+<footer>
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma · Página creada con ayuda de una herramienta de IA (Claude).</small>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
