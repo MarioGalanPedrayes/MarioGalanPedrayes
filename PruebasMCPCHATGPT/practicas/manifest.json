@@ -1,0 +1,42 @@
+[
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPCHATGPT/juegos/nodo-7",
+    "titulo": "NODO 7 — Clasificador de señales",
+    "descripcion": "Juego de lógica logística con seis expedientes: clasifica paquetes por color, forma y ritmo, aplica filtros simples y compuestos y supera los 54 envíos sin acumular tres errores. La lógica se ejecuta en Python mediante Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/nodo-7/",
+    "fecha": "2026-10-31"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "JavaScript",
+    "carpeta": "PruebasMCPCHATGPT/juegos/prisma",
+    "titulo": "PRISMA: Archivo de Luz",
+    "descripcion": "Puzle de lógica óptica en cinco expedientes. Gira espejos para conducir un haz de luz hasta el receptor.",
+    "ejecutable_en_navegador": true,
+    "url": "https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/prisma/",
+    "fecha": "2026-10-31"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "JavaScript",
+    "carpeta": "PruebasMCPCHATGPT/juegos/brote",
+    "titulo": "BROTE: Ecosistema Perdido",
+    "descripcion": "Juego cozy de gestión y exploración: cultiva brotes, reúne recursos, atrae criaturas y restaura un claro olvidado.",
+    "ejecutable_en_navegador": true,
+    "url": "https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/brote/",
+    "fecha": "2026-10-31"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPCHATGPT/juegos/voidrun",
+    "titulo": "VOIDRUN: SECTOR 9",
+    "descripcion": "Roguelite arcade de supervivencia en Python/Pygame-CE. Documentado como juego Pygbag, pero sus archivos fuente y compilación no se han podido localizar en la ruta consultada; pendiente de verificación.",
+    "ejecutable_en_navegador": false,
+    "url": "https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/voidrun/",
+    "fecha": "2026-10-31"
+  }
+]
