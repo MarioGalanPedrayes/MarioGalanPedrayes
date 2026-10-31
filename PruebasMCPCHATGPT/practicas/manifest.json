@@ -28,15 +28,5 @@
     "ejecutable_en_navegador": true,
     "url": "https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/brote/",
     "fecha": "2026-10-31"
-  },
-  {
-    "tema": "Juegos",
-    "tecnologia": "Python",
-    "carpeta": "PruebasMCPCHATGPT/juegos/voidrun",
-    "titulo": "VOIDRUN: SECTOR 9",
-    "descripcion": "Roguelite arcade de supervivencia en Python/Pygame-CE. Documentado como juego Pygbag, pero sus archivos fuente y compilación no se han podido localizar en la ruta consultada; pendiente de verificación.",
-    "ejecutable_en_navegador": false,
-    "url": "https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/voidrun/",
-    "fecha": "2026-10-31"
   }
 ]
