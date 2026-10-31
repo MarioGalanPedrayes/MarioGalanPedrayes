@@ -14,12 +14,6 @@ Juego web cozy de exploración, cultivo y restauración de un pequeño ecosistem
 
 Consulta `brote/README.md` para jugar y conocer sus mecánicas.
 
-## VOIDRUN: SECTOR 9
-
-Roguelite arcade de ciencia ficción, documentado como juego Python/Pygame-CE y Pygbag. La compilación y los archivos de juego quedan pendientes de verificación en la ruta de ChatGPT.
-
-Consulta `voidrun/README.md` cuando esté disponible.
-
 ## PRISMA: Archivo de Luz
 
 Puzle de lógica óptica en cinco expedientes. Gira espejos para conducir un haz de luz hasta el receptor. Aplicación web estática con HTML, CSS, JavaScript y SVG originales.
