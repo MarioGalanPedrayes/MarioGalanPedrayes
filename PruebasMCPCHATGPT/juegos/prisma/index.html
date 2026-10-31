@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#11131c"><meta name="description" content="PRISMA: Archivo de Luz. Un juego original de puzles ópticos y reflexión.">
+<title>PRISMA — Archivo de Luz</title><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar"><a class="wordmark" href="./"><span class="logo">◈</span><span>PRISMA<small>ARCHIVO DE LUZ</small></span></a><div class="top-meta"><span class="live-dot"></span> LABORATORIO ÓPTICO <span class="meta-divider">/</span> EXPEDIENTE 09</div><button class="help-button" id="help-button" aria-label="Cómo jugar">?</button></header>
+<main>
+<section class="intro"><div><p class="eyebrow">PROTOCOLO DE CALIBRACIÓN · <span id="chapter-label">01 / 05</span></p><h1>La luz siempre<br><em>encuentra un camino.</em></h1><p class="intro-copy">Reorienta los espejos. Conecta el emisor con el receptor. Cada giro cuenta.</p></div><div class="prism-art" aria-hidden="true"><span class="orbit orbit-a"></span><span class="orbit orbit-b"></span><span class="prism-core">◈</span></div></section>
+<section class="status-strip"><div><small>ARCHIVO</small><strong id="level-name">01 · Primer rebote</strong></div><div><small>GIROS</small><strong id="moves">00</strong></div><div><small>OBJETIVO</small><strong id="par">≤ 05</strong></div><div class="progress-wrap"><div class="progress-label"><small>PROGRESO</small><strong id="progress-label">01 / 05</strong></div><div class="progress-track"><span id="progress-fill"></span></div></div></section>
+<section class="play-layout">
+<div class="board-panel">
+<div class="board-heading"><div><span class="section-index">A —</span><h2>Mesa de reflexión</h2></div><span class="board-tag" id="board-state">EMISOR EN ESPERA</span></div>
+<div class="board-frame"><div class="board" id="board" role="group" aria-label="Tablero de espejos"></div><svg class="beam-layer" id="beam-layer" viewBox="0 0 700 700" aria-hidden="true"></svg></div>
+<div class="board-legend"><span><i class="legend-source"></i> EMISOR</span><span><i class="legend-mirror">／</i> ESPEJO</span><span><i class="legend-target"></i> RECEPTOR</span><span><i class="legend-beam"></i> HAZ DE LUZ</span></div>
+</div>
+<aside class="side-panel">
+<div class="mission-card"><p class="eyebrow">B — OBJETIVO DE MISIÓN</p><div class="mission-icon">◎</div><h2 id="mission-title">Activa el receptor</h2><p id="mission-copy">Gira los espejos hasta que el haz alcance el receptor.</p><div class="mission-rule"><span>REGLA</span><b>Un espejo, dos direcciones.</b></div></div>
+<div class="control-card"><p class="eyebrow">C — CONTROLES</p><div class="control-row"><span>Seleccionar espejo</span><kbd>CLIC / TOQUE</kbd></div><div class="control-row"><span>Girar todos al inicio</span><kbd>REINICIAR</kbd></div><div class="control-row"><span>Siguiente expediente</span><kbd>ENTER</kbd></div><button class="primary-button" id="reset-button">↺ Reiniciar tablero</button><button class="secondary-button" id="hint-button">✧ Revelar una pista</button><p class="hint-text" id="hint-text">Las pistas no consumen giros.</p></div>
+<div class="record-card"><div><small>MEJOR REGISTRO</small><strong id="best-score">—</strong></div><div><small>EXPEDIENTES</small><strong id="unlocked-count">01 / 05</strong></div></div>
+</aside>
+</section>
+<section class="bottom-note"><span class="note-mark">✳</span><p><b>NOTA DEL ARCHIVISTA</b><br>La luz rebota en cada espejo y cambia de dirección. Los espacios vacíos no alteran su trayectoria. Encuentra la secuencia correcta.</p><span class="note-code">PR-09 / OPTICS</span></section>
+</main>
+<footer><span>PRISMA · ARCHIVO DE LUZ</span><span>PUZLE ORIGINAL · SIN RECURSOS EXTERNOS</span></footer>
+</div>
+<dialog id="help-dialog"><div class="dialog-inner"><button id="close-help" class="dialog-close" aria-label="Cerrar">×</button><p class="eyebrow">MANUAL DE CAMPO</p><h2>Cómo jugar</h2><p>El emisor lanza un haz recto. Cada espejo lo desvía 90 grados. Tu misión es conseguir que el rayo llegue al receptor.</p><ul><li>Selecciona un espejo para alternar entre sus dos orientaciones.</li><li>El haz se recalcula automáticamente después de cada giro.</li><li>Completa cada expediente con el menor número de movimientos posible.</li><li>Si te atascas, pide una pista: te señalará un espejo que debes girar.</li></ul><button class="primary-button" id="close-help-bottom">Entendido</button></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div><script src="./game.js" defer></script>
+</body></html>
