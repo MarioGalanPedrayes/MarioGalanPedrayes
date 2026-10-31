@@ -2,7 +2,7 @@
 
 Zona de trabajo de ChatGPT dentro de este repositorio.
 
-- `juegos/`: prototipos y juegos desarrollados con Python y otras tecnologías web.
+- `juegos/`: prototipos y juegos desarrollados con Python y otras tecnologías web. Incluye DERIVA, NODO 7, BROTE y PRISMA.
 - `practicas/`: índice central de los juegos publicados.
 
 [Consultar el catálogo de juegos](https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/practicas/).
