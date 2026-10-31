@@ -4,38 +4,28 @@ Un pequeño juego cozy de gestión y exploración: recupera un claro olvidado, c
 
 ## Jugar online
 
-La versión estática es compatible con GitHub Pages. No necesita Python, Flask ni instalación: abre la página index.html publicada en GitHub Pages.
+BROTE es una aplicación web estática compatible con GitHub Pages. No necesita Python, Flask, servidor ni instalación.
 
-Si GitHub Pages está configurado para publicar la rama main desde la raíz del repositorio, la dirección será:
+Si GitHub Pages está configurado para publicar la rama `main` desde la raíz del repositorio, la dirección del juego es:
 
 https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/brote/
 
-La partida se guarda automáticamente en el almacenamiento local del navegador (localStorage).
-
-## Ejecutar en local con Python
-
-También se conserva la versión Python/Flask original:
-
-    python -m venv .venv
-    pip install -r requirements.txt
-    python app.py
-
-Abre http://127.0.0.1:5000.
+La partida se guarda automáticamente en el almacenamiento local del navegador (`localStorage`).
 
 ## Cómo jugar
 
-- Recolectar: consigue rocío, semillas y madera.
-- Plantar: coloca semillas en parcelas vacías; las plantas crecen al pasar de día.
-- Regar: acelera el crecimiento.
-- Cosechar: recoge recursos cuando la planta florezca.
-- Explorar: descubre recursos y criaturas.
-- Construir: instala refugios para atraer visitantes.
-- Pasar el día: recupera energía, avanza el crecimiento y activa el clima siguiente.
+- **Recolectar**: consigue rocío, semillas y madera.
+- **Plantar**: coloca semillas en parcelas vacías; las plantas crecen al pasar de día.
+- **Regar**: acelera el crecimiento.
+- **Cosechar**: recoge recursos cuando la planta florezca.
+- **Explorar**: descubre recursos y criaturas.
+- **Construir**: instala refugios para atraer visitantes.
+- **Pasar el día**: recupera energía, avanza el crecimiento y activa el clima siguiente.
 
 ## Archivos
 
-- index.html, style.css, game.js: versión estática para GitHub Pages.
-- app.py, game.py, templates/, static/: versión Flask original.
-- requirements.txt: dependencias de la versión Flask.
+- `index.html`: estructura de la página.
+- `style.css`: diseño adaptable.
+- `game.js`: reglas, acciones y guardado local de la partida.
 
 Los elementos visuales son CSS y emoji del sistema; no se incorporan imágenes ni música de terceros.
