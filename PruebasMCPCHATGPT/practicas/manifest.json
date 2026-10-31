@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPCHATGPT/juegos/deriva",
+    "titulo": "DERIVA — Cartógrafo de Mareas",
+    "descripcion": "Puzle táctico de navegación por turnos: recupera boyas científicas, aprovecha corrientes que giran con cada maniobra y alcanza el faro en cinco mapas sin agotar combustible ni casco.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/deriva/",
+    "fecha": "2026-10-31"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPCHATGPT/juegos/nodo-7",
     "titulo": "NODO 7 — Clasificador de señales",
     "descripcion": "Juego de lógica logística con seis expedientes: clasifica paquetes por color, forma y ritmo, aplica filtros simples y compuestos y supera los 54 envíos sin acumular tres errores. La lógica se ejecuta en Python mediante Pyodide.",
