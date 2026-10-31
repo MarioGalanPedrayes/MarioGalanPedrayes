@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juegos · Pruebas MCP ChatGPT</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><p class="eyebrow">COLECCIÓN INTERACTIVA</p><h1>🎮 Juegos de navegador</h1><p>Videojuegos y experimentos publicados en la zona de ChatGPT. El catálogo se actualiza desde <code>manifest.json</code>.</p></header>
+<main><div id="filtros" class="filtros"></div><div id="contenido"><p class="cargando">Cargando juegos…</p></div></main>
+<footer>Índice de PruebasMCPCHATGPT · GitHub Pages</footer>
+<script>
+let TODOS=[], filtro="todos";
+function esc(value){const el=document.createElement("div");el.textContent=value;return el.innerHTML;}
+function techs(item){return item.tecnologia.split(" + ").flatMap(x=>x.split("/")).map(x=>x.trim()).filter(Boolean);}
+function card(item){return '<a class="card" href="'+esc(item.url)+'"><div class="card-head"><h3>'+esc(item.titulo)+'</h3><span class="badge '+(item.ejecutable_en_navegador?'live':'pending')+'">'+(item.ejecutable_en_navegador?'en navegador':'pendiente')+'</span></div><p>'+esc(item.descripcion)+'</p><div class="meta"><span>'+esc(item.tecnologia)+'</span><span>'+esc(item.fecha)+'</span></div></a>';}
+function render(){const area=document.getElementById("contenido");const visible=TODOS.filter(x=>filtro==="todos"||techs(x).includes(filtro));if(!visible.length){area.innerHTML='<p class="empty">No hay juegos en esta categoría.</p>';return;}area.innerHTML='<div class="grid">'+visible.map(card).join("")+'</div>';}
+function filters(){const list=["todos",...new Set(TODOS.flatMap(techs))];const el=document.getElementById("filtros");el.innerHTML=list.map(x=>'<button class="filter '+(x===filtro?'active':'')+'" data-filter="'+esc(x)+'">'+(x==="todos"?"Todos":esc(x))+'</button>').join("");el.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{filtro=b.dataset.filter;filters();render();}));}
+async function load(){try{const response=await fetch("manifest.json",{cache:"no-store"});if(!response.ok)throw new Error("No se pudo leer manifest.json");TODOS=await response.json();TODOS.sort((a,b)=>b.fecha.localeCompare(a.fecha));filters();render();}catch(error){document.getElementById("contenido").innerHTML='<p class="empty">No se pudo cargar el catálogo. Recarga la página dentro de un minuto.</p>';console.error(error);}}
+load();
+</script>
+</body></html>
