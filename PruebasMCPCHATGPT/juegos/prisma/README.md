@@ -15,6 +15,8 @@ https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos
 - Conecta el emisor (círculo ámbar) con el receptor.
 - Completa cinco expedientes intentando usar pocos giros.
 - Usa «Revelar una pista» si necesitas ayuda.
+- Al completar un expediente, pulsa el botón «Siguiente nivel» que aparece en el panel de misión.
+- En el último expediente, ese botón te permite volver al primero.
 - Pulsa «Reiniciar tablero» o la tecla R para recuperar la disposición inicial.
 - Pulsa Enter al completar un nivel para avanzar.
 
