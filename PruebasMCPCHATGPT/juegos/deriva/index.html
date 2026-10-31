@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b2b">
+<meta name="description" content="DERIVA: Cartógrafo de Mareas. Un puzle táctico de navegación y corrientes marinas.">
+<title>DERIVA — Cartógrafo de Mareas</title>
+<link rel="stylesheet" href="./style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="./script.js"></script>
+</head>
+<body>
+<div class="shell">
+<header class="topbar"><a class="brand" href="./"><span class="brand-mark">D</span><span>DERIVA<small>ARCHIVO OCEANOGRÁFICO</small></span></a><div class="top-meta"><i></i> EXPEDICIÓN ACTIVA <span id="level-tag">01 / 05</span></div><button id="help" class="help" aria-label="Instrucciones">?</button></header>
+<main>
+<section class="intro"><div><p class="eyebrow">CARTOGRAFÍA · SECTOR ATLÁNTICO</p><h1>El mar tiene<br><em>sus propias rutas.</em></h1><p>Recupera las boyas científicas, estudia las corrientes y encuentra el faro. Cada movimiento cambia la marea.</p></div><div class="compass" aria-hidden="true"><span>N</span><b>✥</b><small>40° 26' N<br>03° 42' O</small></div></section>
+<section class="stats"><div><span>PUNTUACIÓN</span><strong id="score">00000</strong></div><div><span>COMBUSTIBLE</span><strong id="fuel">30</strong></div><div><span>INTEGRIDAD DEL CASCO</span><strong id="hull">♥ ♥ ♥</strong></div><div><span>BOYAS RECUPERADAS</span><strong id="buoys">0 / 2</strong></div></section>
+<div class="layout">
+<section class="map-panel">
+<div class="panel-head"><div><p class="eyebrow">CARTA NÁUTICA <span id="map-number">· 01</span></p><h2 id="level-name">Cargando archipiélago…</h2></div><span class="tide" id="tide">PLEAMAR</span></div>
+<p class="brief" id="brief">Conectando con la sonda oceanográfica.</p>
+<div class="map-wrap"><div class="map-grid" id="map-grid" role="img" aria-label="Mapa de navegación de siete por siete celdas"></div><div class="map-legend"><span><i class="legend-boat">▲</i> Tu barco</span><span><i class="legend-buoy">●</i> Boya</span><span><i class="legend-current">↗</i> Corriente</span><span><i class="legend-reef">✕</i> Arrecife</span><span><i class="legend-lighthouse">⌂</i> Faro</span></div></div>
+<div class="message" id="message" role="status" aria-live="polite"><b>›</b><span>Preparando la expedición…</span></div>
+<div class="controls"><div class="control-title"><div><p class="eyebrow">GOBIERNO DEL BARCO</p><h3>Elige tu siguiente maniobra</h3></div><span>TECLAS WASD / ↑ ↓ ← →</span></div><div class="control-row"><div class="dpad"><button data-action="up" aria-label="Navegar al norte">↑</button><button data-action="left" aria-label="Navegar al oeste">←</button><button data-action="anchor" aria-label="Echar el ancla" class="anchor">⚓</button><button data-action="right" aria-label="Navegar al este">→</button><button data-action="down" aria-label="Navegar al sur">↓</button></div><button class="restart" id="restart">Reiniciar mapa ↺</button></div></div>
+<div class="result" id="result" hidden><div class="result-icon" id="result-icon">✓</div><div class="result-copy"><strong id="result-title">Mapa completado</strong><p id="result-text">La expedición continúa.</p></div><button class="primary" id="result-button">Siguiente mapa →</button></div>
+</section>
+<aside class="sidebar">
+<section class="side-panel"><p class="eyebrow">INFORME DE MISIÓN</p><h3>Objetivos del mapa</h3><div class="objective"><span class="objective-icon">◉</span><div><strong>Recuperar las boyas</strong><small id="objective-buoys">0 de 2 muestras</small></div><b id="objective-check">○</b></div><div class="objective"><span class="objective-icon">⌂</span><div><strong>Alcanzar el faro</strong><small>Con todas las muestras a bordo</small></div><b id="objective-exit">○</b></div></section>
+<section class="side-panel tide-panel"><p class="eyebrow">LECTURA DE MAREA</p><div class="tide-symbol" id="tide-symbol">↑</div><h3 id="tide-title">Pleamar</h3><p>La orientación de las corrientes gira con cada maniobra. Si entras en una casilla de corriente, el agua puede arrastrarte una casilla más.</p><div class="tide-cycle"><span>↑</span><span>→</span><span>↓</span><span>←</span></div></section>
+<section class="side-panel log-panel"><p class="eyebrow">REGISTRO DE A BORDO</p><p id="log">Sonda desplegada · motor estable.</p></section>
+<section class="side-panel tip"><span>✳</span><p><strong>Consejo de navegación</strong><br>El ancla consume combustible y hace avanzar la marea sin mover el barco. Úsala para cambiar la dirección de una corriente antes de entrar en ella.</p></section>
+</aside>
+</div>
+<section class="info-grid"><article><p class="eyebrow">01 · OBJETIVO</p><h3>Cartografía el archipiélago</h3><p>Completa cinco mapas, recupera las dos boyas de cada zona y llega al faro con el barco a flote.</p></article><article><p class="eyebrow">02 · CONTROLES</p><h3>Un turno por maniobra</h3><p>Usa las flechas, WASD o los botones de dirección. El ancla espera un ciclo de marea. Cada acción consume combustible.</p></article><article><p class="eyebrow">03 · TECNOLOGÍA</p><h3>Python en el navegador</h3><p>Pyodide ejecuta codigo.py. JavaScript dibuja el mapa y conecta los controles; HTML y CSS forman la interfaz.</p></article><article><p class="eyebrow">04 · APRENDIZAJE</p><h3>Planificación espacial</h3><p>Practica orientación, anticipación, gestión de recursos, lectura de patrones y toma de decisiones por turnos.</p></article></section>
+<section class="source"><details><summary><span>CÓDIGO FUENTE PYTHON</span><span>codigo.py · reglas de navegación</span></summary><p>El motor de juego está escrito en Python y se ejecuta localmente en el navegador mediante Pyodide.</p><pre><code id="python-source">Cargando codigo.py…</code></pre><a href="./codigo.py" download>Descargar codigo.py ↓</a></details></section>
+</main>
+<footer><span>Hecho con ayuda de IA (ChatGPT) como herramienta</span><span>Mario Galan Pedrayes</span><span>Técnico en Desarrollo Web y Multiplataforma</span></footer>
+</div>
+<div class="loading" id="loading"><div class="loading-mark">D</div><strong>Preparando la carta náutica</strong><span id="loading-message">Iniciando el motor Python…</span></div>
+<dialog id="help-dialog"><div class="dialog-body"><p class="eyebrow">MANUAL DE NAVEGACIÓN</p><h2>Cómo jugar</h2><ol><li>Recoge las dos boyas científicas del mapa.</li><li>Llega al faro con ambas muestras a bordo.</li><li>Las corrientes giran una posición cada vez que realizas una maniobra.</li><li>Si entras en una corriente, esta te desplaza una casilla en su dirección actual.</li><li>El ancla cambia la marea sin mover el barco, pero consume combustible.</li><li>Evita arrecifes: tres impactos destruyen el casco. Quedarte sin combustible también termina la expedición.</li></ol><p>Controles: flechas del teclado, WASD o botones en pantalla. La primera carga necesita conexión para descargar Pyodide.</p><button class="primary" id="close-help">Entendido</button></div></dialog>
+</body></html>
