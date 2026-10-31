@@ -31,7 +31,7 @@ function render(){
  }
  const msg=$('message');msg.className='message'+(state.lost?' error':state.won||state.finished?' success':'');msg.querySelector('span').textContent=state.message;
  const stopped=state.lost||state.won||state.finished;
- document.querySelectorAll('[data-action]').forEach(b=>b.disabled=stopped);
+ document.querySelectorAll('[data-action]:not(#result-button)').forEach(b=>b.disabled=stopped);
  $('restart').disabled=state.finished;
  $('result').hidden=true;
  if(state.lost)result('!','Expedición interrumpida','El barco no puede continuar. Reinicia el mapa para intentarlo de nuevo.','Reintentar mapa ↺','restart');
@@ -39,7 +39,7 @@ function render(){
  else if(state.won)result('★','¡Archipiélago cartografiado!','Has completado los cinco sectores. La expedición científica es un éxito.','Nueva expedición ↻','new');
  else if(state.finished)result('★','Expedición completada','Tu atlas del archipiélago está terminado.','Nueva expedición ↻','new');
 }
-function result(icon,title,copy,label,action){$('result').hidden=false;$('result-icon').textContent=icon;$('result-title').textContent=title;$('result-text').textContent=copy;$('result-button').textContent=label;$('result-button').dataset.action=action;}
+function result(icon,title,copy,label,action){$('result').hidden=false;$('result-icon').textContent=icon;$('result-title').textContent=title;$('result-text').textContent=copy;$('result-button').textContent=label;$('result-button').dataset.action=action;$('result-button').disabled=false;}
 function update(next){state=next;render()}
 function act(action){if(!py||!state||state.lost||state.won||state.finished)return;update(invoke('act_json',action));}
 document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.action==='anchor')act('anchor');else act(b.dataset.action)}));
