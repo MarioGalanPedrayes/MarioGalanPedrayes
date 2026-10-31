@@ -2,6 +2,12 @@
 
 Proyectos de juegos ejecutables desde navegador.
 
+## DERIVA — Cartógrafo de Mareas
+
+Puzle táctico de navegación por turnos desarrollado con Python y Pyodide. Recupera boyas científicas, aprovecha corrientes cambiantes y alcanza el faro en cinco mapas.
+
+[Jugar a DERIVA](https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/deriva/).
+
 ## NODO 7 — Clasificador de señales
 
 Juego de lógica logística desarrollado con Python y Pyodide. Clasifica paquetes por color, forma y ritmo en seis expedientes, con filtros simples y compuestos, rachas, pistas y límite de errores.
