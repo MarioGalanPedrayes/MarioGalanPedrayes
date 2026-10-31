@@ -1,41 +1,41 @@
 # BROTE: Ecosistema Perdido
 
-Un pequeño juego cozy de gestión y exploración: recupera un claro olvidado, cultiva brotes, reúne recursos, atrae criaturas y completa encargos antes de que termine la jornada.
+Un pequeño juego cozy de gestión y exploración: recupera un claro olvidado, cultiva brotes, reúne recursos, atrae criaturas y completa encargos.
 
-## Requisitos
+## Jugar online
 
-- Python 3.10 o posterior
-- Navegador moderno
+La versión estática es compatible con GitHub Pages. No necesita Python, Flask ni instalación: abre la página index.html publicada en GitHub Pages.
 
-## Instalación y ejecución
+Si GitHub Pages está configurado para publicar la rama main desde la raíz del repositorio, la dirección será:
 
-Desde esta carpeta:
+https://mariogalanpedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/brote/
 
-```bash
-python -m venv .venv
-# Windows: .venv\\Scripts\\activate
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
-```
+La partida se guarda automáticamente en el almacenamiento local del navegador (localStorage).
 
-Abre http://127.0.0.1:5000 en el navegador.
+## Ejecutar en local con Python
+
+También se conserva la versión Python/Flask original:
+
+    python -m venv .venv
+    pip install -r requirements.txt
+    python app.py
+
+Abre http://127.0.0.1:5000.
 
 ## Cómo jugar
 
-- **Recolectar**: consigue rocío, semillas y madera en el claro.
-- **Plantar**: coloca semillas en parcelas vacías; las plantas crecen al pasar de día.
-- **Regar**: acelera el crecimiento y ayuda a mantener el jardín sano.
-- **Explorar**: descubre recursos y posibilidades de encontrar criaturas.
-- **Construir**: instala refugios para atraer visitantes.
-- **Pasar el día**: recupera energía, avanza el crecimiento y activa el clima del día siguiente.
+- Recolectar: consigue rocío, semillas y madera.
+- Plantar: coloca semillas en parcelas vacías; las plantas crecen al pasar de día.
+- Regar: acelera el crecimiento.
+- Cosechar: recoge recursos cuando la planta florezca.
+- Explorar: descubre recursos y criaturas.
+- Construir: instala refugios para atraer visitantes.
+- Pasar el día: recupera energía, avanza el crecimiento y activa el clima siguiente.
 
-El estado de cada partida se guarda en la sesión del servidor. No utiliza recursos, imágenes ni música de terceros: los elementos visuales son CSS y arte original mediante formas y emoji del sistema.
+## Archivos
 
-## Estructura
+- index.html, style.css, game.js: versión estática para GitHub Pages.
+- app.py, game.py, templates/, static/: versión Flask original.
+- requirements.txt: dependencias de la versión Flask.
 
-- `app.py`: servidor Flask y API.
-- `game.py`: reglas, estado y acciones del juego.
-- `templates/index.html`: interfaz.
-- `static/style.css`: estilos adaptables.
-- `static/game.js`: interacción del navegador.
+Los elementos visuales son CSS y emoji del sistema; no se incorporan imágenes ni música de terceros.
