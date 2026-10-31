@@ -49,6 +49,8 @@ function render(){
  $('progress-fill').style.width=((levelIndex+1)/5*100)+'%';
  $('mission-title').textContent=solved?'Conexión estable':'Activa el receptor';
  $('mission-copy').textContent=solved?'El haz ha alcanzado el receptor. Expediente completado.':'Gira los espejos hasta que el haz alcance el receptor.';
+ $('next-level-button').hidden=!solved;
+ $('next-level-button').textContent=levelIndex===levels.length-1?'Volver al inicio →':'Siguiente nivel →';
  $('board-state').textContent=solved?'RECEPTOR ACTIVO':'HAZ EN TRÁNSITO';
  $('best-score').textContent=saved.best[levelIndex]===undefined?'—':saved.best[levelIndex]+' GIROS';
  $('unlocked-count').textContent=String(saved.unlocked).padStart(2,'0')+' / 05';
@@ -63,16 +65,17 @@ function rotate(i){if(solved)return;orientations[i]=orientations[i]==='/'?'\\':'
 function complete(){
  solved=true;const prev=saved.best[levelIndex];if(prev===undefined||moves<prev)saved.best[levelIndex]=moves;
  saved.unlocked=Math.max(saved.unlocked,Math.min(5,levelIndex+2));persist();render();
- $('mission-copy').textContent=moves<=current().par?'Conexión perfecta. Has igualado o superado el registro objetivo.':'Conexión conseguida. Puedes repetir para mejorar tu número de giros.';
+ $('mission-copy').textContent=levelIndex===levels.length-1?'¡Has completado los cinco expedientes! El Archivo de Luz está restaurado.':(moves<=current().par?'Conexión perfecta. Has igualado o superado el registro objetivo.':'Conexión conseguida. Puedes repetir para mejorar tu número de giros.');
  $('hint-text').textContent='Expediente completado · '+moves+' giros.';
- showToast(moves<=current().par?'¡Conexión perfecta!':'¡Receptor activado!');
+ showToast(levelIndex===levels.length-1?'¡Archivo de Luz completado!':(moves<=current().par?'¡Conexión perfecta!':'¡Receptor activado!'));
  $('board-state').textContent='CONEXIÓN ESTABLE';
 }
-function reset(){orientations=initialOrientations();moves=0;solved=false;render();}
+function reset(){orientations=initialOrientations();moves=0;solved=false;render();$('next-level-button').hidden=true;}
 function showToast(message){const t=$('toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);}
 function nextLevel(){if(!solved)return;if(levelIndex<levels.length-1){levelIndex++;reset();showToast('Expediente '+String(levelIndex+1).padStart(2,'0')+' desbloqueado.');}else{showToast('Has completado el Archivo de Luz.');levelIndex=0;reset();}}
 function hint(){if(solved){showToast('Este expediente ya está resuelto.');return;}const solution=current().mirrors;const wrong=solution.findIndex((m,i)=>orientations[i]!==m[2]);if(wrong<0){showToast('La configuración es correcta.');return;}const [x,y]=solution[wrong];const tile=board.querySelector('[data-x="'+x+'"][data-y="'+y+'"]');if(tile){tile.classList.remove('hint-pulse');void tile.offsetWidth;tile.classList.add('hint-pulse');$('hint-text').textContent='Pista: prueba a girar el espejo señalado.';}}
 $('reset-button').addEventListener('click',reset);$('hint-button').addEventListener('click',hint);
+$('next-level-button').addEventListener('click',nextLevel);
 $('help-button').addEventListener('click',()=>$('help-dialog').showModal());
 $('close-help').addEventListener('click',()=>$('help-dialog').close());$('close-help-bottom').addEventListener('click',()=>$('help-dialog').close());
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&solved)nextLevel();if(e.key.toLowerCase()==='r')reset();});
