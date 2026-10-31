@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juegos · Python + Pygame: SYNTH//SWARM</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>👾 SYNTH//SWARM</h1>
+  <p>Un juego de supervivencia estilo neón hecho con Python y Pygame, que corre en tu navegador gracias a Pygbag (Python compilado a WebAssembly).</p>
+  <span class="badge">▶ Se ejecuta en vivo en el navegador</span>
+</header>
+<main>
+  <section class="panel">
+    <h2>Juega</h2>
+    <div class="marco">
+      <iframe src="juego/" title="SYNTH//SWARM" allow="autoplay; fullscreen; gamepad" loading="lazy"></iframe>
+    </div>
+    <div class="acciones">
+      <a class="btn" href="juego/">Abrir a pantalla completa</a>
+      <span class="note">La primera carga descarga el motor de Python y Pygame y puede tardar unos segundos. Haz clic dentro del juego para empezar: el navegador necesita un clic para activar el teclado y el sonido.</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Controles</h2>
+    <table class="tabla">
+      <tr><th>Acción</th><th>Teclado y ratón</th><th>Móvil</th></tr>
+      <tr><td>Moverse</td><td><code>WASD</code> o flechas</td><td>Mantener el dedo en el lado izquierdo</td></tr>
+      <tr><td>Dash (breve invulnerabilidad)</td><td><code>ESPACIO</code>, <code>MAYÚS</code> o clic derecho</td><td>Tocar el lado derecho</td></tr>
+      <tr><td>Elegir mejora</td><td><code>1</code>, <code>2</code>, <code>3</code> o clic en la tarjeta</td><td>Tocar la tarjeta</td></tr>
+      <tr><td>Pausa / reiniciar</td><td><code>ESC</code> / <code>R</code></td><td>Botón de la pantalla final</td></tr>
+    </table>
+    <p class="note">El disparo es automático: la nave apunta al enemigo más cercano, así que solo hay que moverse, recoger energía y esquivar.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Objetivo de la práctica</h2>
+    <p>Ver un videojuego completo hecho solo con código: sin imágenes ni sonidos externos, todo se dibuja con formas y partículas. Sirve para estudiar cómo se estructura un juego en Python y cómo se lleva al navegador sin reescribirlo en JavaScript.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Cómo está hecho</h2>
+    <ul>
+      <li>Un único archivo, <code>main.py</code>, con una clase <code>Game</code> que gestiona los estados (menú, partida, mejora, pausa y fin) y un bucle de juego a 60 fotogramas por segundo.</li>
+      <li>Cada fotograma tiene tres pasos: leer eventos (teclado, ratón o dedo), actualizar el mundo con el tiempo transcurrido (<code>dt</code>) y dibujarlo.</li>
+      <li>Los enemigos (drones, corredores y tanques) salen de los bordes y aparecen más rápido cada oleada, que cambia cada 22 segundos. Al eliminarlos sueltan energía; al llenar la barra subes de nivel y eliges una de tres mejoras entre ocho posibles.</li>
+      <li>La «semilla diaria» usa la fecha para generar los números aleatorios de la aparición de enemigos y de las mejoras, separados de los efectos visuales.</li>
+      <li>Para el navegador, el bucle usa <code>async</code>/<code>await</code> y cede el control al navegador en cada fotograma (<code>await asyncio.sleep(0)</code>). Pygbag empaqueta <code>main.py</code> en un archivo <code>.apk</code> y la página carga Python y Pygame desde su CDN.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Qué se busca con ella</h2>
+    <p>Que se vea que un proyecto de Pygame puede publicarse como una web estática: la misma lógica corre en el ordenador (<code>python main.py</code>) y en el navegador, y solo cambia que el bucle principal sea asíncrono. También sirve como ejemplo de código que se puede seguir leyendo y ampliando.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Detalles a mejorar</h2>
+    <ul>
+      <li>Las balas perforantes pueden golpear dos veces al mismo enemigo, porque se vuelven a comprobar en el fotograma siguiente: gastan perforación sin atravesar de verdad. Se arreglaría guardando qué enemigos ha tocado cada bala.</li>
+      <li>La semilla diaria fija las posiciones de aparición, pero lo que sale depende también del tiempo que sobrevivas, así que dos partidas con la misma semilla no tienen por qué ser idénticas.</li>
+      <li>La mejor puntuación solo se guarda mientras la página está abierta; guardarla de forma permanente o compartirla necesitaría <code>localStorage</code> o un servidor.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Código Python</h2>
+    <p class="note">Para jugar en tu ordenador: <a href="main.py" download>descarga main.py</a> y ejecuta <code>pip install pygame</code> y después <code>python main.py</code>.</p>
+    <details>
+      <summary>Ver el código completo (main.py)</summary>
+      <pre><code>&quot;&quot;&quot;SYNTH//SWARM — a bite-sized neon survival roguelite.
+
+Desktop: WASD / arrows to move, SPACE to dash, 1-3 to pick upgrades.
+Browser: Pygbag-compatible; touch the left side to steer and right side to dash.
+&quot;&quot;&quot;
+import asyncio
+import math
+import random
+from datetime import date
+import pygame
+
+WIDTH, HEIGHT = 960, 640
+FPS = 60
+BG = (7, 9, 22)
+WHITE = (240, 248, 255)
+MUTED = (127, 145, 177)
+CYAN = (49, 238, 235)
+PINK = (255, 71, 179)
+PURPLE = (155, 92, 255)
+GOLD = (255, 202, 88)
+RED = (255, 80, 104)
+GREEN = (112, 255, 169)
+
+pygame.init()
+pygame.display.set_caption(&quot;SYNTH//SWARM&quot;)
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+CLOCK = pygame.time.Clock()
+FONT_CACHE = {}
+GLOW_CACHE = {}
+
+
+def font(size, bold=False):
+    key = (size, bold)
+    if key not in FONT_CACHE:
+        f = pygame.font.Font(None, size)
+        f.set_bold(bold)
+        FONT_CACHE[key] = f
+    return FONT_CACHE[key]
+
+
+def text(surface, value, x, y, size=24, color=WHITE, bold=False, center=False):
+    image = font(size, bold).render(str(value), True, color)
+    rect = image.get_rect()
+    if center:
+        rect.center = (int(x), int(y))
+    else:
+        rect.topleft = (int(x), int(y))
+    surface.blit(image, rect)
+    return rect
+
+
+def glow(surface, x, y, radius, color, strength=1.0):
+    radius = max(2, int(radius))
+    key = (radius, color, round(strength, 2))
+    image = GLOW_CACHE.get(key)
+    if image is None:
+        image = pygame.Surface((radius * 4, radius * 4), pygame.SRCALPHA)
+        cx = cy = radius * 2
+        for ring in range(7, 0, -1):
+            rr = max(1, int(radius * ring / 3.5))
+            alpha = max(3, int(25 * strength * (1 - ring / 9)))
+            pygame.draw.circle(image, (*color, alpha), (cx, cy), rr)
+        pygame.draw.circle(image, (*color, min(255, int(90 * strength))), (cx, cy), radius)
+        GLOW_CACHE[key] = image
+    surface.blit(image, (int(x - image.get_width() / 2), int(y - image.get_height() / 2)))
+
+
+def clamp(value, lo, hi):
+    return max(lo, min(hi, value))
+
+
+def unit(x, y):
+    length = math.hypot(x, y)
+    if length &lt;= 0.0001:
+        return 0.0, 0.0
+    return x / length, y / length
+
+
+def circle_hit(ax, ay, ar, bx, by, br):
+    return (ax - bx) ** 2 + (ay - by) ** 2 &lt;= (ar + br) ** 2
+
+
+UPGRADES = [
+    (&quot;OVERDRIVE&quot;, &quot;Fire 22% faster&quot;, CYAN),
+    (&quot;ION CORE&quot;, &quot;+1 bullet damage&quot;, PURPLE),
+    (&quot;NEON ENGINE&quot;, &quot;+16% movement speed&quot;, GREEN),
+    (&quot;MAGNET FIELD&quot;, &quot;Collect energy from farther away&quot;, GOLD),
+    (&quot;DOUBLE TAP&quot;, &quot;Fire an extra side shot&quot;, PINK),
+    (&quot;PHASE SKIN&quot;, &quot;+1 max HP and heal 1&quot;, CYAN),
+    (&quot;QUICK SHIFT&quot;, &quot;Dash recharges 25% faster&quot;, PURPLE),
+    (&quot;PIERCING BYTE&quot;, &quot;Bullets pierce one more enemy&quot;, GOLD),
+]
+
+
+class Game:
+    def __init__(self):
+        self.scene = pygame.Surface((WIDTH, HEIGHT))
+        self.stars = [(random.randrange(WIDTH), random.randrange(HEIGHT), random.choice((1, 1, 1, 2))) for _ in range(110)]
+        self.daily_seed = int(date.today().strftime(&quot;%Y%m%d&quot;))
+        self.reset_run()
+        self.state = &quot;menu&quot;
+        self.session_best = 0
+        self.joy_active = False
+        self.joy_origin = (100, HEIGHT - 100)
+        self.joy_pos = self.joy_origin
+        self.last_pointer = (0, 0)
+
+    def reset_run(self):
+        # Keep gameplay spawns and upgrade drafts on separate seeded streams.
+        # Cosmetic particles use the unseeded global RNG and cannot affect the daily challenge.
+        self.spawn_rng = random.Random(self.daily_seed)
+        self.upgrade_rng = random.Random(self.daily_seed ^ 0x5A17C3)
+        self.player = {
+            &quot;x&quot;: WIDTH / 2, &quot;y&quot;: HEIGHT / 2, &quot;r&quot;: 12, &quot;speed&quot;: 245.0,
+            &quot;hp&quot;: 3, &quot;max_hp&quot;: 3, &quot;invuln&quot;: 0.0, &quot;dash_cd&quot;: 0.0,
+            &quot;dash_time&quot;: 0.0, &quot;dash_dir&quot;: (1.0, 0.0), &quot;fire_cd&quot;: 0.0,
+            &quot;fire_interval&quot;: 0.30, &quot;damage&quot;: 1, &quot;extra_shots&quot;: 0,
+            &quot;magnet&quot;: 52.0, &quot;dash_max&quot;: 2.4, &quot;pierce&quot;: 0,
+        }
+        self.enemies = []
+        self.bullets = []
+        self.orbs = []
+        self.particles = []
+        self.elapsed = 0.0
+        self.score = 0
+        self.kills = 0
+        self.bonus_score = 0
+        self.level = 1
+        self.xp = 0
+        self.xp_needed = 7
+        self.spawn_timer = 0.0
+        self.shake = 0.0
+        self.flash = 0.0
+        self.upgrade_choices = []
+        self.toast = &quot;&quot;
+        self.toast_time = 0.0
+        self.state = &quot;playing&quot;
+        self.joy_active = False
+
+    def add_burst(self, x, y, color, count=10, speed=150):
+        for _ in range(count):
+            a = random.random() * math.tau
+            v = random.uniform(speed * 0.3, speed)
+            life = random.uniform(0.20, 0.52)
+            self.particles.append({&quot;x&quot;: x, &quot;y&quot;: y, &quot;vx&quot;: math.cos(a)*v, &quot;vy&quot;: math.sin(a)*v,
+                                  &quot;life&quot;: life, &quot;max&quot;: life, &quot;color&quot;: color, &quot;r&quot;: random.uniform(1.5, 3.4)})
+
+    def spawn_enemy(self):
+        edge = self.spawn_rng.randrange(4)
+        margin = 26
+        if edge == 0: x, y = self.spawn_rng.uniform(0, WIDTH), -margin
+        elif edge == 1: x, y = WIDTH + margin, self.spawn_rng.uniform(0, HEIGHT)
+        elif edge == 2: x, y = self.spawn_rng.uniform(0, WIDTH), HEIGHT + margin
+        else: x, y = -margin, self.spawn_rng.uniform(0, HEIGHT)
+        t = self.spawn_rng.random()
+        wave = 1 + int(self.elapsed // 22)
+        if wave &gt;= 3 and t &lt; min(0.22, 0.07 + wave * 0.012):
+            kind = &quot;tank&quot;
+            hp = 5 + wave // 2
+            speed = 48 + min(30, wave * 1.8)
+            radius = 18
+            color = GOLD
+            score = 260
+        elif wave &gt;= 2 and t &lt; 0.42:
+            kind = &quot;runner&quot;
+            hp = 1 + (1 if wave &gt;= 6 and self.spawn_rng.random() &lt; .18 else 0)
+            speed = 112 + min(75, wave * 3.0)
+            radius = 9
+            color = PINK
+            score = 150
+        else:
+            kind = &quot;drone&quot;
+            hp = 2 if wave &gt;= 5 and self.spawn_rng.random() &lt; .18 else 1
+            speed = 72 + min(55, wave * 2.2)
+            radius = 12
+            color = RED
+            score = 100
+        self.enemies.append({&quot;x&quot;: x, &quot;y&quot;: y, &quot;r&quot;: radius, &quot;hp&quot;: hp, &quot;max_hp&quot;: hp, &quot;speed&quot;: speed,
+                             &quot;kind&quot;: kind, &quot;color&quot;: color, &quot;score&quot;: score, &quot;phase&quot;: random.random()*math.tau})
+
+    def fire(self):
+        p = self.player
+        if not self.enemies:
+            return
+        target = min(self.enemies, key=lambda e: (e[&quot;x&quot;]-p[&quot;x&quot;])**2 + (e[&quot;y&quot;]-p[&quot;y&quot;])**2)
+        dx, dy = unit(target[&quot;x&quot;]-p[&quot;x&quot;], target[&quot;y&quot;]-p[&quot;y&quot;])
+        spread = [-0.12, 0.12] if p[&quot;extra_shots&quot;] else []
+        dirs = [(dx, dy)]
+        for a in spread:
+            ca, sa = math.cos(a), math.sin(a)
+            dirs.append((dx*ca-dy*sa, dx*sa+dy*ca))
+        for vx, vy in dirs:
+            self.bullets.append({&quot;x&quot;: p[&quot;x&quot;]+vx*17, &quot;y&quot;: p[&quot;y&quot;]+vy*17, &quot;vx&quot;: vx*570, &quot;vy&quot;: vy*570,
+                                 &quot;r&quot;: 4, &quot;damage&quot;: p[&quot;damage&quot;], &quot;pierce&quot;: p[&quot;pierce&quot;], &quot;life&quot;: 1.15})
+        self.add_burst(p[&quot;x&quot;]+dx*15, p[&quot;y&quot;]+dy*15, CYAN, 2, 45)
+
+    def trigger_dash(self, mx=0, my=0):
+        p = self.player
+        if p[&quot;dash_cd&quot;] &gt; 0 or self.state != &quot;playing&quot;:
+            return
+        keys = pygame.key.get_pressed()
+        dx = int(keys[pygame.K_d] or keys[pygame.K_RIGHT]) - int(keys[pygame.K_a] or keys[pygame.K_LEFT])
+        dy = int(keys[pygame.K_s] or keys[pygame.K_DOWN]) - int(keys[pygame.K_w] or keys[pygame.K_UP])
+        if abs(mx) + abs(my) &gt; 0.05:
+            dx, dy = mx, my
+        if dx == 0 and dy == 0:
+            dx, dy = p[&quot;dash_dir&quot;]
+        dx, dy = unit(dx, dy)
+        p[&quot;dash_dir&quot;] = (dx, dy)
+        p[&quot;dash_time&quot;] = 0.16
+        p[&quot;dash_cd&quot;] = p[&quot;dash_max&quot;]
+        p[&quot;invuln&quot;] = max(p[&quot;invuln&quot;], 0.24)
+        self.add_burst(p[&quot;x&quot;], p[&quot;y&quot;], CYAN, 12, 230)
+
+    def level_up(self):
+        self.level += 1
+        self.xp -= self.xp_needed
+        self.xp_needed = int(7 + self.level * 2.6)
+        self.upgrade_choices = self.upgrade_rng.sample(UPGRADES, 3)
+        self.state = &quot;upgrade&quot;
+        self.add_burst(self.player[&quot;x&quot;], self.player[&quot;y&quot;], PURPLE, 24, 200)
+
+    def apply_upgrade(self, idx):
+        if idx &lt; 0 or idx &gt;= len(self.upgrade_choices):
+            return
+        name = self.upgrade_choices[idx][0]
+        p = self.player
+        if name == &quot;OVERDRIVE&quot;: p[&quot;fire_interval&quot;] *= 0.78
+        elif name == &quot;ION CORE&quot;: p[&quot;damage&quot;] += 1
+        elif name == &quot;NEON ENGINE&quot;: p[&quot;speed&quot;] *= 1.16
+        elif name == &quot;MAGNET FIELD&quot;: p[&quot;magnet&quot;] += 65
+        elif name == &quot;DOUBLE TAP&quot;: p[&quot;extra_shots&quot;] += 1
+        elif name == &quot;PHASE SKIN&quot;: p[&quot;max_hp&quot;] += 1; p[&quot;hp&quot;] = min(p[&quot;max_hp&quot;], p[&quot;hp&quot;] + 1)
+        elif name == &quot;QUICK SHIFT&quot;: p[&quot;dash_max&quot;] *= 0.75
+        elif name == &quot;PIERCING BYTE&quot;: p[&quot;pierce&quot;] += 1
+        self.state = &quot;playing&quot;
+        self.toast = name + &quot; ACQUIRED&quot;
+        self.toast_time = 1.4
+
+    def handle_click(self, pos):
+        x, y = pos
+        self.last_pointer = pos
+        if self.state == &quot;menu&quot;:
+            self.reset_run()
+            return
+        if self.state == &quot;gameover&quot;:
+            if 300 &lt;= x &lt;= 660 and 440 &lt;= y &lt;= 510:
+                self.reset_run()
+            return
+        if self.state == &quot;upgrade&quot;:
+            for i in range(3):
+                rect = pygame.Rect(65 + i*282, 250, 260, 220)
+                if rect.collidepoint(pos):
+                    self.apply_upgrade(i)
+                    return
+        elif self.state == &quot;playing&quot;:
+            if x &gt; WIDTH * 0.55:
+                self.trigger_dash()
+            else:
+                self.joy_active = True
+                self.joy_origin = (x, y)
+                self.joy_pos = (x, y)
+
+    def handle_event(self, event):
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            raise SystemExit
+        if event.type == pygame.KEYDOWN:
+            if self.state == &quot;menu&quot; and event.key in (pygame.K_SPACE, pygame.K_RETURN):
+                self.reset_run()
+            elif self.state == &quot;gameover&quot; and event.key in (pygame.K_r, pygame.K_SPACE, pygame.K_RETURN):
+                self.reset_run()
+            elif self.state == &quot;playing&quot; and event.key in (pygame.K_SPACE, pygame.K_LSHIFT, pygame.K_RSHIFT):
+                self.trigger_dash()
+            elif self.state == &quot;upgrade&quot; and event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
+                self.apply_upgrade(event.key - pygame.K_1)
+            elif self.state == &quot;playing&quot; and event.key == pygame.K_ESCAPE:
+                self.state = &quot;paused&quot;
+            elif self.state == &quot;paused&quot; and event.key in (pygame.K_ESCAPE, pygame.K_SPACE):
+                self.state = &quot;playing&quot;
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                self.handle_click(event.pos)
+            elif event.button == 3 and self.state == &quot;playing&quot;:
+                self.trigger_dash()
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            self.joy_active = False
+        elif event.type == pygame.MOUSEMOTION:
+            if self.joy_active:
+                self.joy_pos = event.pos
+        # Native finger events make the virtual joystick reliable on touch screens.
+        elif hasattr(pygame, &quot;FINGERDOWN&quot;) and event.type == pygame.FINGERDOWN:
+            pos = (int(event.x * WIDTH), int(event.y * HEIGHT))
+            self.last_pointer = pos
+            if self.state == &quot;menu&quot;:
+                self.reset_run()
+            elif self.state == &quot;gameover&quot;:
+                if 300 &lt;= pos[0] &lt;= 660 and 440 &lt;= pos[1] &lt;= 510:
+                    self.reset_run()
+            elif self.state == &quot;upgrade&quot;:
+                self.handle_click(pos)
+            elif self.state == &quot;playing&quot;:
+                if pos[0] &gt; WIDTH * 0.55:
+                    self.trigger_dash()
+                else:
+                    self.joy_active = True
+                    self.joy_origin = pos
+                    self.joy_pos = pos
+        elif hasattr(pygame, &quot;FINGERMOTION&quot;) and event.type == pygame.FINGERMOTION:
+            if self.joy_active:
+                self.joy_pos = (int(event.x * WIDTH), int(event.y * HEIGHT))
+        elif hasattr(pygame, &quot;FINGERUP&quot;) and event.type == pygame.FINGERUP:
+            self.joy_active = False
+
+    def update(self, dt):
+        if self.state != &quot;playing&quot;:
+            return
+        p = self.player
+        self.elapsed += dt
+        self.score = self.kills * 100 + self.bonus_score + int(self.elapsed * 8) + (self.level - 1) * 250
+        wave = 1 + int(self.elapsed // 22)
+        self.spawn_timer -= dt
+        spawn_gap = max(0.19, 0.78 - self.elapsed * 0.008)
+        if self.spawn_timer &lt;= 0 and len(self.enemies) &lt; 72:
+            self.spawn_enemy()
+            self.spawn_timer = spawn_gap * self.spawn_rng.uniform(.72, 1.18)
+            if wave &gt;= 4 and self.spawn_rng.random() &lt; min(.45, (wave-2)*.07):
+                self.spawn_enemy()
+
+        keys = pygame.key.get_pressed()
+        dx = int(keys[pygame.K_d] or keys[pygame.K_RIGHT]) - int(keys[pygame.K_a] or keys[pygame.K_LEFT])
+        dy = int(keys[pygame.K_s] or keys[pygame.K_DOWN]) - int(keys[pygame.K_w] or keys[pygame.K_UP])
+        if self.joy_active:
+            jx = self.joy_pos[0] - self.joy_origin[0]
+            jy = self.joy_pos[1] - self.joy_origin[1]
+            mag = math.hypot(jx, jy)
+            if mag &gt; 8:
+                dx, dy = jx / max(mag, 1), jy / max(mag, 1)
+                scale = min(1.0, mag / 52)
+                dx, dy = dx*scale, dy*scale
+        dx, dy = unit(dx, dy) if abs(dx)+abs(dy) &gt; 1.02 else (dx, dy)
+        p[&quot;dash_cd&quot;] = max(0.0, p[&quot;dash_cd&quot;] - dt)
+        p[&quot;dash_time&quot;] = max(0.0, p[&quot;dash_time&quot;] - dt)
+        p[&quot;invuln&quot;] = max(0.0, p[&quot;invuln&quot;] - dt)
+        if p[&quot;dash_time&quot;] &gt; 0:
+            dx, dy = p[&quot;dash_dir&quot;]
+            speed = 760
+        else:
+            speed = p[&quot;speed&quot;]
+        if abs(dx) + abs(dy) &gt; .03:
+            p[&quot;dash_dir&quot;] = unit(dx, dy)
+        p[&quot;x&quot;] = clamp(p[&quot;x&quot;] + dx*speed*dt, 18, WIDTH-18)
+        p[&quot;y&quot;] = clamp(p[&quot;y&quot;] + dy*speed*dt, 26, HEIGHT-18)
+
+        p[&quot;fire_cd&quot;] -= dt
+        if p[&quot;fire_cd&quot;] &lt;= 0 and self.enemies:
+            self.fire()
+            p[&quot;fire_cd&quot;] = p[&quot;fire_interval&quot;]
+
+        for b in self.bullets[:]:
+            b[&quot;x&quot;] += b[&quot;vx&quot;]*dt; b[&quot;y&quot;] += b[&quot;vy&quot;]*dt; b[&quot;life&quot;] -= dt
+            hit = None
+            for e in self.enemies:
+                if circle_hit(b[&quot;x&quot;], b[&quot;y&quot;], b[&quot;r&quot;], e[&quot;x&quot;], e[&quot;y&quot;], e[&quot;r&quot;]):
+                    hit = e; break
+            if hit:
+                hit[&quot;hp&quot;] -= b[&quot;damage&quot;]
+                self.add_burst(b[&quot;x&quot;], b[&quot;y&quot;], hit[&quot;color&quot;], 4, 85)
+                if b[&quot;pierce&quot;] &gt; 0:
+                    b[&quot;pierce&quot;] -= 1
+                    b[&quot;damage&quot;] = max(1, b[&quot;damage&quot;] - 1)
+                    b[&quot;x&quot;] += b[&quot;vx&quot;]*dt*1.8
+                    b[&quot;y&quot;] += b[&quot;vy&quot;]*dt*1.8
+                else:
+                    if b in self.bullets: self.bullets.remove(b)
+            elif b[&quot;life&quot;] &lt;= 0 or b[&quot;x&quot;] &lt; -30 or b[&quot;x&quot;] &gt; WIDTH+30 or b[&quot;y&quot;] &lt; -30 or b[&quot;y&quot;] &gt; HEIGHT+30:
+                if b in self.bullets: self.bullets.remove(b)
+
+        for e in self.enemies[:]:
+            ex, ey = unit(p[&quot;x&quot;]-e[&quot;x&quot;], p[&quot;y&quot;]-e[&quot;y&quot;])
+            e[&quot;phase&quot;] += dt * (2.0 if e[&quot;kind&quot;] == &quot;runner&quot; else 1.0)
+            wobble = math.sin(e[&quot;phase&quot;] * 2) * (18 if e[&quot;kind&quot;] == &quot;runner&quot; else 5)
+            e[&quot;x&quot;] += (ex*e[&quot;speed&quot;] - ey*wobble)*dt
+            e[&quot;y&quot;] += (ey*e[&quot;speed&quot;] + ex*wobble)*dt
+            if e[&quot;hp&quot;] &lt;= 0:
+                self.kills += 1
+                self.add_burst(e[&quot;x&quot;], e[&quot;y&quot;], e[&quot;color&quot;], 15 if e[&quot;kind&quot;] == &quot;tank&quot; else 9, 175)
+                self.orbs.append({&quot;x&quot;: e[&quot;x&quot;], &quot;y&quot;: e[&quot;y&quot;], &quot;r&quot;: 6, &quot;value&quot;: 1, &quot;phase&quot;: random.random()*math.tau})
+                if e[&quot;kind&quot;] == &quot;tank&quot;:
+                    self.orbs.append({&quot;x&quot;: e[&quot;x&quot;]+8, &quot;y&quot;: e[&quot;y&quot;]+4, &quot;r&quot;: 6, &quot;value&quot;: 1, &quot;phase&quot;: random.random()*math.tau})
+                self.bonus_score += max(0, e[&quot;score&quot;] - 100)
+                self.enemies.remove(e)
+                continue
+            if circle_hit(p[&quot;x&quot;], p[&quot;y&quot;], p[&quot;r&quot;], e[&quot;x&quot;], e[&quot;y&quot;], e[&quot;r&quot;]) and p[&quot;invuln&quot;] &lt;= 0:
+                p[&quot;hp&quot;] -= 1
+                p[&quot;invuln&quot;] = 1.15
+                self.shake = 0.28
+                self.flash = 0.14
+                self.add_burst(p[&quot;x&quot;], p[&quot;y&quot;], RED, 18, 210)
+                e[&quot;x&quot;] -= ex*26; e[&quot;y&quot;] -= ey*26
+                if p[&quot;hp&quot;] &lt;= 0:
+                    self.session_best = max(self.session_best, self.score)
+                    self.state = &quot;gameover&quot;
+                    return
+
+        for orb in self.orbs[:]:
+            orb[&quot;phase&quot;] += dt*3
+            vx, vy = p[&quot;x&quot;]-orb[&quot;x&quot;], p[&quot;y&quot;]-orb[&quot;y&quot;]
+            dist = math.hypot(vx, vy)
+            if dist &lt; p[&quot;magnet&quot;] + 38:
+                nx, ny = unit(vx, vy)
+                pull = 240 if dist &lt; p[&quot;magnet&quot;] else 115
+                orb[&quot;x&quot;] += nx*pull*dt; orb[&quot;y&quot;] += ny*pull*dt
+            if dist &lt; p[&quot;r&quot;] + orb[&quot;r&quot;] + 4:
+                self.xp += orb[&quot;value&quot;]
+                self.add_burst(orb[&quot;x&quot;], orb[&quot;y&quot;], CYAN, 5, 95)
+                self.orbs.remove(orb)
+                if self.xp &gt;= self.xp_needed:
+                    self.level_up()
+                    break
+
+        for pt in self.particles[:]:
+            pt[&quot;x&quot;] += pt[&quot;vx&quot;]*dt; pt[&quot;y&quot;] += pt[&quot;vy&quot;]*dt
+            pt[&quot;vx&quot;] *= max(0, 1-2.3*dt); pt[&quot;vy&quot;] *= max(0, 1-2.3*dt)
+            pt[&quot;life&quot;] -= dt
+            if pt[&quot;life&quot;] &lt;= 0: self.particles.remove(pt)
+        self.shake = max(0, self.shake-dt)
+        self.flash = max(0, self.flash-dt)
+        self.toast_time = max(0, self.toast_time-dt)
+
+    def draw_background(self, surface):
+        surface.fill(BG)
+        # Subtle vertical colour wash, the grid is deliberately restrained.
+        for y in range(0, HEIGHT, 4):
+            shade = int(7 + 7 * (1 - y / HEIGHT))
+            pygame.draw.line(surface, (shade, shade+1, shade+14), (0, y), (WIDTH, y))
+        for x in range(0, WIDTH, 48):
+            pygame.draw.line(surface, (17, 24, 47), (x, 0), (x, HEIGHT), 1)
+        for y in range(0, HEIGHT, 48):
+            pygame.draw.line(surface, (17, 24, 47), (0, y), (WIDTH, y), 1)
+        for x, y, r in self.stars:
+            surface.fill((29, 48, 76), (x, y, r, r))
+        pygame.draw.rect(surface, (29, 55, 83), (9, 9, WIDTH-18, HEIGHT-18), 1, border_radius=14)
+
+    def draw_enemy(self, surface, e):
+        x, y, r, c = int(e[&quot;x&quot;]), int(e[&quot;y&quot;]), e[&quot;r&quot;], e[&quot;color&quot;]
+        glow(surface, x, y, r*1.35, c, .75)
+        if e[&quot;kind&quot;] == &quot;tank&quot;:
+            points = [(x, y-r), (x+r, y-r//2), (x+r, y+r//2), (x, y+r), (x-r, y+r//2), (x-r, y-r//2)]
+            pygame.draw.polygon(surface, (38, 31, 43), points)
+            pygame.draw.polygon(surface, c, points, 2)
+            pygame.draw.circle(surface, c, (x, y), 4)
+        elif e[&quot;kind&quot;] == &quot;runner&quot;:
+            points = [(x, y-r-2), (x+r+2, y), (x, y+r+2), (x-r-2, y)]
+            pygame.draw.polygon(surface, (43, 23, 48), points)
+            pygame.draw.polygon(surface, c, points, 2)
+            pygame.draw.circle(surface, WHITE, (x, y), 2)
+        else:
+            pygame.draw.circle(surface, (40, 25, 39), (x, y), r)
+            pygame.draw.circle(surface, c, (x, y), r, 2)
+            pygame.draw.circle(surface, c, (x, y), 3)
+        if e[&quot;hp&quot;] &lt; e[&quot;max_hp&quot;]:
+            w = r*2
+            pygame.draw.rect(surface, (43, 39, 57), (x-w//2, y-r-9, w, 3), border_radius=2)
+            pygame.draw.rect(surface, c, (x-w//2, y-r-9, int(w*max(0,e[&quot;hp&quot;])/e[&quot;max_hp&quot;]), 3), border_radius=2)
+
+    def draw_player(self, surface):
+        p = self.player
+        x, y, r = int(p[&quot;x&quot;]), int(p[&quot;y&quot;]), p[&quot;r&quot;]
+        if p[&quot;invuln&quot;] &gt; 0 and int(p[&quot;invuln&quot;]*16) % 2 == 0:
+            return
+        glow(surface, x, y, 24, CYAN, 1.0)
+        angle = math.atan2(p[&quot;dash_dir&quot;][1], p[&quot;dash_dir&quot;][0])
+        # Point the avatar toward its latest movement direction.
+        vertices = []
+        for a, rr in ((0, r+5), (2.35, r), (math.pi, r+2), (math.tau-2.35, r)):
+            aa = angle + a
+            vertices.append((x + math.cos(aa)*rr, y + math.sin(aa)*rr))
+        pygame.draw.polygon(surface, (17, 48, 61), vertices)
+        pygame.draw.polygon(surface, CYAN, vertices, 2)
+        pygame.draw.circle(surface, WHITE, (x, y), 3)
+        if p[&quot;dash_cd&quot;] &lt;= 0:
+            pygame.draw.circle(surface, (40, 112, 125), (x, y), r+9, 1)
+
+    def draw_hud(self, surface):
+        p = self.player
+        pygame.draw.rect(surface, (11, 16, 36), (24, 22, 236, 84), border_radius=12)
+        pygame.draw.rect(surface, (38, 62, 95), (24, 22, 236, 84), 1, border_radius=12)
+        text(surface, &quot;SCORE&quot;, 40, 34, 17, MUTED, True)
+        text(surface, f&quot;{self.score:06d}&quot;, 40, 52, 34, WHITE, True)
+        text(surface, f&quot;LVL {self.level:02d}&quot;, 202, 39, 17, CYAN, True)
+        wave = 1 + int(self.elapsed // 22)
+        text(surface, f&quot;WAVE {wave:02d}&quot;, WIDTH-140, 30, 18, PINK, True)
+        text(surface, f&quot;{int(self.elapsed//60):02d}:{int(self.elapsed%60):02d}&quot;, WIDTH-140, 52, 24, WHITE, True)
+        # Health pips
+        text(surface, &quot;CORE&quot;, 30, 120, 15, MUTED, True)
+        for i in range(p[&quot;max_hp&quot;]):
+            col = RED if i &lt; p[&quot;hp&quot;] else (43, 47, 69)
+            pygame.draw.rect(surface, col, (83+i*20, 123, 13, 9), border_radius=3)
+        # XP bar across the top
+        bar = pygame.Rect(285, 27, 390, 7)
+        pygame.draw.rect(surface, (30, 39, 65), bar, border_radius=4)
+        fill = int(bar.width * min(1.0, self.xp / max(1, self.xp_needed)))
+        if fill:
+            pygame.draw.rect(surface, CYAN, (bar.x, bar.y, fill, bar.height), border_radius=4)
+        text(surface, f&quot;ENERGY  {self.xp}/{self.xp_needed}&quot;, 285, 40, 15, MUTED)
+        # Dash cooldown marker
+        pygame.draw.circle(surface, (23, 47, 65), (WIDTH-43, HEIGHT-42), 23)
+        pygame.draw.circle(surface, CYAN if p[&quot;dash_cd&quot;] &lt;= 0 else (67, 100, 126), (WIDTH-43, HEIGHT-42), 23, 2)
+        text(surface, &quot;DASH&quot; if p[&quot;dash_cd&quot;] &lt;= 0 else f&quot;{p[&#x27;dash_cd&#x27;]:.1f}&quot;, WIDTH-43, HEIGHT-42, 15, CYAN if p[&quot;dash_cd&quot;] &lt;= 0 else MUTED, True, True)
+        text(surface, &quot;WASD / ARROWS · SPACE DASH&quot;, 30, HEIGHT-34, 15, (103, 126, 157), True)
+        if self.toast_time &gt; 0:
+            text(surface, self.toast, WIDTH/2, 93, 19, GOLD, True, True)
+        if self.joy_active:
+            ox, oy = self.joy_origin; jx, jy = self.joy_pos
+            pygame.draw.circle(surface, (32, 67, 86), (int(ox), int(oy)), 38, 2)
+            pygame.draw.circle(surface, (*CYAN, 100), (int(jx), int(jy)), 14, 2)
+
+    def draw_menu(self, surface):
+        self.draw_background(surface)
+        t = pygame.time.get_ticks() / 1000
+        cx, cy = WIDTH/2, HEIGHT/2 - 48
+        for i, r in enumerate((90, 125, 160)):
+            pygame.draw.circle(surface, (28+i*4, 48+i*3, 76+i*2), (int(cx), int(cy)), r, 1)
+        glow(surface, cx, cy, 60, CYAN, .65)
+        for i in range(8):
+            a = t*.45 + i*math.tau/8
+            x, y = cx+math.cos(a)*124, cy+math.sin(a)*124
+            glow(surface, x, y, 9, PINK if i%2 else CYAN, .8)
+            pygame.draw.circle(surface, PINK if i%2 else CYAN, (int(x), int(y)), 3)
+        text(surface, &quot;SYNTH&quot;, cx, 167, 88, WHITE, True, True)
+        text(surface, &quot;// SWARM&quot;, cx, 222, 42, CYAN, True, True)
+        text(surface, &quot;ONE SEED. ENDLESS WAYS TO SURVIVE.&quot;, cx, 286, 19, MUTED, True, True)
+        text(surface, f&quot;DAILY SEED  {self.daily_seed}&quot;, cx, 319, 16, GOLD, True, True)
+        btn = pygame.Rect(330, 370, 300, 64)
+        pygame.draw.rect(surface, (17, 39, 58), btn, border_radius=13)
+        pygame.draw.rect(surface, CYAN, btn, 2, border_radius=13)
+        glow(surface, cx, 400, 40, CYAN, .4)
+        text(surface, &quot;ENTER THE SWARM  →&quot;, cx, 402, 24, WHITE, True, True)
+        text(surface, &quot;MOVE  WASD / ARROWS&quot;, cx, 475, 18, MUTED, True, True)
+        text(surface, &quot;AUTO-FIRE  ·  COLLECT ENERGY  ·  PICK YOUR UPGRADES&quot;, cx, 503, 15, MUTED, False, True)
+        text(surface, &quot;PHONE? HOLD LEFT SIDE TO MOVE · TAP RIGHT SIDE TO DASH&quot;, cx, 532, 15, (89, 132, 151), False, True)
+        text(surface, &quot;A tiny neon survival game built with Python + Pygame&quot;, cx, 592, 15, (61, 82, 111), False, True)
+
+    def draw_upgrade(self, surface):
+        self.draw_world(surface)
+        veil = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        veil.fill((4, 7, 18, 205)); surface.blit(veil, (0, 0))
+        text(surface, &quot;LEVEL UP&quot;, WIDTH/2, 125, 51, WHITE, True, True)
+        text(surface, &quot;PICK ONE PROTOCOL · PRESS 1 / 2 / 3&quot;, WIDTH/2, 174, 18, CYAN, True, True)
+        for i, (name, desc, color) in enumerate(self.upgrade_choices):
+            rect = pygame.Rect(65 + i*282, 235, 260, 238)
+            pygame.draw.rect(surface, (13, 19, 41), rect, border_radius=15)
+            pygame.draw.rect(surface, color, rect, 2, border_radius=15)
+            glow(surface, rect.centerx, rect.y+50, 37, color, .6)
+            pygame.draw.circle(surface, color, (rect.centerx, rect.y+50), 9, 2)
+            text(surface, f&quot;0{i+1}&quot;, rect.x+20, rect.y+18, 18, color, True)
+            text(surface, name, rect.centerx, rect.y+104, 21, WHITE, True, True)
+            # Wrap short descriptions in two lines if needed.
+            if len(desc) &gt; 24:
+                words = desc.split(); lines=[]; current=&quot;&quot;
+                for word in words:
+                    if len(current + &quot; &quot; + word) &gt; 24:
+                        lines.append(current); current = word
+                    else: current = (current + &quot; &quot; + word).strip()
+                if current: lines.append(current)
+            else:
+                lines = [desc]
+            for j, line in enumerate(lines[:2]): text(surface, line, rect.centerx, rect.y+143+j*22, 17, MUTED, False, True)
+            text(surface, &quot;SELECT&quot;, rect.centerx, rect.y+204, 16, color, True, True)
+        text(surface, &quot;YOUR BUILD. YOUR RULES.&quot;, WIDTH/2, 522, 17, MUTED, True, True)
+
+    def draw_world(self, surface):
+        self.draw_background(surface)
+        for orb in self.orbs:
+            x, y = int(orb[&quot;x&quot;]), int(orb[&quot;y&quot;])
+            glow(surface, x, y, 12, CYAN, .65)
+            a = orb[&quot;phase&quot;]
+            pts = [(x+math.cos(a+i*math.pi/2)*orb[&quot;r&quot;], y+math.sin(a+i*math.pi/2)*orb[&quot;r&quot;]) for i in range(4)]
+            pygame.draw.polygon(surface, CYAN, pts, 2)
+        for b in self.bullets:
+            x, y = int(b[&quot;x&quot;]), int(b[&quot;y&quot;])
+            tailx, taily = x-int(b[&quot;vx&quot;]*.018), y-int(b[&quot;vy&quot;]*.018)
+            pygame.draw.line(surface, (32, 145, 172), (tailx, taily), (x, y), 3)
+            glow(surface, x, y, 7, CYAN, .7)
+            pygame.draw.circle(surface, WHITE, (x, y), 2)
+        for e in self.enemies: self.draw_enemy(surface, e)
+        for pt in self.particles:
+            alpha = clamp(pt[&quot;life&quot;] / max(.001, pt[&quot;max&quot;]), 0, 1)
+            rr = max(1, int(pt[&quot;r&quot;]*alpha))
+            pygame.draw.circle(surface, pt[&quot;color&quot;], (int(pt[&quot;x&quot;]), int(pt[&quot;y&quot;])), rr)
+        self.draw_player(surface)
+        self.draw_hud(surface)
+        if self.flash &gt; 0:
+            overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+            overlay.fill((255, 65, 100, int(75*self.flash/.14)))
+            surface.blit(overlay, (0, 0))
+
+    def draw_pause(self, surface):
+        self.draw_world(surface)
+        veil = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA); veil.fill((4, 7, 18, 190)); surface.blit(veil, (0,0))
+        text(surface, &quot;PAUSED&quot;, WIDTH/2, HEIGHT/2-25, 54, WHITE, True, True)
+        text(surface, &quot;PRESS ESC OR SPACE TO RESUME&quot;, WIDTH/2, HEIGHT/2+27, 19, CYAN, True, True)
+
+    def draw_gameover(self, surface):
+        self.draw_world(surface)
+        veil = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA); veil.fill((4, 7, 18, 210)); surface.blit(veil, (0,0))
+        text(surface, &quot;SIGNAL LOST&quot;, WIDTH/2, 130, 55, RED, True, True)
+        text(surface, f&quot;{self.score:06d}&quot;, WIDTH/2, 204, 68, WHITE, True, True)
+        text(surface, &quot;FINAL SCORE&quot;, WIDTH/2, 246, 17, MUTED, True, True)
+        pygame.draw.line(surface, (48, 66, 94), (300, 280), (660, 280), 1)
+        text(surface, f&quot;WAVE  {1+int(self.elapsed//22):02d}&quot;, WIDTH/2-100, 315, 21, PINK, True, True)
+        text(surface, f&quot;LEVEL  {self.level:02d}&quot;, WIDTH/2+100, 315, 21, CYAN, True, True)
+        text(surface, f&quot;ELIMINATIONS  {self.kills:03d}&quot;, WIDTH/2, 354, 18, MUTED, True, True)
+        text(surface, f&quot;SESSION BEST  {self.session_best:06d}&quot;, WIDTH/2, 374, 15, (103, 139, 165), True, True)
+        share = f&quot;SYNTH//SWARM  |  {self.score:06d} PTS  |  WAVE {1+int(self.elapsed//22)}  |  LVL {self.level}  |  SEED {self.daily_seed}&quot;
+        pygame.draw.rect(surface, (13, 19, 37), (210, 385, 540, 35), border_radius=7)
+        text(surface, share, WIDTH/2, 402, 14, GOLD, True, True)
+        btn = pygame.Rect(330, 442, 300, 58)
+        pygame.draw.rect(surface, (17, 39, 58), btn, border_radius=12)
+        pygame.draw.rect(surface, CYAN, btn, 2, border_radius=12)
+        text(surface, &quot;RUN IT BACK  ↻&quot;, WIDTH/2, 470, 23, WHITE, True, True)
+        text(surface, &quot;PRESS R / ENTER OR CLICK TO RESTART&quot;, WIDTH/2, 528, 16, MUTED, True, True)
+        text(surface, &quot;TIP: DASH THROUGH DANGER. DON&#x27;T STOP MOVING.&quot;, WIDTH/2, 567, 16, (95, 132, 160), False, True)
+
+    def render(self):
+        if self.state == &quot;menu&quot;: self.draw_menu(self.scene)
+        elif self.state == &quot;upgrade&quot;: self.draw_upgrade(self.scene)
+        elif self.state == &quot;paused&quot;: self.draw_pause(self.scene)
+        elif self.state == &quot;gameover&quot;: self.draw_gameover(self.scene)
+        else: self.draw_world(self.scene)
+        ox = oy = 0
+        if self.shake &gt; 0:
+            mag = int(7 * self.shake / .28)
+            ox, oy = random.randint(-mag, mag), random.randint(-mag, mag)
+        SCREEN.fill(BG)
+        SCREEN.blit(self.scene, (ox, oy))
+        pygame.display.flip()
+
+
+async def main():
+    game = Game()
+    running = True
+    while running:
+        dt = min(CLOCK.tick(FPS) / 1000.0, 0.035)
+        for event in pygame.event.get():
+            game.handle_event(event)
+        if game.state == &quot;paused&quot;:
+            pass
+        else:
+            game.update(dt)
+        game.render()
+        # Pygbag requires yielding to the browser&#x27;s event loop each frame.
+        await asyncio.sleep(0)
+    pygame.quit()
+
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(main())
+</code></pre>
+    </details>
+  </section>
+</main>
+<footer>
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma · Juego generado con ChatGPT; revisado y publicado con ayuda de una herramienta de IA (Claude).</small>
+</footer>
+</body>
+</html>

@@ -1,5 +1,15 @@
 [
   {
+    "tema": "Juegos",
+    "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/navegador",
+    "titulo": "SYNTH//SWARM: supervivencia neón en el navegador",
+    "descripcion": "Juego de supervivencia con disparo automático, oleadas de enemigos, subida de nivel con ocho mejoras y semilla diaria, hecho con Python y Pygame (generado con ChatGPT). Corre de verdad en el navegador, con teclado o táctil, gracias a Pygbag (Python compilado a WebAssembly).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/navegador/",
+    "fecha": "2026-10-31"
+  },
+  {
     "tema": "Física",
     "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/fisica/python",
