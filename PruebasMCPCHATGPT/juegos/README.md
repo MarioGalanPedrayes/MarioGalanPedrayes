@@ -1,5 +1,11 @@
 # Juegos
 
+## TRAZA: Rescate orbital
+
+Aventura de lógica por turnos desarrollada con Python y Pyodide. Guía un robot por cinco sectores, recupera núcleos de energía y alcanza cada compuerta antes de agotar la batería.
+
+[Jugar a TRAZA](https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/traza/).
+
 Proyectos de juegos ejecutables desde navegador.
 
 ## DERIVA — Cartógrafo de Mareas
