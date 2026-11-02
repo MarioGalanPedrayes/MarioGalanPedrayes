@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b1b"><title>BESTIARIO — Ecos de lo Salvaje</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script><script defer src="script.js"></script>
+</head>
+<body><div class="ambient"></div>
+<header class="topbar"><a class="brand" href="#"><span class="brand-mark">✳</span> BESTIARIO</a><div class="top-meta"><i></i> ARCHIVO DE CAMPO <span id="save-status">● INICIANDO</span></div></header>
+<main>
+<section class="hero"><div><p class="eyebrow">CUADERNO DE EXPLORACIÓN · Nº 07</p><h1>Ecos de<br><em>lo Salvaje</em></h1><p class="lead">Setenta formas de vida aguardan en los márgenes del mundo conocido. No las sometas: aprende a escuchar su ritmo.</p><div class="hero-stats"><div><strong>70</strong><span>especies</span></div><div><strong>6</strong><span>biomas</span></div><div><strong>4</strong><span>pulsos por eco</span></div></div></div>
+<div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="sigil">✺</div><div class="art-caption">ESCUCHA<br>ANTES DE<br>RESPONDER</div></div></section>
+<section class="game-layout">
+<aside class="sidebar panel"><div class="section-kicker">TU EXPEDICIÓN</div><div class="progress-head"><span>Bestiario</span><strong id="collection-count">0 / 70</strong></div><div class="progress-track"><div id="collection-progress"></div></div><div class="mini-stats"><div><span>Encuentros</span><strong id="encounter-count">0</strong></div><div><span>Sellos</span><strong id="seal-count">0</strong></div></div><div class="side-divider"></div><div class="section-kicker">CUADERNO</div><div id="collection-list" class="collection-list"><p class="muted">Las criaturas que encuentres aparecerán aquí.</p></div><button id="reset-button" class="text-button" type="button">Reiniciar expedición ↗</button></aside>
+<section class="play-area">
+<div class="panel encounter-panel"><div class="encounter-head"><div><div class="section-kicker">ENCUENTRO ACTUAL</div><h2 id="encounter-title">El bosque contiene el aliento</h2></div><span id="biome-chip" class="chip">SIN RASTRO</span></div>
+<div class="creature-stage"><div class="stage-glow"></div><div id="creature-glyph" class="creature-glyph">✳</div><div class="stage-caption"><span id="creature-name">Aún no has encontrado nada</span><span id="creature-mood">—</span></div></div>
+<div class="encounter-copy"><p id="encounter-description">Pulsa «Explorar» para adentrarte en un bioma. Cada criatura responde a una secuencia única de cuatro pulsos.</p></div>
+<div class="actions-row"><button id="explore-button" class="primary-button" type="button">✦ Explorar</button><button id="listen-button" class="secondary-button" type="button" disabled>◖ Escuchar eco</button></div></div>
+<div class="panel resonance-panel"><div class="resonance-head"><div><div class="section-kicker">MECÁNICA DE RESONANCIA</div><h2>Devuelve su señal</h2></div><div class="agitation"><span>AGITACIÓN</span><strong id="agitation-value">0%</strong></div></div>
+<p class="instruction" id="instruction">Primero encuentra una criatura y escucha sus cuatro pulsos.</p>
+<div class="echo-line" id="echo-line" hidden><span>SECUENCIA ESCUCHADA</span><strong id="echo-pattern"></strong></div>
+<div class="pulse-display" id="pulse-display"><div class="pulse-slot">·</div><div class="pulse-slot">·</div><div class="pulse-slot">·</div><div class="pulse-slot">·</div></div>
+<div class="tone-label">ELIGE UN TONO PARA CADA TURNO</div><div class="tone-buttons"><button class="tone-button" data-tone="0" type="button" disabled><span>●</span> Bruma</button><button class="tone-button" data-tone="1" type="button" disabled><span>◆</span> Raíz</button><button class="tone-button" data-tone="2" type="button" disabled><span>▲</span> Chispa</button></div>
+<div class="turn-footer"><span id="turn-label">TURNO — / 4</span><span id="feedback" aria-live="polite">El silencio también es una respuesta.</span></div><div class="agitation-track"><div id="agitation-bar"></div></div>
+<div id="result-box" class="result-box" hidden><h3 id="result-title">Resonancia estable</h3><p id="result-text"></p><button id="result-button" class="primary-button" type="button">Siguiente rastro ↗</button></div></div></section></section>
+<section class="field-notes panel"><div><div class="section-kicker">PROTOCOLO DE CAMPO</div><h2>La paciencia es una herramienta</h2></div><div class="notes-grid"><p><b>01 / Observa</b> Cada criatura tiene un patrón de cuatro tonos. Escuchar revela la secuencia.</p><p><b>02 / Responde</b> En tu turno, elige Bruma, Raíz o Chispa. Una respuesta correcta calma; un error agita.</p><p><b>03 / Sella</b> Completa los cuatro pulsos sin llevar la agitación al límite para registrar la criatura.</p></div></section>
+<details class="code-panel panel"><summary><span><small class="section-kicker">BAJO LA SUPERFICIE</small><strong>Consultar código Python</strong></span><span>＋</span></summary><pre><code id="python-source">Cargando el cuaderno de campo…</code></pre><a class="text-button" download="codigo.py" href="codigo.py">Descargar codigo.py ↗</a></details>
+</main>
+<footer><span>Hecho con ayuda de IA (Claude) como herramienta</span><span>Mario Galán Pedrayes</span><span>Técnico en Desarrollo Web y Multiplataforma</span></footer><div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body></html>
