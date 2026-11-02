@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>TRAZA · Rescate orbital</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><a href="../../practicas/" class="back">← Todos los juegos</a><span class="brand">ARCHIVO ORBITAL / 07</span><span class="status"><i></i> SISTEMA ACTIVO</span></header>
+<main>
+<section class="intro"><p class="kicker">MISIÓN DE RECUPERACIÓN · SECTOR EXTERIOR</p><h1>TRAZA<span>.</span></h1><p class="lead">La estación ha perdido sus núcleos de energía. Guía al robot de mantenimiento, recupera cada núcleo y alcanza la compuerta de evacuación.</p></section>
+<section class="game-shell">
+<div class="hud"><div><small>OPERACIÓN</small><strong id="level">01 / 05</strong></div><div><small>ENERGÍA</small><strong id="energy">—</strong></div><div><small>NÚCLEOS</small><strong id="cores">0 / 0</strong></div><div><small>MOVIMIENTOS</small><strong id="moves">0</strong></div></div>
+<div class="play-area"><div class="board-wrap"><div id="board" class="board" aria-label="Tablero del juego"></div></div><aside class="side"><div class="mission"><span class="mini-label">OBJETIVO ACTUAL</span><h2 id="mission-title">Conectando con la estación…</h2><p id="message" aria-live="polite">Cargando el sistema de navegación.</p></div><div class="legend"><span><b class="robot">R</b> Tú</span><span><b class="core">◆</b> Núcleo</span><span><b class="exit">◎</b> Salida</span><span><b class="wall">■</b> Muro</span><span><b class="hazard">✕</b> Peligro</span></div><div class="controls"><button data-dir="up" aria-label="Mover arriba">↑</button><div><button data-dir="left" aria-label="Mover izquierda">←</button><button data-dir="down" aria-label="Mover abajo">↓</button><button data-dir="right" aria-label="Mover derecha">→</button></div><small>También puedes usar las flechas del teclado o WASD.</small></div><button id="restart" class="secondary">Reiniciar operación</button><button id="next" class="primary" hidden>Siguiente sector →</button></aside></div>
+</section>
+<section class="how"><article><span>01 / EXPLORA</span><h3>Lee el terreno</h3><p>Los muros bloquean el paso. Las zonas inestables consumen energía extra.</p></article><article><span>02 / RECUPERA</span><h3>Reúne los núcleos</h3><p>No puedes abrir la compuerta hasta recoger todos los núcleos del sector.</p></article><article><span>03 / ESCAPA</span><h3>Calcula la ruta</h3><p>Cada movimiento cuenta. Administra la batería y encuentra el camino más seguro.</p></article></section>
+<section class="tech"><h2>Dentro de la misión</h2><p>Las reglas, colisiones, energía y progresión están programadas en Python. Pyodide ejecuta <code>codigo.py</code> en el navegador; JavaScript solo conecta los controles y representa el estado recibido.</p><details><summary>Ver el código Python</summary><pre><code id="source">Cargando codigo.py…</code></pre></details><a class="download" href="codigo.py" download>↓ Descargar codigo.py</a></section>
+</main>
+<footer><span>Hecho con ayuda de IA (ChatGPT) como herramienta</span><span>Mario Galan Pedrayes</span><span>Técnico en Desarrollo Web y Multiplataforma</span></footer>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script><script src="script.js"></script>
+</body></html>
