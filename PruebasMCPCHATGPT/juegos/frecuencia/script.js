@@ -1,6 +1,6 @@
 let pyodide=null,py=null,game=null,selection=[];
 const $=id=>document.getElementById(id);
-const call=(name,...args)=>py.globals.get(name)(...args).toJs({dict_converter:Object.fromEntries});
+const call=(name,...args)=>{const result=py.globals.get(name)(...args);return typeof result==="string"?result:result.toJs({dict_converter:Object.fromEntries});};
 function parseResult(value){return JSON.parse(value);}
 function setMessage(text){$("message").textContent=text;}
 function render(){
