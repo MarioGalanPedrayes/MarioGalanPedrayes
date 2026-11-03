@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPCHATGPT/juegos/frecuencia",
+    "titulo": "FRECUENCIA — Código fantasma",
+    "descripcion": "Juego de deducción por turnos: descifra cinco transmisiones con códigos de símbolos, pistas de coincidencia y un número limitado de intentos. La lógica se ejecuta en Python mediante Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/frecuencia/",
+    "fecha": "2026-11-03"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPCHATGPT/juegos/traza",
     "titulo": "TRAZA: Rescate orbital",
     "descripcion": "Aventura de lógica por turnos: guía un robot por cinco sectores, recupera núcleos de energía, evita zonas inestables y alcanza cada compuerta sin agotar la batería. La lógica se ejecuta en Python mediante Pyodide.",
