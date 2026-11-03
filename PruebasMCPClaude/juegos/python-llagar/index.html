@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Llagar: juego incremental con progreso sin conexión y prestigio. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Llagar · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Llagar</h1>
+  <p class="intro">En Asturias, el <em>llagar</em> es donde se machaca la manzana para hacer sidra. Empiezas recogiendo fruta a mano y acabas con un pomar, un llagar y una sidrería que trabajan solos, incluso cuando cierras la página.</p>
+</header>
+
+<main>
+  <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+  <div id="fuera" class="aviso fuera" role="status" hidden>
+    <span id="fuera-texto"></span>
+    <button type="button" id="cerrar-fuera" class="boton pequeno-boton">Entendido</button>
+  </div>
+
+  <div class="rejilla">
+    <section class="panel" aria-labelledby="t-pomar">
+      <h2 id="t-pomar">Pomar</h2>
+      <p class="contador"><span id="manzanas">0</span> <small>manzanas</small></p>
+      <p class="pequeno"><span id="prod">0,0</span> por segundo · <span id="click">1</span> por recogida</p>
+      <button type="button" id="recoger" class="boton principal grande" disabled>Recoger manzanas</button>
+      <p class="pequeno">También puedes pulsar la barra espaciadora.</p>
+      <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+
+      <h3>Nueva cosecha</h3>
+      <p class="pequeno">Reinicia el pomar a cambio de <strong>Sellos</strong>: cada uno da un +20 % permanente a toda la producción.</p>
+      <dl class="datos">
+        <div><dt>Sellos</dt><dd id="sellos">0</dd></div>
+        <div><dt>Bono actual</dt><dd id="bono">+0 %</dd></div>
+        <div><dt>Esta cosecha</dt><dd id="run">0</dd></div>
+      </dl>
+      <p id="prestigio-info" class="pequeno"></p>
+      <button type="button" id="prestigio" class="boton" disabled>Nueva cosecha</button>
+      <p class="pequeno">Siguiente Sello a partir de <span id="siguiente-sello">1 M</span> manzanas recogidas en la cosecha.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="t-edificios">
+      <div class="barra">
+        <h2 id="t-edificios">Edificios</h2>
+        <div class="modos" role="group" aria-label="Cantidad a comprar">
+          <button type="button" class="modo activo" data-cantidad="1" aria-pressed="true">×1</button>
+          <button type="button" class="modo" data-cantidad="10" aria-pressed="false">×10</button>
+          <button type="button" class="modo" data-cantidad="0" aria-pressed="false">Máx.</button>
+        </div>
+      </div>
+      <ul id="edificios" class="lista"></ul>
+    </section>
+
+    <section class="panel" aria-labelledby="t-mejoras">
+      <h2 id="t-mejoras">Mejoras</h2>
+      <p id="sin-mejoras" class="pequeno">Aún no hay mejoras disponibles. Aparecen al recoger más manzanas y al tener más edificios.</p>
+      <ul id="mejoras" class="lista"></ul>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu partida</h2>
+    <dl class="datos">
+      <div><dt>Tiempo jugado</dt><dd id="st-tiempo">0 s</dd></div>
+      <div><dt>Recogidas a mano</dt><dd id="st-recogidas">0</dd></div>
+      <div><dt>Manzanas en total</dt><dd id="st-total">0</dd></div>
+      <div><dt>Cosechas</dt><dd id="st-cosechas">0</dd></div>
+    </dl>
+    <p class="pequeno">La partida se guarda sola cada pocos segundos en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+    <button type="button" id="borrar" class="boton">Borrar partida</button>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li><strong>Recoge</strong> manzanas con el botón. Con las primeras compras un manzano empieza a darte fruta solo.</li>
+      <li>Compra <strong>edificios</strong>: cada uno produce manzanas por segundo. Cada unidad nueva cuesta un 15 % más que la anterior, así que conviene repartir las compras.</li>
+      <li>Compra <strong>mejoras</strong> (únicas): duplican lo que produce un edificio o aumentan lo que rindes a mano. Van apareciendo según avanzas.</li>
+      <li>Puedes cerrar la página: al volver se suma lo producido mientras no estabas, hasta un máximo de 8 horas.</li>
+      <li>Cuando hayas recogido 1 millón de manzanas en una cosecha puedes empezar una <strong>nueva cosecha</strong>. Pierdes edificios y mejoras, pero ganas Sellos (raíz cuadrada de manzanas / 1.000.000) que multiplican la producción para siempre. La siguiente cosecha va más rápido.</li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Los juegos incrementales (idle) son de los que más se juegan en el navegador porque casi todo el progreso ocurre solo y cada regreso se siente recompensado. Esta práctica quiere mostrar que ese tipo de juego se puede escribir entero en <strong>Python</strong>, con la economía, las mejoras, el progreso sin conexión y el prestigio en un único archivo, y publicarlo como web estática.</p>
+    <p>También es un ejercicio de equilibrio de reglas. El ritmo se ha comprobado con una simulación de una persona jugando de forma activa: el primer manzano llega a los pocos segundos, el primer millón de manzanas a la media hora, y cada Sello acorta las cosechas siguientes.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene todas las reglas: costes (<code>base × 1,15<sup>n</sup></code>), producción, mejoras, prestigio, formato de números en castellano y guardado. Las funciones devuelven el estado como texto JSON.</li>
+      <li><strong>El tiempo lo mide la página:</strong> <code>script.js</code> avisa a Python cada décima de segundo con el tiempo real transcurrido (<code>avanzar(segundos)</code>). Así el juego sigue bien aunque el navegador frene la pestaña en segundo plano.</li>
+      <li><strong>Progreso sin conexión:</strong> al abrir la página se compara la hora del último guardado con la actual y se llama a <code>avanzar_fuera()</code>, que limita el resultado a 8 horas.</li>
+      <li><strong>Guardado seguro:</strong> al cargar, Python descarta cualquier dato inválido (números negativos, mejoras que no existen, textos corruptos) y empieza de cero si hace falta.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly, cargado desde su CDN.</li>
+      <li><strong>Accesibilidad:</strong> todo se maneja con botones reales, con teclado, sin depender del color, y se adapta a pantallas pequeñas.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Las mecánicas de los juegos incrementales (producción por segundo, costes crecientes, mejoras, prestigio) son genéricas y de uso libre. El tema del llagar asturiano, los nombres, los textos y el diseño son propios; no se usan imágenes, sonidos, marcas ni personajes de terceros. Como motor de Python solo se usa Pyodide.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.nuevo_juego())"</code></p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
