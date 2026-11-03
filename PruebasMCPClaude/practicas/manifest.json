@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-faros",
+    "titulo": "FAROS DE NIEBLA — deducción de código, sondas limitadas y reto diario con racha",
+    "descripcion": "Puzzle de deducción: descubre un código oculto de 4 faros (6 símbolos, sin repetir) en 7 intentos, con pistas de «en su sitio» y «en otro sitio» y 3 sondas que preguntan si un símbolo está en el código a cambio de puntos. El reto diario usa la fecha como semilla (mismo código para todos), cuenta la racha de días y genera un resultado en emojis para compartir. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-faros/",
+    "fecha": "2026-11-03"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-bestiario",
     "titulo": "BESTIARIO: Ecos de lo Salvaje",
     "descripcion": "Juego de exploración y captura no violenta de 70 criaturas en seis biomas: escuchas un patrón único de cuatro tonos y lo repites por turnos sin agitar a la criatura. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",

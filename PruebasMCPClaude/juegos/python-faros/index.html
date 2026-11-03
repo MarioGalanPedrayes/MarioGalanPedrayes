@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Faros de Niebla: puzzle de deducción con reto diario. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Faros de Niebla · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Faros de Niebla</h1>
+  <p class="intro">Un puzzle de deducción: hay cuatro faros apagados y un código oculto. Con las pistas de cada intento y un número limitado de sondas, tienes que descubrir qué símbolo va en cada faro antes de que se acaben los siete intentos.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Partida</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true">Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false">Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+
+    <div class="tablero-zona">
+      <div id="tablero" class="tablero" aria-label="Tablero de intentos"></div>
+
+      <div class="controles">
+        <div>
+          <h3>Símbolos</h3>
+          <div id="paleta" class="paleta"></div>
+          <div class="acciones">
+            <button type="button" id="probar" class="boton principal" disabled>Probar</button>
+            <button type="button" id="borrar" class="boton" disabled>Borrar fila</button>
+          </div>
+          <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+        </div>
+
+        <div>
+          <h3>Sondas <span id="sondas-quedan" class="pequeno"></span></h3>
+          <p class="pequeno">Pregunta si un símbolo está en el código. No dice en qué faro, y cada sonda resta puntos.</p>
+          <div id="sondas" class="sondas"></div>
+          <ul id="sondas-resultados" class="sondas-resultados"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <div id="codigo-revelado" class="codigo-revelado"></div>
+      <pre id="compartir-texto" class="compartir"></pre>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra partida de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Partidas</dt><dd id="st-jugadas">0</dd></div>
+      <div><dt>Victorias</dt><dd id="st-ganadas">0</dd></div>
+      <div><dt>Mejor puntuación</dt><dd id="st-puntos">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>El código tiene <strong>4 faros</strong> y cada uno lleva uno de <strong>6 símbolos</strong>. Ningún símbolo se repite.</li>
+      <li>Elige 4 símbolos (con el ratón, el dedo o las teclas <kbd>1</kbd> a <kbd>6</kbd>) y pulsa <strong>Probar</strong> (o <kbd>Enter</kbd>). <kbd>Retroceso</kbd> borra el último.</li>
+      <li>Cada intento recibe cuatro puntos de pista:
+        <ul class="leyenda">
+          <li><span class="pista exacto" aria-hidden="true"></span> símbolo correcto <strong>en su sitio</strong>.</li>
+          <li><span class="pista desp" aria-hidden="true"></span> símbolo correcto, pero <strong>en otro sitio</strong>.</li>
+          <li><span class="pista" aria-hidden="true"></span> ese punto no corresponde a ningún símbolo del código.</li>
+        </ul>
+        Las pistas no te dicen <em>cuál</em> de tus símbolos las provoca; eso hay que deducirlo.
+      </li>
+      <li>Tienes <strong>7 intentos</strong> y <strong>3 sondas</strong>. Puntuación: 1000, menos 100 por cada intento extra y 120 por cada sonda (mínimo 50).</li>
+      <li>El <strong>reto diario</strong> es el mismo código para todo el mundo ese día y solo se juega una vez. En <strong>Práctica</strong> puedes jugar tantas veces como quieras.</li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un juego completo puede tener <strong>toda su lógica en Python</strong> y publicarse como una web estática, sin servidor. La parte visual (HTML, CSS y un poco de JavaScript) se limita a dibujar el tablero y a avisar a Python de lo que hace la persona que juega.</p>
+    <p>También es un ejercicio de diseño de reglas: pocas piezas, una regla que se entiende en un minuto y suficiente profundidad para que deducir sea la parte divertida. Una partida dura unos minutos, por eso encaja bien como reto diario.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: generar el código, evaluar cada intento, gastar sondas, calcular la puntuación, el texto para compartir y la racha de días.</li>
+      <li><strong>El mismo código para todos:</strong> el reto diario usa la fecha (por ejemplo <code>20261103</code>) como semilla. Para que dé el mismo resultado en cualquier versión de Python, el generador de números aleatorios (mulberry32) está escrito dentro del propio archivo en lugar de usar el módulo <code>random</code>.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Guardado:</strong> la partida del día se guarda en el navegador y se reconstruye repitiendo los intentos, así que recargar la página no pierde el progreso.</li>
+      <li><strong>Accesibilidad:</strong> cada símbolo tiene forma y color distintos (no depende solo del color), los botones tienen nombre para lectores de pantalla y se puede jugar solo con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Las reglas de deducción de códigos son una mecánica de juego genérica y de uso libre. El nombre, los símbolos, los textos y el diseño son propios y no se ha copiado ningún juego, personaje, imagen ni sonido de terceros: todo se dibuja con texto y CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.nueva_partida(20261103, 'diario'))"</code></p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
