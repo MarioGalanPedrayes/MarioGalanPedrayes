@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10151e">
+  <title>FRECUENCIA — Código fantasma</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+</head>
+<body>
+  <header class="top">
+    <a class="back" href="../../practicas/">← Volver al catálogo</a>
+    <div class="brand"><span class="signal">◉</span><span>ARCHIVO DE TRANSMISIONES <b>09</b></span></div>
+  </header>
+  <main>
+    <section class="intro">
+      <p class="eyebrow">PROTOCOLO DE RECUPERACIÓN · UNIDAD 09</p>
+      <h1>FRECUENCIA<span>.</span></h1>
+      <p class="subtitle">Código fantasma</p>
+      <p class="lead">Una estación olvidada emite secuencias cifradas. Descubre el orden correcto de los símbolos y recupera cinco transmisiones antes de que el ruido lo cubra todo.</p>
+    </section>
+
+    <section class="game-shell" aria-live="polite">
+      <div class="statusbar"><span id="connection">● INICIANDO MOTOR PYTHON…</span><span id="level-label">TRANSMISIÓN — / 05</span></div>
+      <div class="stats"><div><small>PUNTUACIÓN</small><strong id="score">0000</strong></div><div><small>INTENTOS</small><strong id="tries">—</strong></div><div><small>SECTOR</small><strong id="sector">01 / 05</strong></div></div>
+      <div class="mission"><div><span class="dot"></span><span id="mission-name">Esperando señal</span></div><p id="message">Estableciendo conexión con el núcleo de la estación…</p></div>
+      <div class="legend"><span class="key exact"></span> Posición correcta <span class="key misplaced"></span> Símbolo correcto, posición distinta</div>
+      <div id="history" class="history"><p class="empty">Las lecturas aparecerán aquí.</p></div>
+      <div class="composer">
+        <div class="composer-head"><div><small>DECODIFICADOR</small><h2>Introduce tu secuencia</h2></div><span id="sequence-size">3 SÍMBOLOS</span></div>
+        <div id="slots" class="slots"></div>
+        <div id="palette" class="palette"></div>
+        <div class="actions"><button id="send" class="primary" disabled>Transmitir intento ↗</button><button id="hint" class="secondary" disabled>Pedir pista −</button></div>
+        <div id="end-actions" class="end-actions" hidden><button id="advance" class="primary">Siguiente transmisión →</button><button id="retry" class="secondary">Reiniciar sector</button></div>
+      </div>
+    </section>
+
+    <section class="how">
+      <div><p class="eyebrow">01 / OBJETIVO</p><h2>Lee el eco.</h2><p>El código contiene símbolos sin repetir. Cada lectura indica cuántos están en la posición exacta y cuántos pertenecen al código, pero están en otro lugar. No revela cuáles son.</p></div>
+      <div><p class="eyebrow">02 / CONTROLES</p><h2>Construye la clave.</h2><p>Selecciona símbolos con ratón o pantalla táctil y pulsa «Transmitir intento». También puedes quitar el último símbolo. La pista revela un símbolo en su posición y reduce la bonificación.</p></div>
+      <div><p class="eyebrow">03 / TECNOLOGÍA</p><h2>Python en órbita.</h2><p>Método B — Pyodide 0.26.0. <code>codigo.py</code> calcula códigos, validaciones, coincidencias, pistas y puntuación; JavaScript dibuja la interfaz. HTML y CSS forman la portada.</p></div>
+      <div><p class="eyebrow">04 / APRENDIZAJE</p><h2>Piensa en patrones.</h2><p>Practica deducción, lógica combinatoria, memoria de trabajo, análisis de pistas y diseño de estrategias mediante retroalimentación limitada.</p></div>
+    </section>
+
+    <details class="source"><summary>Ver el código Python del juego</summary><pre><code id="python-source">Cargando codigo.py…</code></pre><a href="codigo.py" download>Descargar codigo.py ↓</a></details>
+  </main>
+  <footer><span>Hecho con ayuda de IA (ChatGPT) como herramienta</span><span>Mario Galan Pedrayes</span><span>Técnico en Desarrollo Web y Multiplataforma</span></footer>
+  <script src="script.js"></script>
+</body>
+</html>
