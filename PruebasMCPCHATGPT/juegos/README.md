@@ -1,5 +1,12 @@
 # Juegos
 
+## SEMILLA CERO — Jardín gravitatorio
+
+Puzle por turnos desarrollado con Python y Pyodide. Recoge las gotas de agua y guía una semilla hasta la tierra fértil mientras la gravedad cambia de dirección en cinco jardines.
+
+[Jugar a SEMILLA CERO](https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/semilla-cero/).
+
+
 ## FRECUENCIA — Código fantasma
 
 Juego de deducción por turnos desarrollado con Python y Pyodide. Descifra cinco transmisiones con secuencias de símbolos sin repetir, interpreta las coincidencias y administra los intentos disponibles.
