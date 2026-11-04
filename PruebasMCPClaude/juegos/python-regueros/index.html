@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Regueros: puzzle de girar casillas para regar un prado sin fugas, con reto diario. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Regueros · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Regueros</h1>
+  <p class="intro">Un <em>reguero</em> es un pequeño canal que lleva el agua por un prado. Aquí tienes 36 trozos de canal mal colocados y una fonte de la que sale el agua: gira las casillas hasta que el agua llegue a todas y no se escape por ningún lado.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Prado</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <div class="zona">
+      <div>
+        <div id="prado" class="prado" role="group" aria-label="Prado de 6 por 6 casillas"></div>
+        <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="lateral">
+        <dl class="contadores" aria-hidden="true">
+          <div><dt>Giros</dt><dd id="c-giros">0</dd></div>
+          <div><dt>Referencia</dt><dd id="c-ref">–</dd></div>
+          <div><dt>Regadas</dt><dd id="c-regadas">0/36</dd></div>
+          <div><dt>Fugas</dt><dd id="c-fugas">0</dd></div>
+        </dl>
+
+        <div class="acciones">
+          <button type="button" id="sentido" class="boton" aria-pressed="false" aria-label="Sentido de giro: horario. Pulsa para cambiar a antihorario" disabled>Sentido: ↻ horario</button>
+          <button type="button" id="deshacer" class="boton" disabled>Deshacer</button>
+          <button type="button" id="reiniciar" class="boton" disabled>Reiniciar</button>
+        </div>
+        <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+        <p class="pequeno">Clic o <kbd>Espacio</kbd> giran la casilla. Flechas para moverte, <kbd>E</kbd> gira en horario, <kbd>Q</kbd> en antihorario, <kbd>U</kbd> deshace. Con <kbd>Mayús</kbd> o clic derecho giras al revés del sentido elegido.</p>
+      </div>
+    </div>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <pre id="compartir-texto" class="compartir"></pre>
+      <p class="pequeno">En el texto para compartir: ⬜ casilla sin girar, 🟦 un giro, 🟩 dos, 🟨 tres o más, ⬛ casilla fija. No enseña el trazado, así que no desvela nada.</p>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra partida de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos completados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>El agua sale de la casilla con la <strong>fonte</strong> y avanza por los canales que se abren el uno hacia el otro.</li>
+      <li>Pulsa una casilla para <strong>girarla 90 grados</strong>. Hay finales, rectos, codos, T y cruces.</li>
+      <li>Ganas cuando <strong>las 36 casillas están regadas</strong> y <strong>no hay ninguna fuga</strong>: un brazo abierto que da al borde del prado o a una casilla que no se abre hacia él.</li>
+      <li>Las casillas <strong>fijas</strong> no giran y ya están bien colocadas: úsalas como punto de partida.</li>
+      <li>Cada giro cuenta. La <strong>referencia</strong> es el número mínimo de giros para reconstruir el trazado. Tres estrellas si no pasas de un 20 % por encima, dos estrellas hasta un 60 %, una si terminas. Deshacer no cuenta como giro; reiniciar empieza de cero.</li>
+      <li>El <strong>reto diario</strong> es el mismo prado para todo el mundo ese día y cuenta para la racha. En <strong>Práctica</strong> el prado es aleatorio y no afecta a las estadísticas.</li>
+    </ol>
+    <h3>Cómo se ve cada cosa (sin depender solo del color)</h3>
+    <ul id="leyenda" class="leyenda"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un juego completo puede tener <strong>toda su lógica en Python</strong> y publicarse como una web estática, sin servidor. El HTML, el CSS y un poco de JavaScript solo dibujan el prado y avisan a Python de cada giro.</p>
+    <p>Es también un ejercicio de diseño: un rompecabezas de lógica espacial que se entiende en un minuto, que cabe en una sesión corta y que ofrece un mismo reto a todo el mundo cada día.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: generar el prado, girar casillas, calcular qué se riega y dónde hay fugas, deshacer, puntuar con estrellas, preparar el texto para compartir y llevar la racha de días.</li>
+      <li><strong>Siempre tiene solución:</strong> el prado se genera dibujando primero un árbol aleatorio que une las 36 casillas (algoritmo de Kruskal con las aristas barajadas). De ese árbol salen las piezas; después se giran al azar, salvo las fijas. Las pruebas comprueban además con un solucionador independiente que cada prado se puede resolver, y que en casi todos la solución es única.</li>
+      <li><strong>El mismo prado para todos:</strong> el reto diario convierte la fecha en una semilla (hash FNV-1a). Para que dé el mismo resultado en cualquier versión de Python, el generador de números aleatorios (mulberry32) está escrito dentro del propio archivo en lugar de usar el módulo <code>random</code>.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Guardado:</strong> el reto del día guarda solo la lista de giros y se reconstruye repitiéndolos, así que recargar la página no pierde el progreso.</li>
+      <li><strong>Accesibilidad:</strong> regada y seca se distinguen por el relleno (rayas o liso) y no solo por el color; las fugas, las fijas y la fonte tienen su propia marca; cada casilla tiene un nombre para lectores de pantalla y se puede jugar solo con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Girar piezas de canal para conectarlas es una mecánica de juego genérica y de uso libre. El nombre, el tema del prado y la fonte, la regla de las fugas, las casillas fijas, las estrellas, los textos y el diseño son propios; no se ha copiado ningún juego, personaje, imagen ni sonido de terceros. Todo se dibuja con CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.nueva_partida(20261104, 'practica'))"</code></p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>

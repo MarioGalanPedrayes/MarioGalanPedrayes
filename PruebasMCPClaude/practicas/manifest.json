@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-regueros",
+    "titulo": "REGUEROS — puzzle de giro de casillas: riego sin fugas, casillas fijas, estrellas y reto diario con racha",
+    "descripcion": "Puzzle de lógica espacial: un prado de 6×6 casillas con trozos de canal (finales, rectos, codos, T y cruces) mal colocados y una fonte de la que sale el agua. Giras las casillas 90° hasta regarlas todas y sin fugas (ningún brazo abierto hacia el borde o hacia una casilla que no se abre hacia él); 5 casillas fijas sirven de ancla. Cada giro cuenta y se puntúa de 1 a 3 estrellas respecto a los giros mínimos del trazado, con deshacer y reinicio. El prado se genera a partir de un árbol aleatorio, así que siempre tiene solución. El reto diario usa la fecha como semilla (mismo prado para todos), cuenta la racha de días y genera un resultado en emojis sin spoilers para compartir. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-regueros/",
+    "fecha": "2026-11-04"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-llagar",
     "titulo": "LLAGAR — juego incremental (idle): producción automática, mejoras, progreso sin conexión y prestigio",
     "descripcion": "Juego incremental con temática de sidra asturiana: recoges manzanas a mano y compras seis edificios (manzano, cuadrilla, carro, llagar, bodega, sidrería) cuyo coste crece un 15 % por unidad, más mejoras únicas. Sigue produciendo con la página cerrada (progreso sin conexión con tope de 8 h) y la «nueva cosecha» reinicia a cambio de Sellos con bono permanente. Equilibrio comprobado con una simulación. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
