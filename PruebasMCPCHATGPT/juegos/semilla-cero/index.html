@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14221d">
+<title>SEMILLA CERO — Jardín gravitatorio</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+</head>
+<body>
+<header class="top"><a href="../../practicas/">← Catálogo de juegos</a><span>INVERNADERO EXPERIMENTAL <b> / 05</b></span></header>
+<main>
+<section class="intro"><p class="eyebrow">PROYECTO DE RESTAURACIÓN · ARCHIVO BOTÁNICO</p><h1>SEMILLA <i>CERO</i></h1><h2>Jardín gravitatorio</h2><p>El viejo invernadero ha perdido su orientación. Guía una semilla a través de cámaras de piedra, recoge agua y encuentra la tierra fértil. Pero cuidado: después de cada paso, la gravedad cambia de dirección.</p></section>
+<section class="game">
+<div class="gamebar"><span id="engine">● PREPARANDO MOTOR PYTHON</span><span id="level">JARDÍN 01 / 05</span></div>
+<div class="stats"><div><small>AGUA RECOGIDA</small><strong id="water">0 / 3</strong></div><div><small>MOVIMIENTOS</small><strong id="turns">0</strong></div><div><small>SEMILLAS VIVAS</small><strong id="score">0</strong></div></div>
+<div class="mission"><div><span class="live"></span><b id="name">Primer brote</b><span class="gravity" id="gravity">GRAVEDAD ↓ SUR</span></div><p id="message">Cargando el jardín…</p></div>
+<div class="board-wrap"><div id="board" class="board" aria-label="Tablero del jardín"></div></div>
+<div class="controls"><div class="pad"><button data-move="0,-1" aria-label="Arriba">↑</button><div><button data-move="-1,0" aria-label="Izquierda">←</button><button data-move="0,1" aria-label="Abajo">↓</button><button data-move="1,0" aria-label="Derecha">→</button></div></div><div class="actions"><button id="wait" class="soft" disabled>Dejar girar la gravedad</button><button id="restart" class="soft" disabled>Reiniciar jardín ↻</button></div></div>
+<div class="legend"><span>● Semilla</span><span>✿ Gota de agua</span><span>▧ Roca</span><span>◎ Tierra fértil</span><span>Las rocas detienen también el empuje gravitatorio.</span></div>
+<div id="finish" hidden><h3 id="finish-title">Jardín restaurado</h3><p id="finish-text"></p><button id="next" class="primary">Siguiente jardín →</button></div>
+</section>
+<section class="guide">
+<article><small>01 / OBJETIVO</small><h3>Hazla florecer.</h3><p>Recoge todas las gotas de agua y termina en la casilla de tierra fértil. La semilla no puede atravesar las rocas ni salir del tablero.</p></article>
+<article><small>02 / CONTROLES</small><h3>Un paso, un giro.</h3><p>Usa las flechas del teclado, WASD o los botones direccionales. También puedes dejar pasar un turno para que actúe la gravedad sin desplazarte manualmente.</p></article>
+<article><small>03 / TECNOLOGÍA</small><h3>Python en el navegador.</h3><p>Método B — Pyodide 0.26.0. <code>codigo.py</code> gestiona mapas, colisiones, gravedad, agua, turnos y puntuación. <code>script.js</code> representa el tablero y conecta los controles.</p></article>
+<article><small>04 / APRENDIZAJE</small><h3>Piensa en fuerzas.</h3><p>Practica orientación espacial, planificación, anticipación de estados, resolución de problemas y razonamiento secuencial.</p></article>
+</section>
+<details class="source"><summary>Consultar el código Python</summary><pre><code id="source-code">Cargando codigo.py…</code></pre><a href="codigo.py" download>Descargar codigo.py ↓</a></details>
+</main>
+<footer><span>Hecho con ayuda de IA (ChatGPT) como herramienta</span><span>Mario Galan Pedrayes</span><span>Técnico en Desarrollo Web y Multiplataforma</span></footer>
+<script src="script.js"></script>
+</body></html>
