@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPCHATGPT/juegos/semilla-cero",
+    "titulo": "SEMILLA CERO — Jardín gravitatorio",
+    "descripcion": "Puzle por turnos en cinco jardines: recoge todas las gotas de agua y guía una semilla hasta la tierra fértil mientras la gravedad gira después de cada movimiento.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/semilla-cero/",
+    "fecha": "2026-11-04"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPCHATGPT/juegos/frecuencia",
     "titulo": "FRECUENCIA — Código fantasma",
     "descripcion": "Juego de deducción por turnos: descifra cinco transmisiones con códigos de símbolos, pistas de coincidencia y un número limitado de intentos. La lógica se ejecuta en Python mediante Pyodide.",
