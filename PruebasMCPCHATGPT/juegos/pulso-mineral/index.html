@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171923"><title>PULSO MINERAL — Circuitos bajo tierra</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+</head>
+<body>
+<header class="top"><a href="../../practicas/">← Catálogo de juegos</a><span>INSTITUTO DE GEOENERGÍA <b>· EXPEDIENTE 05</b></span></header>
+<main>
+<section class="intro"><p class="eyebrow">OPERACIÓN DE RECUPERACIÓN · NIVEL SUBTERRÁNEO</p><h1>PULSO <i>MINERAL</i></h1><h2>Circuitos bajo tierra</h2><p>Un temblor ha desconectado la red energética de una mina cristalina. Gira los conductos, activa los relés y consigue que el pulso llegue al núcleo de salida. Cada pieza tiene una orientación precisa: un giro puede encender toda la galería.</p></section>
+<section class="game">
+<div class="gamebar"><span id="engine">● INICIANDO MOTOR PYTHON</span><span id="level">SECTOR 01 / 05</span></div>
+<div class="stats"><div><small>RELÉS ACTIVADOS</small><strong id="relays">0 / 2</strong></div><div><small>GIROS REALIZADOS</small><strong id="rotations">0</strong></div><div><small>ENERGÍA RECUPERADA</small><strong id="score">0000</strong></div></div>
+<div class="mission"><div><span class="live"></span><b id="name">Galería de cuarzo</b><span class="legend-power"><i></i> CONECTADO</span></div><p id="message">Estableciendo conexión con la mina…</p></div>
+<div class="board-wrap"><div id="board" class="board" aria-label="Tablero de conductos"></div></div>
+<div class="help"><span class="source-dot">S</span> Fuente <span class="relay-dot">◆</span> Relé <span class="target-dot">◎</span> Núcleo <span class="pipe-dot">╱</span> Conducto</div>
+<div class="actions"><button id="restart" class="soft" disabled>Reiniciar sector ↻</button></div>
+<div id="finish" hidden><h3 id="finish-title">Energía restaurada</h3><p id="finish-text"></p><button id="next" class="primary">Siguiente sector →</button></div>
+</section>
+<section class="guide">
+<article><small>01 / OBJETIVO</small><h3>Completa el circuito.</h3><p>La fuente S debe conectarse con el núcleo ◎. La energía debe pasar también por todos los relés ◆ del sector. Las piezas iluminadas indican que reciben energía.</p></article>
+<article><small>02 / CONTROLES</small><h3>Un toque, un giro.</h3><p>Pulsa o toca cualquier conducto para girarlo 90 grados en sentido horario. La fuente y el núcleo no se pueden girar. Reinicia el sector si quieres volver a su disposición inicial.</p></article>
+<article><small>03 / TECNOLOGÍA</small><h3>Python en el navegador.</h3><p>Método B — Pyodide 0.26.0. <code>codigo.py</code> calcula conexiones, energía, relés y puntuación. HTML, CSS y JavaScript dibujan el tablero y gestionan los clics.</p></article>
+<article><small>04 / APRENDIZAJE</small><h3>Piensa en conexiones.</h3><p>Practica orientación espacial, reconocimiento de patrones, pensamiento sistémico y resolución de problemas mediante prueba y comprobación.</p></article>
+</section>
+<details class="source"><summary>Consultar el código Python</summary><pre><code id="source-code">Cargando codigo.py…</code></pre><a href="codigo.py" download>Descargar codigo.py ↓</a></details>
+</main>
+<footer><span>Hecho con ayuda de IA (ChatGPT) como herramienta</span><span>Mario Galan Pedrayes</span><span>Técnico en Desarrollo Web y Multiplataforma</span></footer>
+<script src="script.js"></script>
+</body></html>
