@@ -1,5 +1,12 @@
 # Juegos
 
+## PULSO MINERAL — Circuitos bajo tierra
+
+Puzle de circuitos desarrollado con Python y Pyodide. Gira los conductos para conectar la fuente de energía con el núcleo de salida y activar todos los relés en cinco galerías.
+
+[Jugar a PULSO MINERAL](https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/pulso-mineral/).
+
+
 ## SEMILLA CERO — Jardín gravitatorio
 
 Puzle por turnos desarrollado con Python y Pyodide. Recoge las gotas de agua y guía una semilla hasta la tierra fértil mientras la gravedad cambia de dirección en cinco jardines.
