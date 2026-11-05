@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPCHATGPT/juegos/pulso-mineral",
+    "titulo": "PULSO MINERAL — Circuitos bajo tierra",
+    "descripcion": "Puzle de circuitos en cinco galerías: gira conductos para conectar la fuente con el núcleo de salida y activar todos los relés.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/pulso-mineral/",
+    "fecha": "2026-11-05"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPCHATGPT/juegos/semilla-cero",
     "titulo": "SEMILLA CERO — Jardín gravitatorio",
     "descripcion": "Puzle por turnos en cinco jardines: recoge todas las gotas de agua y guía una semilla hasta la tierra fértil mientras la gravedad gira después de cada movimiento.",
