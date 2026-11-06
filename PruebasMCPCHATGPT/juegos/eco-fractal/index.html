@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a26">
+  <meta name="description" content="Eco Fractal: explora ruinas de una estación olvidada y recupera los fragmentos de señal.">
+  <title>ECO FRACTAL — Cartógrafos del silencio</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <p class="eyebrow">ARCHIVO DE EXPLORACIÓN · EXPEDIENTE 08</p>
+      <h1>ECO <span>FRACTAL</span></h1>
+      <p class="subtitle">Cartógrafos del silencio</p>
+    </header>
+    <section class="intro">
+      <div><span class="signal">● SEÑAL INESTABLE</span><h2>La estación ha olvidado su propia voz.</h2>
+      <p>Adéntrate en cinco sectores abandonados, recupera los tres fragmentos de cada mapa y alcanza la salida para reconstruir la señal.</p></div>
+      <div class="stats"><div><small>SECTOR</small><strong id="level">1 / 5</strong></div><div><small>PASOS</small><strong id="moves">0</strong></div></div>
+    </section>
+    <section class="game">
+      <div class="game-head"><span>MAPA DE SECTOR</span><span>◈ EXPLORADOR</span></div>
+      <div id="board" class="board" aria-label="Mapa del juego"></div>
+      <div class="legend"><span>◈ Tú</span><span>✧ Fragmento</span><span>⌂ Salida</span></div>
+      <p id="status" class="status" aria-live="polite">Cargando el mapa…</p>
+      <div class="controls" aria-label="Controles de movimiento">
+        <button data-dir="up" aria-label="Arriba">↑</button>
+        <div><button data-dir="left" aria-label="Izquierda">←</button><button data-dir="down" aria-label="Abajo">↓</button><button data-dir="right" aria-label="Derecha">→</button></div>
+      </div>
+      <div class="actions"><button id="restart" class="secondary">Reiniciar sector</button><button id="next" class="primary" hidden>Siguiente sector ↗</button></div>
+      <p id="py-status" class="engine">Conectando con el núcleo Python…</p>
+    </section>
+    <section class="notes">
+      <article><h3>OBJETIVO</h3><p>Recoge los tres fragmentos brillantes y llega a la salida. Las paredes de basalto bloquean el paso.</p></article>
+      <article><h3>CONTROLES</h3><p>Usa las flechas del teclado o WASD. En móvil, utiliza el panel direccional. Puedes reiniciar el sector cuando quieras.</p></article>
+      <article><h3>TECNOLOGÍA</h3><p>La lógica, los mapas y las decisiones se ejecutan en Python mediante Pyodide. HTML, CSS y JavaScript muestran el tablero y gestionan los controles.</p></article>
+      <article><h3>QUÉ SE PRACTICA</h3><p>Orientación espacial, planificación de rutas, resolución de problemas y pensamiento secuencial.</p></article>
+    </section>
+    <footer>Hecho con ayuda de IA (ChatGPT) como herramienta · Mario Galan Pedrayes · Técnico en Desarrollo Web y Multiplataforma</footer>
+  </main>
+</body>
+</html>
