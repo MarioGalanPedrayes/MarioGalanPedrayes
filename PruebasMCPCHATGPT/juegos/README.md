@@ -1,5 +1,12 @@
 # Juegos
 
+## ECO FRACTAL — Cartógrafos del silencio
+
+Juego de exploración y rutas por turnos desarrollado con Python y Pyodide. Recorre cinco sectores, recoge tres fragmentos de señal en cada mapa y encuentra la salida.
+
+[Jugar a ECO FRACTAL](https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/eco-fractal/).
+
+
 ## PULSO MINERAL — Circuitos bajo tierra
 
 Puzle de circuitos desarrollado con Python y Pyodide. Gira los conductos para conectar la fuente de energía con el núcleo de salida y activar todos los relés en cinco galerías.
