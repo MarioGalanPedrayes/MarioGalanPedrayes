@@ -4,8 +4,8 @@
     "tecnologia": "Python",
     "carpeta": "PruebasMCPCHATGPT/juegos/filo-rojo",
     "titulo": "FILO ROJO — Duelo de autómatas",
-    "descripcion": "Combate táctico con cartas: administra energía, prepara ataques y bloquea los golpes anunciados por un jefe mecánico. La lógica se ejecuta en Python mediante Pyodide.",
-    "ejecutable_en_navegador": true,
+    "descripcion": "Combate táctico con cartas: administra energía, prepara ataques y bloquea los golpes anunciados por un jefe mecánico. La lógica está escrita en Python para Pyodide; falta verificar la ejecución integrada en navegador.",
+    "ejecutable_en_navegador": false,
     "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/filo-rojo/",
     "fecha": "2026-11-06"
   },
