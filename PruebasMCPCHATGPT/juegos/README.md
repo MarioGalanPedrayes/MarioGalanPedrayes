@@ -1,3 +1,9 @@
+## FILO ROJO — Duelo de autómatas
+
+Combate táctico de cartas desarrollado con Python y Pyodide. Administra energía, combina ataques y defensas y derrota al Magistrado de Hojalata.
+
+[Jugar a FILO ROJO](https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/filo-rojo/).
+
 # Juegos
 
 ## ECO FRACTAL — Cartógrafos del silencio
