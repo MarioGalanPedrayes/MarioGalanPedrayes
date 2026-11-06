@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPCHATGPT/juegos/eco-fractal",
+    "titulo": "ECO FRACTAL — Cartógrafos del silencio",
+    "descripcion": "Explora cinco sectores laberínticos, recoge tres fragmentos de señal en cada mapa y encuentra la salida. La lógica se ejecuta en Python mediante Pyodide.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPCHATGPT/juegos/eco-fractal/",
+    "fecha": "2026-11-06"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPCHATGPT/juegos/pulso-mineral",
     "titulo": "PULSO MINERAL — Circuitos bajo tierra",
     "descripcion": "Puzle de circuitos en cinco galerías: gira conductos para conectar la fuente con el núcleo de salida y activar todos los relés.",
