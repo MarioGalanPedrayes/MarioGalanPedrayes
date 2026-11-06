@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#efe4cf"><title>FILO ROJO — Duelo de autómatas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead">
+    <a class="back-link" href="../../practicas/">← CATÁLOGO</a>
+    <div class="brand">TALLER <span>09</span></div><div class="edition">EDICIÓN DE MEDIANOCHE · Nº 01</div>
+  </header>
+  <main>
+    <section class="intro">
+      <div class="eyebrow">UN JUEGO DE CARTAS Y COMBATE TÁCTICO</div>
+      <h1>FILO <i>ROJO</i></h1><p class="dek">La última función del taller mecánico.</p>
+      <div class="intro-rule"><span>40 PUNTOS DE VIDA</span><b>✳</b><span>3 DE ENERGÍA POR TURNO</span></div>
+    </section>
+    <section class="arena" aria-label="Zona de combate">
+      <div class="arena-topline"><span>ENFRENTAMIENTO ÚNICO</span><span id="turn-label">RONDA 01</span></div>
+      <div class="combatants">
+        <article class="fighter hero-fighter">
+          <div class="portrait hero-portrait" aria-hidden="true"><div class="hero-head"></div><div class="hero-body"></div><div class="hero-blade"></div></div>
+          <div class="fighter-copy"><span class="fighter-tag">EL MECÁNICO</span><h2>Vera<br>Voltio</h2><div class="health-line"><span id="hero-hp-label">40 / 40</span><div class="health-track"><i id="hero-hp-bar"></i></div></div><div class="micro-stats"><span>ESCUDO <b id="block-value">0</b></span><span>ENERGÍA <b id="energy-value">3</b></span></div></div>
+        </article>
+        <div class="versus">VS</div>
+        <article class="fighter enemy-fighter">
+          <div class="fighter-copy enemy-copy"><span class="fighter-tag">JEFE DE LA FUNDICIÓN</span><h2>El Magistrado<br>de Hojalata</h2><div class="health-line"><span id="enemy-hp-label">68 / 68</span><div class="health-track enemy-track"><i id="enemy-hp-bar"></i></div></div><div class="intent"><span class="intent-mark">⚒</span><span>PRÓXIMO GOLPE <b id="intent-value">7</b></span></div></div>
+          <div class="portrait enemy-portrait" aria-hidden="true"><div class="crown"></div><div class="mask"></div><div class="eye eye-left"></div><div class="eye eye-right"></div><div class="jaw"></div></div>
+        </article>
+      </div>
+      <div class="battle-log" id="battle-log" aria-live="polite">Conecta con el motor Python para comenzar el duelo.</div>
+    </section>
+    <section class="hand-section">
+      <div class="hand-heading"><div><span class="eyebrow">TU MANO</span><h2>Elige tu siguiente movimiento</h2></div><div class="energy-counter"><span id="energy-big">03</span><small>ENERGÍA</small></div></div>
+      <div class="hand" id="hand"><div class="loading-note">Preparando la baraja…</div></div>
+      <div class="turn-actions"><p>Juega cartas hasta agotar tu energía o pulsa fin de turno.</p><button id="end-turn" class="end-turn" disabled>TERMINAR TURNO <span>↗</span></button></div>
+    </section>
+    <section class="howto"><div><span class="eyebrow">REGLAS RÁPIDAS</span><h2>Un turno, tres puntos de energía.</h2></div>
+      <ol><li>Juega cartas de ataque para reducir los 68 puntos de vida del Magistrado.</li><li>Usa Guardia y Riposta para absorber el golpe que anuncia antes de atacar.</li><li>Impulso te da energía extra y potencia tu siguiente ataque. El mazo se recicla al agotarse.</li></ol>
+    </section>
+    <details class="source-panel"><summary>VER CÓDIGO PYTHON DEL JUEGO <span>＋</span></summary>
+      <div class="source-actions"><a href="codigo.py" download>Descargar codigo.py ↓</a><span>La lógica del combate se ejecuta en Python mediante Pyodide.</span></div>
+      <pre><code id="python-source">Cargando código…</code></pre>
+    </details>
+  </main>
+  <footer><span>Hecho con ayuda de IA (ChatGPT) como herramienta</span><span>Mario Galan Pedrayes</span><span>Técnico en Desarrollo Web y Multiplataforma</span></footer>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script><script src="script.js"></script>
+</body></html>
