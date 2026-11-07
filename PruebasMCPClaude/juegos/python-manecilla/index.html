@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Manecilla: juego de un solo toque. Para la aguja dentro del sector. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Manecilla · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Manecilla</h1>
+  <p class="intro">Una aguja gira por una esfera de reloj y solo tienes una acción: pararla cuando pase por el sector marcado. Cada acierto la hace más rápida y estrecha el sector. Partidas de uno o dos minutos para batir tu propio récord.</p>
+</header>
+
+<main>
+  <p id="estado-carga" class="aviso-carga" role="status">Cargando el motor de Python…</p>
+
+  <section class="panel juego" aria-labelledby="t-juego">
+    <h2 id="t-juego" class="oculto">Partida</h2>
+
+    <dl class="marcador">
+      <div><dt>Puntos</dt><dd id="puntos">0</dd></div>
+      <div><dt>Combo</dt><dd><span id="combo">0</span> <small id="mult">×1</small></dd></div>
+      <div><dt>Aciertos</dt><dd id="aciertos">0</dd></div>
+      <div><dt>Vidas</dt><dd id="vidas" class="vidas" aria-label="3 de 3 vidas">●●●</dd></div>
+      <div><dt>Récord</dt><dd id="record">0</dd></div>
+    </dl>
+
+    <div id="esfera" class="esfera">
+      <svg id="dial" viewBox="0 0 300 300" role="img" aria-label="Esfera con una aguja que gira y un sector marcado donde hay que pararla" data-estado="listo">
+        <circle cx="150" cy="150" r="146" class="cara"/>
+        <circle id="tiempo" cx="150" cy="150" r="140" class="anillo-tiempo" transform="rotate(-90 150 150)" stroke-dasharray="880 880"/>
+        <g id="marcas"></g>
+        <path id="sector" class="sector" d="M 150 38 A 112 112 0 0 1 151 38"/>
+        <path id="perfecto" class="perfecto" d="M 150 38 A 112 112 0 0 1 151 38"/>
+        <line id="aguja" x1="150" y1="150" x2="150" y2="28" class="aguja"/>
+        <circle cx="150" cy="150" r="9" class="eje"/>
+      </svg>
+      <p id="ayuda-inicio" class="ayuda-inicio">Pulsa «Empezar» o la barra espaciadora</p>
+    </div>
+
+    <p id="aviso" class="aviso" role="status" aria-live="polite"></p>
+
+    <button type="button" id="parar" class="boton principal grande" disabled>Empezar</button>
+    <p class="pequeno centro">Controles: botón, barra espaciadora o tocar la esfera. Un solo toque.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <pre id="compartir-texto" class="compartir"></pre>
+      <div class="acciones">
+        <button type="button" id="jugar-otra" class="boton principal">Jugar otra vez</button>
+        <button type="button" id="copiar" class="boton">Copiar resultado</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tus números</h2>
+    <dl class="datos">
+      <div><dt>Partidas</dt><dd id="st-partidas">0</dd></div>
+      <div><dt>Mejor puntuación</dt><dd id="st-mejor">0</dd></div>
+      <div><dt>Mejor combo</dt><dd id="st-combo">0</dd></div>
+      <div><dt>Aciertos</dt><dd id="st-aciertos">0</dd></div>
+      <div><dt>Perfectos</dt><dd id="st-perfectos">0</dd></div>
+    </dl>
+    <p class="pequeno">Se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>Pulsa <strong>Empezar</strong>. La aguja gira y aparece un sector marcado en la esfera.</li>
+      <li>Pulsa cuando la aguja esté <strong>dentro del sector</strong>. Si acierta, el sector salta a otro sitio. Si pulsas fuera, o se agota el anillo de tiempo que rodea la esfera, pierdes una vida.</li>
+      <li>La franja oscura del centro del sector es la zona <strong>perfecta</strong>: vale 20 puntos en lugar de 10.</li>
+      <li><strong>Combo:</strong> aciertos seguidos. Multiplica los puntos ×2 desde 5, ×3 desde 10, ×4 desde 15 y ×5 desde 20. Un fallo lo pone a cero.</li>
+      <li>Tienes <strong>3 vidas</strong> y recuperas una cada 8 aciertos. Cada 5 aciertos la aguja <strong>cambia de sentido</strong>.</li>
+      <li>La dificultad sube durante los primeros 20 aciertos (más velocidad, sector más estrecho, menos tiempo) y después se queda fija: a partir de ahí gana quien mantiene la concentración.</li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Los juegos de una sola acción, con partidas muy cortas y reinicio inmediato, son los que más tiempo acumulan en el navegador. Esta práctica quiere mostrar que ese tipo de juego, que a primera vista pide reflejos y animación, también se puede escribir con <strong>toda su lógica en Python</strong> y publicarse como web estática.</p>
+    <p>También es un ejercicio de equilibrio. Para calibrar la dificultad se simularon jugadores con distinto error al pulsar: con unos 70 milisegundos de error se llega a unos 30 aciertos; por debajo de unos 40 milisegundos la partida se alarga muchísimo. Esa diferencia entre «aprendiz» y «experto» es la que engancha.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> guarda todas las reglas: giro de la aguja, colocación de cada sector, puntuación, combo, vidas, curva de dificultad y estadísticas. Cada función devuelve el estado como texto JSON.</li>
+      <li><strong>El tiempo lo mide la página:</strong> <code>script.js</code> llama a <code>avanzar(segundos)</code> en cada fotograma. Python limita cada paso a 50 ms, así que una pestaña dormida no te quita vidas.</li>
+      <li><strong>Pulsación precisa:</strong> justo antes de enviar el toque, la página avanza Python hasta ese instante exacto, para que el resultado no dependa de cuándo se dibuja el siguiente fotograma. Los bordes del sector tienen 2 grados de margen.</li>
+      <li><strong>Esfera en SVG:</strong> se dibuja con elementos SVG (sin imágenes ni canvas), así que se ve nítida en cualquier pantalla y se puede describir para lectores de pantalla.</li>
+      <li><strong>Accesibilidad:</strong> los avisos de acierto, fallo y vida extra son texto, no solo color; todo se controla con teclado; el botón mantiene el foco.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly, cargado desde su CDN.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Pulsar en el momento justo es una mecánica genérica de uso libre. El nombre, el tema del reloj, las reglas de combo, vidas y cambio de sentido, los textos y el diseño son propios; no se usan imágenes, sonidos, marcas ni personajes de terceros. Como motor de Python solo se usa Pyodide.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.nueva_partida(1))"</code></p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso-carga">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
