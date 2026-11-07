@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-trojes",
+    "titulo": "TROJES — puzzle de ordenar por montones: movimientos de grupo, sellado automático, candado, pistas y reto diario con racha",
+    "descripcion": "Puzzle de ordenar la cosecha: de 6 a 8 trojes (compartimentos de 4 fichas) con manzanas, castañas, maíz y otros productos mezclados, y dos trojes vacíos. Se pasan de golpe las fichas iguales de arriba a un troje vacío o con una igual encima; un troje lleno de un solo producto se sella solo. En difícil un troje empieza con candado hasta que se selle el primero. Cada reparto se comprueba con un solucionador en Python (A* ponderado) que da la referencia de movimientos y también las 3 pistas; 1 a 3 estrellas según los movimientos (con pistas, máximo 2), deshacer y reinicio. El reto diario usa la fecha como semilla (mismo reparto para todos), cuenta la racha de días y genera un resultado en emojis sin spoilers. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-trojes/",
+    "fecha": "2026-11-07"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-manecilla",
     "titulo": "MANECILLA — hipercasual de un solo toque: temporización, combo, vidas y dificultad creciente",
     "descripcion": "Una aguja gira por una esfera de reloj y hay que pararla dentro del sector marcado, con un solo toque (botón, espacio o pulsando la esfera). Cada acierto acelera la aguja y estrecha el sector; el centro vale el doble, el combo multiplica hasta ×5, hay 3 vidas que se recuperan cada 8 aciertos y la aguja cambia de sentido cada 5. Récord y estadísticas guardados en el navegador. Esfera en SVG, equilibrio comprobado con jugadores simulados y toda la lógica en Python con Pyodide (hecho con ayuda de Claude).",

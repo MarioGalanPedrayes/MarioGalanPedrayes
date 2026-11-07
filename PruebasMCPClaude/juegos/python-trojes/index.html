@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Trojes: puzzle de ordenar la cosecha en compartimentos, con candado, pistas y reto diario. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Trojes · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Trojes</h1>
+  <p class="intro">Un <em>troje</em> es el compartimento de madera donde se guarda la cosecha. Aquí tienes varios, con manzanas, castañas, maíz y más mezclados: pasa las fichas de uno a otro hasta dejar cada producto junto y sellado en su propio troje.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Cosecha</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <div id="fila-dificultad" class="fila" hidden>
+      <label for="dificultad">Dificultad de la práctica</label>
+      <select id="dificultad">
+        <option value="facil">Fácil · 4 productos</option>
+        <option value="normal" selected>Normal · 5 productos</option>
+        <option value="dificil">Difícil · 6 productos y candado</option>
+      </select>
+    </div>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <div id="trojes" class="trojes" role="group" aria-label="Trojes"></div>
+    <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+
+    <dl class="contadores" aria-hidden="true">
+      <div><dt>Movimientos</dt><dd id="c-movs">0</dd></div>
+      <div><dt>Referencia</dt><dd id="c-ref">–</dd></div>
+      <div><dt>Sellados</dt><dd id="c-sellados">0/0</dd></div>
+      <div><dt>Pistas</dt><dd id="c-pistas">0/3</dd></div>
+    </dl>
+
+    <div class="acciones">
+      <button type="button" id="deshacer" class="boton" aria-label="Deshacer el último movimiento" disabled>Deshacer</button>
+      <button type="button" id="pista" class="boton" aria-label="Pedir una pista" disabled>Pista</button>
+      <button type="button" id="reiniciar" class="boton" disabled>Reiniciar</button>
+    </div>
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+    <p class="pequeno">Elige un troje de origen y luego uno de destino: con ratón o toque, con <kbd>←</kbd> <kbd>→</kbd> y <kbd>Espacio</kbd>, o con las teclas <kbd>1</kbd>–<kbd>8</kbd>. <kbd>U</kbd> deshace, <kbd>P</kbd> pide una pista, <kbd>Esc</kbd> cancela la selección.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <pre id="compartir-texto" class="compartir"></pre>
+      <p class="pequeno">En el texto para compartir, los cuadrados de color son el orden en que sellaste los productos. No enseña el reparto, así que no desvela nada.</p>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra partida de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos completados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>Cada troje cabe <strong>4 fichas</strong>, apiladas de abajo arriba. Solo se puede coger lo de arriba.</li>
+      <li>Al mover, pasan al destino las <strong>fichas iguales</strong> que hay pegadas arriba del origen, las que quepan. El destino debe estar <strong>vacío</strong> o tener arriba una ficha <strong>igual</strong>.</li>
+      <li>Un troje lleno de fichas iguales se <strong>sella</strong> solo y ya no se toca.</li>
+      <li>En el modo difícil un troje tiene <strong>candado</strong> (<span aria-hidden="true">🔒</span> marcado con el texto «candado»): no se puede coger de él ni poner en él hasta que selles el primer troje.</li>
+      <li>Ganas cuando <strong>todos los trojes están vacíos o sellados</strong>.</li>
+      <li>La <strong>referencia</strong> es el número de movimientos de una solución que encuentra el programa. Tres estrellas hasta un 25 % por encima, dos hasta un 75 %, una si terminas. Las pistas (3 como máximo) limitan la nota a dos estrellas. Deshacer quita el movimiento del contador.</li>
+      <li>El <strong>reto diario</strong> es el mismo reparto para todo el mundo ese día (siempre difícil) y cuenta para la racha. En <strong>Práctica</strong> el reparto es aleatorio y no afecta a las estadísticas.</li>
+    </ol>
+    <h3>Los productos (cada uno tiene su forma, no solo su color)</h3>
+    <ul id="leyenda" class="leyenda"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un juego completo puede tener <strong>toda su lógica en Python</strong>, incluido un solucionador, y publicarse como web estática sin servidor. El HTML, el CSS y un poco de JavaScript solo dibujan los trojes y avisan a Python de cada movimiento.</p>
+    <p>Es también un ejercicio de diseño: un puzzle de ordenar que se entiende en un minuto, cabe en una sesión corta y ofrece el mismo reto a todo el mundo cada día.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: generar el reparto, validar y aplicar movimientos, sellar trojes, el candado, deshacer, las pistas, las estrellas, el texto para compartir y la racha de días.</li>
+      <li><strong>Siempre tiene solución:</strong> cada reparto se comprueba con un solucionador (búsqueda A* ponderada, que prueba movimientos legales y descarta estados repetidos). Solo se acepta si encuentra salida, y su longitud es la referencia. No garantiza el mínimo absoluto, por eso las estrellas dejan margen.</li>
+      <li><strong>Las pistas</strong> usan el mismo solucionador desde la posición actual y te dicen el primer movimiento de la salida que encuentra.</li>
+      <li><strong>El mismo reparto para todos:</strong> el reto diario convierte la fecha en una semilla (hash FNV-1a). Para que dé el mismo resultado en cualquier versión de Python, el generador de números aleatorios (mulberry32) está escrito dentro del propio archivo en lugar de usar el módulo <code>random</code>.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Guardado:</strong> el reto del día guarda solo la lista de movimientos y las pistas gastadas, y se reconstruye repitiéndolos, así que recargar la página no pierde el progreso.</li>
+      <li><strong>Accesibilidad:</strong> los productos se distinguen por la forma, los sellados y el candado tienen su propia marca de texto, cada troje tiene un nombre para lectores de pantalla y se puede jugar solo con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Repartir fichas entre recipientes por tipos es una mecánica de juego genérica y de uso libre. El nombre, el tema de la cosecha, la regla de sellado automático, el candado, las pistas, las estrellas, los textos y el diseño son propios; no se ha copiado ningún juego, personaje, imagen ni sonido de terceros. Todo se dibuja con CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.nueva_partida(20261107, 'practica', '', 'normal'))"</code></p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
