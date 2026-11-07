@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-tejar",
+    "titulo": "TEJAR — emparejado de fichas libres en capas: fichas tapadas, estaciones comodín, barajas con salida garantizada y reto diario con racha",
+    "descripcion": "Puzzle de retirar parejas de un almacén de fichas apiladas en capas. Una ficha solo se puede tocar si está libre: sin nada encima y con un lado despejado. Se eligen dos libres con el mismo dibujo (18 combinaciones de forma y color, cada una con su letra) y se retiran; las cuatro estaciones son una familia comodín que empareja entre sí. Tres almacenes (Corral de 20 fichas, Hórreo de 36 y Pajar de 52 con capas desplazadas). Cada tablero se construye al revés para que siempre tenga solución, y si te quedas sin parejas puedes deshacer o barajar (2-3 barajas) con la garantía de que la nueva colocación también tiene salida; 3 pistas las calcula un solucionador en profundidad. Estrellas según fallos, pistas y barajas. El reto diario usa la fecha como semilla (mismo tablero para todos), cuenta la racha de días y genera un resultado en emojis sin spoilers. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-tejar/",
+    "fecha": "2026-11-08"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-trojes",
     "titulo": "TROJES — puzzle de ordenar por montones: movimientos de grupo, sellado automático, candado, pistas y reto diario con racha",
     "descripcion": "Puzzle de ordenar la cosecha: de 6 a 8 trojes (compartimentos de 4 fichas) con manzanas, castañas, maíz y otros productos mezclados, y dos trojes vacíos. Se pasan de golpe las fichas iguales de arriba a un troje vacío o con una igual encima; un troje lleno de un solo producto se sella solo. En difícil un troje empieza con candado hasta que se selle el primero. Cada reparto se comprueba con un solucionador en Python (A* ponderado) que da la referencia de movimientos y también las 3 pistas; 1 a 3 estrellas según los movimientos (con pistas, máximo 2), deshacer y reinicio. El reto diario usa la fecha como semilla (mismo reparto para todos), cuenta la racha de días y genera un resultado en emojis sin spoilers. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",

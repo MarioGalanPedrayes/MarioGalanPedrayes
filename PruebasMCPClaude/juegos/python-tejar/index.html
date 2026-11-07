@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Tejar: puzzle de retirar parejas de fichas libres apiladas en capas, con estaciones comodín, barajas seguras, pistas y reto diario. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Tejar · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Tejar</h1>
+  <p class="intro">Un <em>tejar</em> es el taller donde se hacen las tejas. Aquí tienes un almacén de fichas apiladas en capas: ve retirándolas de dos en dos, siempre que estén libres y hagan pareja, hasta dejar el almacén vacío.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Almacén</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <div id="fila-dificultad" class="fila" hidden>
+      <label for="dificultad">Dificultad de la práctica</label>
+      <select id="dificultad">
+        <option value="facil">Fácil · 20 fichas, 1 capa extra</option>
+        <option value="normal" selected>Normal · 36 fichas, 3 capas</option>
+        <option value="dificil">Difícil · 52 fichas, 4 capas desplazadas</option>
+      </select>
+    </div>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <div id="caja" class="caja">
+      <div id="tablero" class="tablero" role="group" aria-label="Tablero de fichas"></div>
+    </div>
+    <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+
+    <dl class="contadores" aria-hidden="true">
+      <div><dt>Parejas</dt><dd id="c-parejas">0/0</dd></div>
+      <div><dt>Parejas libres</dt><dd id="c-libres">0</dd></div>
+      <div><dt>Fallos</dt><dd id="c-fallos">0</dd></div>
+      <div><dt>Pistas</dt><dd id="c-pistas">0/3</dd></div>
+      <div><dt>Barajas</dt><dd id="c-barajas">0/0</dd></div>
+    </dl>
+
+    <div class="acciones">
+      <button type="button" id="deshacer" class="boton" aria-label="Deshacer la última pareja" disabled>Deshacer</button>
+      <button type="button" id="pista" class="boton" aria-label="Pedir una pista" disabled>Pista</button>
+      <button type="button" id="barajar" class="boton" aria-label="Barajar las fichas que quedan" disabled>Barajar</button>
+      <button type="button" id="reiniciar" class="boton" disabled>Reiniciar</button>
+    </div>
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+    <p class="pequeno">Toca o haz clic en dos fichas libres. Con teclado: <kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> para moverte por las fichas, <kbd>Espacio</kbd> o <kbd>Intro</kbd> para elegir, <kbd>N</kbd> salta a la siguiente ficha libre, <kbd>U</kbd> deshace, <kbd>P</kbd> pide una pista, <kbd>B</kbd> baraja y <kbd>Esc</kbd> cancela la elección.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <pre id="compartir-texto" class="compartir"></pre>
+      <p class="pequeno">En el texto para compartir, los cuadrados indican en qué capa estaba cada pareja que retiraste (de la más baja, marrón, a la más alta, blanca). No enseña el tablero, así que no desvela nada.</p>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra partida de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos completados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>Una ficha está <strong>libre</strong> cuando <strong>no tiene ninguna encima</strong> y, además, tiene <strong>despejado al menos uno de sus lados</strong> (izquierda o derecha). Las fichas libres se ven claras; las tapadas o encajonadas, rayadas y más apagadas, y los lectores de pantalla las anuncian como «tapada».</li>
+      <li>Elige <strong>dos fichas libres que hagan pareja</strong> y se retiran. Hacen pareja las que tienen el <strong>mismo dibujo</strong> (forma y color).</li>
+      <li>Las cuatro <strong>estaciones</strong> (primavera, verano, otoño e invierno) son una <strong>familia comodín</strong>: dos estaciones cualesquiera hacen pareja aunque sean distintas.</li>
+      <li>Ganas cuando <strong>no queda ninguna ficha</strong>.</li>
+      <li>Ojo: hay varias fichas iguales y no da igual con cuál haces la pareja. Si te quedas sin parejas libres, puedes <strong>deshacer</strong> la última o <strong>barajar</strong>: las fichas que quedan se recolocan y la nueva distribución <strong>siempre tiene salida</strong>. Las barajas son pocas (3 en fácil, 2 en normal y en difícil) y una baraja no se puede deshacer.</li>
+      <li>La <strong>pista</strong> (3 como máximo) te indica una pareja que sigue dejando una salida posible.</li>
+      <li><strong>Estrellas:</strong> cada fallo (dos fichas libres que no son pareja) suma 1 punto de penalización, cada pista 2 y cada baraja 3. Con 2 o menos tienes tres estrellas; con 7 o menos, dos; si no, una. Elegir una ficha tapada no cuenta como fallo.</li>
+      <li>El <strong>reto diario</strong> es el mismo tablero para todo el mundo ese día (siempre difícil) y cuenta para la racha. En <strong>Práctica</strong> el tablero es aleatorio y no afecta a las estadísticas.</li>
+    </ol>
+    <h3>Las fichas (cada dibujo tiene su forma y una letra de color, no solo el color)</h3>
+    <p class="pequeno">Letras: <strong>R</strong> rojo, <strong>V</strong> verde, <strong>A</strong> azul.</p>
+    <ul id="leyenda" class="leyenda"></ul>
+    <h3>La familia comodín</h3>
+    <ul id="leyenda-estaciones" class="leyenda"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un juego con una geometría un poco más seria (capas, solapes y una regla de «ficha libre») puede tener <strong>toda su lógica en Python</strong>, incluido un generador que garantiza solución y un solucionador, y publicarse como web estática sin servidor. El HTML, el CSS y un poco de JavaScript solo dibujan las fichas y avisan a Python de cada elección.</p>
+    <p>Es también un ejercicio de diseño de sesiones cortas: se entiende en un minuto, cabe en un descanso y ofrece el mismo reto a todo el mundo cada día.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: los tres diseños de almacén, qué fichas están libres, la comprobación de parejas, las estaciones comodín, las pistas, las barajas, deshacer, las estrellas, el texto para compartir y la racha de días.</li>
+      <li><strong>Fichas libres con máscaras de bits:</strong> para cada ficha se calculan una sola vez qué fichas la tapan y cuáles la tocan por la izquierda y por la derecha, y se guardan como números binarios. Saber si una ficha está libre es entonces un par de operaciones <code>&amp;</code> sobre el número que representa las fichas vivas.</li>
+      <li><strong>Siempre tiene solución:</strong> el tablero se construye <em>al revés</em>. Se parte de las posiciones llenas, se eligen dos fichas libres, se les da la misma pareja y se retiran; se repite hasta vaciarlo. Jugar es recorrer ese camino. La baraja usa el mismo método con las fichas que quedan, así que tampoco te deja atrapado.</li>
+      <li><strong>Las pistas</strong> usan un solucionador de búsqueda en profundidad con memoria de estados ya vistos y un orden que prefiere las parejas que dejan más fichas libres. También descarta posiciones sin remedio, como un grupo de dos fichas en el que una tapa a la otra. Si no encuentra salida a tiempo, lo dice en lugar de inventar una.</li>
+      <li><strong>El mismo tablero para todos:</strong> el reto diario convierte la fecha en una semilla (hash FNV-1a). Para que dé el mismo resultado en cualquier versión de Python, el generador de números aleatorios (mulberry32) está escrito dentro del propio archivo en lugar de usar el módulo <code>random</code>.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Guardado:</strong> el reto del día guarda solo el historial de parejas y barajas, y se reconstruye repitiéndolo desde el tablero inicial, así que recargar la página no pierde el progreso.</li>
+      <li><strong>Accesibilidad:</strong> cada dibujo se distingue por la forma y una letra, las fichas tapadas llevan rayas y la palabra «tapada» para lectores de pantalla, y se puede jugar solo con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Retirar parejas de fichas libres apiladas es una mecánica de juego genérica y de uso libre. El nombre, el tema del tejar, los dibujos (formas de CSS con letra de color), la familia comodín de las estaciones, las barajas con salida garantizada, las pistas, las estrellas, los tres diseños de almacén, los textos y el aspecto son propios; no se ha copiado ningún juego, personaje, imagen ni sonido de terceros. Todo se dibuja con CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.nueva_partida(20261108, 'practica', '', 'normal')[:300])"</code></p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
