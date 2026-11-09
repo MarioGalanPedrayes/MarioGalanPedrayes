@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Montaña de Xanas: aventura 2D vista desde arriba. Recorre una montaña, tranquiliza criaturas del folclore en duelos por turnos y hazte amiga de las 12 especies. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Montaña de Xanas · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Montaña de Xanas</h1>
+  <p class="intro">Una montaña con su aldea, su prado, su bosque y su gruta. Entre la hierba alta viven criaturas del folclore que no quieren pelea: quieren que alguien las escuche. Camina, tranquilízalas y hazte amiga de las doce.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <h2 id="t-juego">La montaña</h2>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <p id="fila-dia" class="pequeno"></p>
+
+    <div id="elegir" hidden>
+      <h3>Elige a tu primera amiga</h3>
+      <p class="pequeno">Los tres elementos se ganan en círculo: <strong>Bosque</strong> gana a <strong>Roca</strong>, <strong>Roca</strong> gana a <strong>Niebla</strong> y <strong>Niebla</strong> gana a <strong>Bosque</strong>. Las otras nueve especies las encontrarás por la montaña.</p>
+      <div id="iniciales" class="iniciales"></div>
+    </div>
+
+    <div id="escena" class="escena" hidden>
+      <canvas id="lienzo" role="img" aria-label="Mapa de la montaña">Tu navegador no admite canvas. El texto de debajo describe dónde estás.</canvas>
+      <p id="lugar" class="lugar"></p>
+    </div>
+
+    <div id="dpad" class="dpad" role="group" aria-label="Caminar" hidden>
+      <button type="button" class="d-n" data-dir="N" aria-label="Caminar al norte">▲</button>
+      <button type="button" class="d-o" data-dir="O" aria-label="Caminar al oeste">◀</button>
+      <button type="button" class="d-s" data-dir="S" aria-label="Caminar al sur">▼</button>
+      <button type="button" class="d-e" data-dir="E" aria-label="Caminar al este">▶</button>
+    </div>
+
+    <div id="duelo" class="duelo" hidden aria-label="Encuentro con una criatura">
+      <div id="duelo-cont"></div>
+    </div>
+
+    <p id="mensaje" class="mensaje" role="alert"></p>
+    <p id="anuncio" class="sr-solo" role="status" aria-live="polite"></p>
+    <ul id="diario" class="diario" aria-label="Últimos sucesos"></ul>
+
+    <dl id="contadores" class="contadores" hidden>
+      <div><dt>Registro</dt><dd id="c-registro">0/12</dd></div>
+      <div><dt>Ofrendas</dt><dd id="c-ofrendas">0</dd></div>
+      <div><dt>Pasos</dt><dd id="c-pasos">0</dd></div>
+      <div><dt>Encuentros</dt><dd id="c-duelos">0</dd></div>
+    </dl>
+
+    <p class="pequeno" id="ayuda-teclas">Caminar: flechas o <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, o los botones de la pantalla. En un encuentro: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> usan un gesto, <kbd>O</kbd> hace una ofrenda, <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> cambian de criatura y <kbd>F</kbd> huye. Todo se puede hacer también con los botones y el tabulador.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-equipo">
+    <h2 id="t-equipo">Tu equipo</h2>
+    <p class="pequeno">Hasta tres criaturas van contigo. Las demás esperan en la reserva. Solo puedes cambiarlas caminando por el mundo, no en un encuentro (allí, cambiar gasta el turno).</p>
+    <div id="equipo" class="tarjetas"></div>
+    <h3>Reserva</h3>
+    <div id="reserva" class="tarjetas"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-registro">
+    <h2 id="t-registro">Registro de la montaña</h2>
+    <p class="pequeno">Una especie pasa de «sin ver» a «vista» cuando la encuentras, y a «amiga» cuando te acompaña. La zona donde vive se indica siempre, para que sepas dónde buscar.</p>
+    <div id="registro" class="registro"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-dia">
+    <h2 id="t-dia">El visitante del día</h2>
+    <p>Cada día llega a <strong>el claro de la cumbre</strong> (siguiendo el camino central hacia el norte) una criatura distinta, igual para todo el mundo ese día. Hacerte amiga de ella cuenta para tu racha.</p>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Visitantes recibidos</dt><dd id="st-completados">0</dd></div>
+    </dl>
+    <pre id="compartir-texto" class="compartir"></pre>
+    <div class="acciones">
+      <button type="button" id="copiar" class="boton principal">Copiar mi progreso</button>
+      <button type="button" id="nueva" class="boton">Empezar de cero</button>
+    </div>
+    <p class="pequeno">Cada cuadrado del texto para compartir es una especie, con el color de su elemento (verde Bosque, marrón Roca, azul Niebla); el blanco es una especie sin amiga todavía. No desvela cuál es cuál. Los datos se guardan solo en este navegador (<code>localStorage</code>).</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li><strong>Camina</strong> por la montaña. El camino y el césped son tranquilos; en la <strong>hierba alta</strong> (más oscura y con briznas) pueden salirte criaturas al paso, y cada zona tiene las suyas: prado, bosque y gruta.</li>
+      <li>En un encuentro no se vence a nadie: se <strong>tranquiliza</strong>. El «ánimo» es la vida. Si el ánimo de la criatura llega a cero se calma y se hace amiga tuya.</li>
+      <li>Cada criatura tiene tres gestos de su elemento: uno básico, uno <strong>fuerte</strong> (pocos usos) y un <strong>resguardo</strong> que reduce a la mitad el siguiente golpe que reciba.</li>
+      <li>Los elementos se ganan en círculo: <strong>Bosque</strong> gana a <strong>Roca</strong>, <strong>Roca</strong> gana a <strong>Niebla</strong> y <strong>Niebla</strong> gana a <strong>Bosque</strong>. El efecto es ×1,5 con ventaja y ×0,67 con desventaja, y el panel del encuentro te lo dice con palabras.</li>
+      <li>Una <strong>ofrenda</strong> cuesta una unidad y la criatura la acepta con más probabilidad cuanto menos ánimo le queda (el panel muestra el porcentaje). Empiezas con 6, y cada encuentro resuelto en paz te da una más.</li>
+      <li>Puedes <strong>cambiar</strong> de criatura (gasta el turno) o <strong>huir</strong> (lo consigues 3 de cada 4 veces).</li>
+      <li>Si tu criatura se cansa, entra otra. Si se cansan todas, vuelves a la fuente de la aldea con el equipo curado: <strong>no se pierde nada</strong>. Pisar la fuente cura al equipo y te deja al menos 3 ofrendas.</li>
+      <li>Las criaturas ganan experiencia y suben hasta el nivel 12: más ánimo y más fuerza. Las de la gruta son las más duras.</li>
+      <li><strong>Objetivo:</strong> completar el registro de las 12 especies. Cada día, además, hay un visitante en el claro de la cumbre.</li>
+    </ol>
+    <h3>Los elementos</h3>
+    <ul class="elementos">
+      <li><span class="insignia" aria-hidden="true">B</span> <strong>Bosque</strong>: raíces y hojas. Gana a Roca.</li>
+      <li><span class="insignia" aria-hidden="true">R</span> <strong>Roca</strong>: piedra y tierra. Gana a Niebla.</li>
+      <li><span class="insignia" aria-hidden="true">N</span> <strong>Niebla</strong>: bruma y ecos. Gana a Bosque.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que una aventura 2D completa (mapa por casillas, encuentros aleatorios, combate por turnos, equipo, experiencia y guardado) puede tener <strong>toda su lógica en Python</strong> y publicarse como web estática sin servidor. El HTML, el CSS y JavaScript solo dibujan el mapa y los sprites en un <code>&lt;canvas&gt;</code> y avisan a Python de cada paso o gesto.</p>
+    <p>Está pensada como un juego tranquilo y de sesiones cortas: nadie sale herido, se puede jugar diez minutos o una hora, y el progreso se guarda solo.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene el mapa (se construye con rectángulos y parches, y una prueba comprueba que todo el suelo es alcanzable), las 12 especies, el movimiento, los encuentros, el duelo, las ofrendas, la experiencia, el equipo, el guardado y la racha de días.</li>
+      <li><strong>Azar propio y repetible:</strong> el generador (mulberry32) está escrito dentro del archivo y su estado se guarda con la partida. El visitante del día sale de la fecha (hash FNV-1a), así que es el mismo para todos en cualquier versión de Python.</li>
+      <li><strong>El duelo:</strong> el daño es <code>fuerza del gesto × fuerza de la criatura ÷ 10 × ventaja × variación</code>; la variación (±10 %) sale del generador. La criatura salvaje elige gesto con una regla sencilla: resguardo si está muy cansada, fuerte si le quedan usos, básico en el resto.</li>
+      <li><strong>Un bot de pruebas:</strong> antes de publicar, un programa recorre la montaña, pelea, ofrece, cambia de criatura y cura en la fuente hasta completar el registro; así se comprueba que el juego se puede terminar con cualquiera de las tres criaturas iniciales.</li>
+      <li><strong>Dibujo:</strong> los sprites, los árboles, el agua y las casas se dibujan con trazos de canvas, sin imágenes. Cada criatura lleva además una letra de su elemento (B, R o N), porque el color solo no basta.</li>
+      <li><strong>Guardado:</strong> toda la partida (equipo, niveles, registro, posición y estado del azar) se guarda como texto JSON en <code>localStorage</code> tras cada acción y se valida al cargar; un guardado dañado no rompe nada.</li>
+      <li><strong>Accesibilidad:</strong> el juego completo se maneja con teclado o con botones; el encuentro es un panel de texto con botones (no depende del canvas), con porcentajes y ventajas escritos, y los sucesos se anuncian a los lectores de pantalla.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Recorrer un mapa visto desde arriba, encontrar criaturas en la hierba y hacerse amigas por turnos son mecánicas de juego genéricas y de uso libre. El nombre, el mundo (una montaña con su aldea, prado, bosque y gruta), las doce criaturas con sus nombres y descripciones, el triángulo de elementos Bosque-Roca-Niebla, el sistema de ofrendas, el duelo sin heridos, los gestos, los dibujos, los textos y el aspecto son propios. Los nombres de las criaturas se inspiran en el folclore tradicional asturiano, que es patrimonio de todos; no se ha copiado ningún juego, personaje, imagen, sonido ni música de terceros. Todo se dibuja con canvas y CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.elegir_inicial(1)[:200])"</code></p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>

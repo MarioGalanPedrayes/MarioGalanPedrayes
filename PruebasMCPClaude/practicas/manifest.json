@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-xanas",
+    "titulo": "MONTAÑA DE XANAS — aventura 2D por casillas: encuentros en hierba alta, duelos por turnos sin heridos, triángulo de elementos, ofrendas, equipo con niveles y visitante diario con racha",
+    "descripcion": "Aventura 2D vista desde arriba dibujada en canvas: se camina por una montaña con aldea, prado, bosque y gruta (flechas, WASD o botones táctiles). En la hierba alta salen criaturas del folclore, 12 especies originales con 4 por zona, que no se vencen sino que se tranquilizan: el ánimo es la vida y, al llegar a cero, la criatura se hace amiga. Duelo por turnos con tres elementos que se ganan en círculo (Bosque > Roca > Niebla > Bosque, ×1,5 y ×0,67), tres gestos por criatura (básico, fuerte con usos limitados y resguardo) y ofrendas que se aceptan con más probabilidad cuanto menos ánimo queda. Equipo de 3 con reserva, experiencia hasta el nivel 12, fuente que cura y derrota sin pérdidas. El objetivo es completar el registro de 12 especies; además cada día espera un visitante en el claro de la cumbre, elegido con la fecha como semilla (mismo para todos), con racha de días y texto para compartir sin spoilers. Partida guardada y validada en localStorage. Toda la lógica está en Python (azar mulberry32 propio) y corre en el navegador con Pyodide; un bot de pruebas la completa con las tres criaturas iniciales (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-xanas/",
+    "fecha": "2026-11-09"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-tejar",
     "titulo": "TEJAR — emparejado de fichas libres en capas: fichas tapadas, estaciones comodín, barajas con salida garantizada y reto diario con racha",
     "descripcion": "Puzzle de retirar parejas de un almacén de fichas apiladas en capas. Una ficha solo se puede tocar si está libre: sin nada encima y con un lado despejado. Se eligen dos libres con el mismo dibujo (18 combinaciones de forma y color, cada una con su letra) y se retiran; las cuatro estaciones son una familia comodín que empareja entre sí. Tres almacenes (Corral de 20 fichas, Hórreo de 36 y Pajar de 52 con capas desplazadas). Cada tablero se construye al revés para que siempre tenga solución, y si te quedas sin parejas puedes deshacer o barajar (2-3 barajas) con la garantía de que la nueva colocación también tiene salida; 3 pistas las calcula un solucionador en profundidad. Estrellas según fallos, pistas y barajas. El reto diario usa la fecha como semilla (mismo tablero para todos), cuenta la racha de días y genera un resultado en emojis sin spoilers. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
