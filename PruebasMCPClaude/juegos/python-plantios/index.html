@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Plantíos: puzzle de fusionar piezas en un huerto. Tres iguales juntas crecen un nivel; hay cola visible, cesto, savia comodín, piedras y reto diario. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Plantíos · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Plantíos</h1>
+  <p class="intro">Un <em>plantío</em> es un terreno donde se planta y se injerta. Te van llegando semillas, brotes y plantones: ponlos en el huerto de uno en uno y, cuando tres iguales quedan juntos, se funden en una pieza mayor. Cría un <strong>pumar</strong> antes de que no te quepa nada más.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Huerto</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <div id="fila-nivel" class="fila" hidden>
+      <label for="nivel">Nivel de la práctica</label>
+      <select id="nivel">
+        <option value="facil">Cuadro · 5×5 · criar un manzano · con savia</option>
+        <option value="normal" selected>Huerto · 5×5 con piedras · criar un pumar</option>
+        <option value="dificil">Pumarada · 5×5 · criar un pumar · sin savia</option>
+      </select>
+    </div>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <div class="mano" aria-label="Piezas">
+      <div class="mano-bloque">
+        <p class="mano-titulo" id="t-actual">Pieza actual</p>
+        <div id="actual" class="actual" role="img" aria-labelledby="t-actual"></div>
+        <p id="actual-nombre" class="mano-nombre"></p>
+      </div>
+      <div class="mano-bloque">
+        <p class="mano-titulo">Siguientes</p>
+        <div id="siguientes" class="siguientes"></div>
+      </div>
+      <div class="mano-bloque">
+        <p class="mano-titulo">Cesto</p>
+        <button type="button" id="cesto" class="cesto" aria-label="Cesto vacío. Guardar la pieza actual" disabled></button>
+      </div>
+    </div>
+
+    <div id="tablero" class="tablero" role="group" aria-label="Huerto"></div>
+    <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+
+    <dl class="contadores" aria-hidden="true">
+      <div><dt>Turnos</dt><dd id="c-turnos">0</dd></div>
+      <div><dt>Referencia</dt><dd id="c-ref">–</dd></div>
+      <div><dt>Objetivo</dt><dd id="c-objetivo">–</dd></div>
+      <div><dt>Pistas</dt><dd id="c-pistas">0/3</dd></div>
+    </dl>
+
+    <div class="acciones">
+      <button type="button" id="cambiar" class="boton" aria-label="Cambiar la pieza actual por la del cesto" disabled>Cesto</button>
+      <button type="button" id="deshacer" class="boton" aria-label="Deshacer la última acción" disabled>Deshacer</button>
+      <button type="button" id="pista" class="boton" aria-label="Pedir una pista" disabled>Pista</button>
+      <button type="button" id="reiniciar" class="boton" disabled>Reiniciar</button>
+    </div>
+    <p class="fila-opcion"><label><input type="checkbox" id="ver-fusiones" checked> Marcar las casillas donde la pieza actual se fusiona</label></p>
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+    <p class="pequeno">Elige una casilla con ratón o toque, o muévete con <kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> y pon la pieza con <kbd>Espacio</kbd> o <kbd>Intro</kbd>. <kbd>C</kbd> usa el cesto, <kbd>U</kbd> deshace y <kbd>P</kbd> pide una pista.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <div id="bloque-compartir">
+        <pre id="compartir-texto" class="compartir"></pre>
+        <p class="pequeno">El texto para compartir enseña cómo quedó tu huerto, no las piezas que te tocaron, así que no desvela nada del reto.</p>
+      </div>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra partida de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos completados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>Arriba ves la <strong>pieza actual</strong> y las <strong>dos siguientes</strong>. Pulsa una casilla vacía del huerto para colocar la actual.</li>
+      <li>Si, al colocarla, forma con sus vecinas (arriba, abajo, izquierda o derecha; las diagonales no cuentan) un grupo de <strong>3 o más piezas iguales</strong>, todo el grupo se funde en <strong>una pieza del nivel siguiente</strong> en la casilla donde la pusiste.</li>
+      <li>Un grupo de <strong>5 o más</strong> es un <strong>injerto doble</strong>: sube dos niveles.</li>
+      <li>La pieza nueva puede fundirse a su vez con otras iguales de alrededor: es una <strong>cadena</strong>.</li>
+      <li>La <strong>savia</strong> es un comodín: cuenta como cualquier nivel para completar un grupo y se gasta en la fusión. Si no completa ninguno, se queda esperando en su casilla.</li>
+      <li>Las <strong>piedras</strong> ocupan casilla y se deshacen solas cuando una fusión ocurre pegada a ellas.</li>
+      <li>El <strong>cesto</strong> guarda una pieza. Una vez por turno puedes cambiar la pieza actual por la del cesto; si está vacío, la actual se guarda y llega la siguiente. Cambiar no cuenta como turno.</li>
+      <li>Ganas cuando crías la pieza <strong>objetivo</strong> del nivel. Pierdes si el huerto se llena. <strong>Deshacer</strong> quita la última acción, así que una jugada mala no es el final.</li>
+      <li>La <strong>referencia</strong> son los turnos que gasta el programa para ganar esa misma partida. Tres estrellas hasta un 15 % por encima, dos hasta un 50 %, una si ganas. Las pistas (3 como máximo) limitan la nota a dos estrellas.</li>
+      <li>El <strong>reto diario</strong> es la misma sucesión de piezas y piedras para todo el mundo ese día (nivel Huerto) y cuenta para la racha. En <strong>Práctica</strong> las piezas son aleatorias y no afectan a las estadísticas.</li>
+    </ol>
+    <h3>Las piezas (cada nivel tiene su forma y su número, no solo su color)</h3>
+    <ul id="leyenda" class="leyenda"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un juego de fusión completo, con un jugador automático incluido, puede tener <strong>toda su lógica en Python</strong> y publicarse como web estática sin servidor. El HTML, el CSS y un poco de JavaScript solo dibujan el huerto y avisan a Python de cada pieza que colocas.</p>
+    <p>También es un ejercicio de diseño sobre lo que funciona hoy en los juegos web: sesiones de pocos minutos, una sola acción por turno (elegir una casilla), un reto que es el mismo para todos cada día y un resultado que se puede compartir sin estropearle nada a nadie. Los informes del sector de 2026 sitúan a los puzles y a la mezcla de «fusionar» con otros géneros entre lo que más crece en juegos casuales.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: las piezas y las piedras de cada partida, la colocación, las fusiones en cadena (con búsqueda de grupos conectados), la savia, el cesto, deshacer, las pistas, las estrellas, el texto para compartir y la racha de días.</li>
+      <li><strong>Siempre se puede ganar:</strong> cada partida se comprueba con un jugador automático que mira las casillas libres y las piezas iguales que quedan juntas. Solo se acepta una sucesión de piezas que ese jugador gana; si no, se prueba otra parecida. Los turnos que gasta son la referencia. No es el mínimo posible, por eso las estrellas dejan margen.</li>
+      <li><strong>Las pistas</strong> usan el mismo jugador, pero mirando además cómo colocaría la pieza siguiente, y te dicen la casilla (o si conviene pasar antes por el cesto).</li>
+      <li><strong>Las piezas no se guardan, se calculan:</strong> la pieza número <em>k</em> de una partida sale de la semilla y de <em>k</em>, así que se puede conocer cualquiera de la cola sin repetir las anteriores y deshacer nunca cambia lo que viene.</li>
+      <li><strong>El mismo reto para todos:</strong> el reto diario convierte la fecha en una semilla (hash FNV-1a). Para que dé el mismo resultado en cualquier versión de Python, el generador de números aleatorios (mulberry32) está escrito dentro del propio archivo en lugar de usar el módulo <code>random</code>.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Guardado:</strong> el reto del día guarda solo la lista de acciones y las pistas gastadas, y se reconstruye repitiéndolas, así que recargar la página no pierde el progreso.</li>
+      <li><strong>Accesibilidad:</strong> las piezas se distinguen por la forma y el número, cada casilla tiene un nombre para lectores de pantalla (con lo que se fundiría si pones ahí la pieza actual) y se puede jugar solo con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Colocar piezas y fundir grupos de tres iguales es una mecánica genérica y de uso libre. El nombre, el tema del huerto, la cola visible junto al cesto, el injerto doble por grupos de cinco, la savia, las piedras que se deshacen, las pistas, las estrellas, los textos y el diseño son propios; no se ha copiado ningún juego, personaje, imagen ni sonido de terceros. Todo se dibuja con CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.jugar_bot(20261109, 'normal'))"</code> (devuelve si el jugador automático gana esa partida y en cuántos turnos).</p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>

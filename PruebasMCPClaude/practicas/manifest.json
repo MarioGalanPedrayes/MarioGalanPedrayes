@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-plantios",
+    "titulo": "PLANTÍOS — puzzle de fusión en huerto: grupos de tres iguales que crecen, injerto doble, cola visible con cesto, savia comodín, piedras y reto diario con racha",
+    "descripcion": "Puzzle de colocar piezas de una en una en un huerto de 5×5 casillas. Ves la pieza actual y las dos siguientes; si al ponerla forma con sus vecinas (sin diagonales) un grupo de 3 o más iguales, todo el grupo se funde en una pieza del nivel siguiente (semilla, brote, plantón, manzano, pumar, pumarada), con salto doble si son 5 o más y cadenas de fusiones. La savia es un comodín que completa cualquier grupo, las piedras ocupan casilla y se deshacen al fusionar pegado a ellas, y el cesto permite guardar o cambiar la pieza actual una vez por turno. Tres niveles (Cuadro, Huerto, Pumarada) con objetivo de criar un manzano o un pumar antes de que el huerto se llene. Un jugador automático escrito en Python comprueba que cada partida se puede ganar, fija la referencia de turnos para dar de 1 a 3 estrellas y calcula 3 pistas; se puede deshacer. El reto diario usa la fecha como semilla (mismas piezas y piedras para todos), cuenta la racha de días y genera un resultado en emojis sin spoilers. Se juega con ratón, táctil o teclado. Toda la lógica está en Python (azar mulberry32 propio) y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-plantios/",
+    "fecha": "2026-11-10"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-xanas",
     "titulo": "MONTAÑA DE XANAS — aventura 2D por casillas: encuentros en hierba alta, duelos por turnos sin heridos, triángulo de elementos, ofrendas, equipo con niveles y visitante diario con racha",
     "descripcion": "Aventura 2D vista desde arriba dibujada en canvas: se camina por una montaña con aldea, prado, bosque y gruta (flechas, WASD o botones táctiles). En la hierba alta salen criaturas del folclore, 12 especies originales con 4 por zona, que no se vencen sino que se tranquilizan: el ánimo es la vida y, al llegar a cero, la criatura se hace amiga. Duelo por turnos con tres elementos que se ganan en círculo (Bosque > Roca > Niebla > Bosque, ×1,5 y ×0,67), tres gestos por criatura (básico, fuerte con usos limitados y resguardo) y ofrendas que se aceptan con más probabilidad cuanto menos ánimo queda. Equipo de 3 con reserva, experiencia hasta el nivel 12, fuente que cura y derrota sin pérdidas. El objetivo es completar el registro de 12 especies; además cada día espera un visitante en el claro de la cumbre, elegido con la fecha como semilla (mismo para todos), con racha de días y texto para compartir sin spoilers. Partida guardada y validada en localStorage. Toda la lógica está en Python (azar mulberry32 propio) y corre en el navegador con Pyodide; un bot de pruebas la completa con las tres criaturas iniciales (hecho con ayuda de Claude).",
