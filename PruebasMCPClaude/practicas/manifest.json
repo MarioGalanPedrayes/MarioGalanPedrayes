@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-corrada",
+    "titulo": "CORRADA — puzle de acorralar en rejilla hexagonal: una piedra por turno, ruta más corta del ternero visible, presupuesto de piedras, pistas y reto diario con racha",
+    "descripcion": "Puzle de persecución en un prado de casillas hexagonales (9×9 u 11×11). Cada turno pones una piedra en una casilla libre y después el ternero da un paso por el camino más corto hasta el borde; si pisa el borde, escapa, y si le cortas todos los caminos, lo acorralas y ganas. Puedes marcar las casillas de su ruta más corta, tu piedra lleva el número de turno y las piedras de partida se distinguen por su trama. Hay presupuesto de piedras, tres niveles (Prau, Corral, Pumarada), deshacer, 3 pistas y estrellas según las piedras gastadas frente a la referencia de un jugador automático escrito en Python, que comprueba que cada prado se puede ganar. El ternero no usa azar oculto: sus empates se resuelven con un generador mulberry32 que depende de la semilla y del turno. El reto diario usa la fecha como semilla (mismo prado para todos), cuenta la racha de días y genera un resultado en emojis sin desvelar la solución. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-corrada/",
+    "fecha": "2026-11-15"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-plantios",
     "titulo": "PLANTÍOS — puzzle de fusión en huerto: grupos de tres iguales que crecen, injerto doble, cola visible con cesto, savia comodín, piedras y reto diario con racha",
     "descripcion": "Puzzle de colocar piezas de una en una en un huerto de 5×5 casillas. Ves la pieza actual y las dos siguientes; si al ponerla forma con sus vecinas (sin diagonales) un grupo de 3 o más iguales, todo el grupo se funde en una pieza del nivel siguiente (semilla, brote, plantón, manzano, pumar, pumarada), con salto doble si son 5 o más y cadenas de fusiones. La savia es un comodín que completa cualquier grupo, las piedras ocupan casilla y se deshacen al fusionar pegado a ellas, y el cesto permite guardar o cambiar la pieza actual una vez por turno. Tres niveles (Cuadro, Huerto, Pumarada) con objetivo de criar un manzano o un pumar antes de que el huerto se llene. Un jugador automático escrito en Python comprueba que cada partida se puede ganar, fija la referencia de turnos para dar de 1 a 3 estrellas y calcula 3 pistas; se puede deshacer. El reto diario usa la fecha como semilla (mismas piezas y piedras para todos), cuenta la racha de días y genera un resultado en emojis sin spoilers. Se juega con ratón, táctil o teclado. Toda la lógica está en Python (azar mulberry32 propio) y corre en el navegador con Pyodide (hecho con ayuda de Claude).",

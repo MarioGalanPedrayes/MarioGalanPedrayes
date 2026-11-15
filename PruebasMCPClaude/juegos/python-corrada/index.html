@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Corrada: puzle de acorralar a un ternero en un prado de casillas hexagonales poniendo una piedra por turno. Ruta del ternero visible, presupuesto de piedras, pistas y reto diario. La lógica está en Python y corre en el navegador con Pyodide.">
+<title>Corrada · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Corrada</h1>
+  <p class="intro">Una <em>corrada</em> es el cercado donde se encierra el ganado. Un ternero anda suelto por el prado y quiere llegar al borde. Tú pones <strong>una piedra por turno</strong> y él da un paso hacia la salida más cercana. Si le cortas todos los caminos, lo has acorralado.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Prado</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <div id="fila-nivel" class="fila" hidden>
+      <label for="nivel">Nivel de la práctica</label>
+      <select id="nivel">
+        <option value="facil">Prau · 9×9 · 13 piedras de partida</option>
+        <option value="normal" selected>Corral · 11×11 · 15 piedras de partida</option>
+        <option value="dificil">Pumarada · 11×11 · 10 piedras de partida</option>
+      </select>
+    </div>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <dl class="contadores" aria-hidden="true">
+      <div><dt>Piedras puestas</dt><dd id="c-usadas">0</dd></div>
+      <div><dt>Te quedan</dt><dd id="c-restantes">–</dd></div>
+      <div><dt>Salida a</dt><dd id="c-distancia">–</dd></div>
+      <div><dt>Referencia</dt><dd id="c-ref">–</dd></div>
+      <div><dt>Pistas</dt><dd id="c-pistas">0/3</dd></div>
+    </dl>
+
+    <div id="tablero" class="tablero" role="group" aria-label="Prado hexagonal"></div>
+    <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+
+    <ul class="claves" aria-label="Qué significa cada casilla">
+      <li><span class="mini t"><b>T</b></span> Ternero</li>
+      <li><span class="mini p">▪</span> Piedra de partida</li>
+      <li><span class="mini j">3</span> Tu piedra (con su turno)</li>
+      <li><span class="mini b"></span> Casilla de borde: si el ternero pisa una, escapa</li>
+      <li><span class="mini r">·</span> Ruta más corta del ternero</li>
+    </ul>
+
+    <div class="acciones">
+      <button type="button" id="deshacer" class="boton" aria-label="Deshacer la última piedra" disabled>Deshacer</button>
+      <button type="button" id="pista" class="boton" aria-label="Pedir una pista" disabled>Pista</button>
+      <button type="button" id="reiniciar" class="boton" disabled>Reiniciar</button>
+    </div>
+    <p class="fila-opcion"><label><input type="checkbox" id="ver-ruta" checked> Marcar las casillas por las que puede pasar el ternero en su camino más corto</label></p>
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+    <p class="pequeno">Elige una casilla con ratón o toque, o muévete con <kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> y pon la piedra con <kbd>Espacio</kbd> o <kbd>Intro</kbd>. <kbd>U</kbd> deshace y <kbd>P</kbd> pide una pista.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <div id="bloque-compartir">
+        <pre id="compartir-texto" class="compartir"></pre>
+        <p class="pequeno">El texto para compartir enseña el prado al terminar y tu nota, pero no el orden de tus piedras, así que no desvela cómo se gana.</p>
+      </div>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra partida de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos acorralados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>El prado es una cuadrícula de <strong>casillas hexagonales</strong>: cada una tiene hasta seis vecinas. El ternero empieza en el centro y el prado ya trae algunas <strong>piedras de partida</strong>.</li>
+      <li>En tu turno pones <strong>una piedra</strong> en una casilla libre (no encima del ternero). Las piedras no se pueden quitar, salvo con <strong>Deshacer</strong>.</li>
+      <li>Después se mueve el ternero: da <strong>un paso</strong> hacia una casilla vecina por el camino más corto hasta el borde. Si hay varios caminos igual de cortos, elige uno con un generador de números que depende solo de la partida y del turno, así que no hay sorpresas ocultas.</li>
+      <li>Si tras tu piedra el ternero ya <strong>no tiene ningún camino libre hasta el borde</strong>, lo has acorralado y ganas.</li>
+      <li>Si el ternero llega a una <strong>casilla de borde</strong>, escapa y pierdes. También pierdes si se te acaban las piedras.</li>
+      <li>Puedes marcar la <strong>ruta más corta</strong> del ternero: son las casillas por las que podría pasar si no haces nada. Cortarla en el sitio justo es la clave.</li>
+      <li>La <strong>referencia</strong> son las piedras que gasta el programa para acorralar al ternero en esa misma partida. Tres estrellas hasta un 15 % por encima, dos hasta un 50 %, una si ganas. Las pistas (3 como máximo) limitan la nota a dos estrellas.</li>
+      <li>El <strong>reto diario</strong> es el mismo prado para todo el mundo ese día (nivel Corral) y cuenta para la racha. En <strong>Práctica</strong> el prado es aleatorio y no afecta a las estadísticas.</li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un puzle de persecución sobre una rejilla hexagonal, con su jugador automático incluido, puede tener <strong>toda su lógica en Python</strong> y publicarse como web estática. El HTML, el CSS y un poco de JavaScript solo dibujan el prado y avisan a Python de cada piedra que pones.</p>
+    <p>También es un ejercicio de diseño sobre lo que funciona hoy en los juegos web: sesiones de pocos minutos, una sola acción por turno (elegir una casilla), reglas que se entienden en diez segundos, un reto igual para todos cada día y un resultado compartible. Los informes de 2026 que consulté colocan a los puzles y a los juegos hipercasuales como lo que más se juega en el navegador, y los puzles diarios de lógica entre los formatos que más crecen.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: la geometría hexagonal (vecinos de cada casilla), la búsqueda en anchura que mide cuántos pasos le faltan al ternero para salir, su movimiento, la repetición de la partida, las pistas, las estrellas, el texto para compartir y la racha de días.</li>
+      <li><strong>Siempre se puede ganar:</strong> cada prado se comprueba con un jugador automático que mira unas pocas jugadas por delante (qué piedra deja al ternero más lejos de la salida y con menos caminos). Solo se acepta un prado que ese jugador gana; si no, se prueba otro parecido. Las piedras que gasta son la referencia. No es el mínimo posible, por eso las estrellas dejan margen.</li>
+      <li><strong>Las pistas</strong> usan el mismo jugador y te señalan una casilla (cuenta como una de las tres).</li>
+      <li><strong>La partida se calcula, no se guarda:</strong> el estado es siempre el resultado de repetir, desde el prado inicial, la lista de piedras que has puesto. Por eso deshacer es quitar la última de la lista y recargar la página no pierde nada.</li>
+      <li><strong>El mismo reto para todos:</strong> el reto diario convierte la fecha en una semilla (hash FNV-1a). Para que dé lo mismo en cualquier versión de Python, el generador de números aleatorios (mulberry32) está escrito dentro del propio archivo en lugar de usar el módulo <code>random</code>.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Accesibilidad:</strong> las casillas no dependen solo del color (el ternero lleva una «T», tus piedras llevan el número de turno, las de partida un dibujo rayado y el borde un contorno discontinuo), cada casilla tiene un nombre para lectores de pantalla y se puede jugar solo con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Poner obstáculos para encerrar a una pieza que huye es una mecánica genérica y de uso libre. El nombre, el tema asturiano del ternero y la corrada, la ruta más corta visible, el presupuesto de piedras con referencia y estrellas, las piedras de partida, las pistas, el reto diario con racha, los textos y el diseño son propios; no se ha copiado ningún juego, personaje, imagen ni sonido de terceros. Todo se dibuja con CSS y texto. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.jugar_bot(20261115, 'normal'))"</code> (devuelve si el jugador automático gana esa partida y cuántas piedras gasta).</p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
