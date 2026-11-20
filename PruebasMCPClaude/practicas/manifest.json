@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-tarima",
+    "titulo": "TARIMA — puzle de colocar piezas y despejar líneas: suelo de 8×8, lotes de tres piezas sin girar, lote siguiente visible, nudos, objetivo de líneas y reto diario con racha",
+    "descripcion": "Puzle de colocar piezas de tablas en un suelo de 8×8 casillas. Cada lote trae tres piezas (37 formas, que no se giran) que se colocan en cualquier orden; cuando una fila o una columna queda completa se despeja, y una sola pieza puede despejar varias a la vez. Se ve el lote siguiente, hay nudos de partida (casillas ya ocupadas que también se despejan) y un número fijo de lotes (5 o 6) para alcanzar el objetivo de líneas, en tres niveles (Tablón, Entarimado y Parqué). Al pasar el ratón o el foco se ve si la pieza cabe y qué líneas despejaría. Un jugador automático escrito en Python, con búsqueda en haz de 60 posiciones, comprueba que cada partida se puede cumplir, fija el objetivo por debajo de lo que consigue y sirve de referencia para las estrellas y para las 3 pistas. Las piezas no se guardan, se calculan a partir de la semilla (generador mulberry32 propio), así que deshacer nunca cambia lo que viene. El reto diario usa la fecha como semilla (mismo suelo y mismas piezas para todos), cuenta la racha de días y genera un resultado en emojis con las líneas por lote, sin desvelar las piezas. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-tarima/",
+    "fecha": "2026-11-20"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-corrada",
     "titulo": "CORRADA — puzle de acorralar en rejilla hexagonal: una piedra por turno, ruta más corta del ternero visible, presupuesto de piedras, pistas y reto diario con racha",
     "descripcion": "Puzle de persecución en un prado de casillas hexagonales (9×9 u 11×11). Cada turno pones una piedra en una casilla libre y después el ternero da un paso por el camino más corto hasta el borde; si pisa el borde, escapa, y si le cortas todos los caminos, lo acorralas y ganas. Puedes marcar las casillas de su ruta más corta, tu piedra lleva el número de turno y las piedras de partida se distinguen por su trama. Hay presupuesto de piedras, tres niveles (Prau, Corral, Pumarada), deshacer, 3 pistas y estrellas según las piedras gastadas frente a la referencia de un jugador automático escrito en Python, que comprueba que cada prado se puede ganar. El ternero no usa azar oculto: sus empates se resuelven con un generador mulberry32 que depende de la semilla y del turno. El reto diario usa la fecha como semilla (mismo prado para todos), cuenta la racha de días y genera un resultado en emojis sin desvelar la solución. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
