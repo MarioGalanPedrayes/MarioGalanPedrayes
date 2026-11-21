@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-empedrado",
+    "titulo": "EMPEDRADO — puzle de lógica por cifras en cuadrícula: tramos de piedras por fila y columna, huecos como notas, solución única sin adivinar, pistas, revisión y reto diario con racha",
+    "descripcion": "Puzle de deducción pura en una cuadrícula de 5×5, 8×8 o 10×10. Las cifras al borde de cada fila y columna dan la longitud de los tramos de piedras seguidas; hay que deducir dónde va cada casilla. Se marcan piedras y huecos (notas de «aquí no hay piedra» que no cuentan), con arrastre para pintar varias casillas, y las líneas cumplidas tachan sus cifras. Cada calle se genera al azar y solo se acepta si un solucionador de lógica de líneas, escrito en Python, la completa entera: tiene una única solución y nunca hace falta adivinar. Hay 3 pistas (colocan una casilla que se deduce) y 3 revisiones (marcan lo mal puesto) que restan estrellas, y deshacer ilimitado. El reto diario usa la fecha como semilla (misma calle para todos), cuenta la racha de días y genera un resultado compartible sin spoilers. Se juega con ratón, táctil o teclado. Toda la lógica está en Python (azar mulberry32 propio) y corre en el navegador con Pyodide (hecho con ayuda de Claude).",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-empedrado/",
+    "fecha": "2026-11-21"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-tarima",
     "titulo": "TARIMA — puzle de colocar piezas y despejar líneas: suelo de 8×8, lotes de tres piezas sin girar, lote siguiente visible, nudos, objetivo de líneas y reto diario con racha",
     "descripcion": "Puzle de colocar piezas de tablas en un suelo de 8×8 casillas. Cada lote trae tres piezas (37 formas, que no se giran) que se colocan en cualquier orden; cuando una fila o una columna queda completa se despeja, y una sola pieza puede despejar varias a la vez. Se ve el lote siguiente, hay nudos de partida (casillas ya ocupadas que también se despejan) y un número fijo de lotes (5 o 6) para alcanzar el objetivo de líneas, en tres niveles (Tablón, Entarimado y Parqué). Al pasar el ratón o el foco se ve si la pieza cabe y qué líneas despejaría. Un jugador automático escrito en Python, con búsqueda en haz de 60 posiciones, comprueba que cada partida se puede cumplir, fija el objetivo por debajo de lo que consigue y sirve de referencia para las estrellas y para las 3 pistas. Las piezas no se guardan, se calculan a partir de la semilla (generador mulberry32 propio), así que deshacer nunca cambia lo que viene. El reto diario usa la fecha como semilla (mismo suelo y mismas piezas para todos), cuenta la racha de días y genera un resultado en emojis con las líneas por lote, sin desvelar las piezas. Se juega con ratón, táctil o teclado. Toda la lógica está en Python y corre en el navegador con Pyodide (hecho con ayuda de Claude).",

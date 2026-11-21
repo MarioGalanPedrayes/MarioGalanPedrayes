@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Empedrado: puzle de lógica en cuadrícula. Las cifras de cada fila y columna dicen cuántas piedras seguidas van; se deduce dónde está cada una sin adivinar. Reto diario, pistas y revisiones. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Empedrado · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Empedrado</h1>
+  <p class="intro">Hay una calle por empedrar y el único plano son unas cifras en los bordes: cada una dice cuántas piedras <em>seguidas</em> lleva un tramo de esa fila o columna. Con lógica, sin probar a ciegas, se puede saber dónde va cada piedra.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Calle</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <div id="fila-nivel" class="fila" hidden>
+      <label for="nivel">Tamaño de la práctica</label>
+      <select id="nivel">
+        <option value="facil">Callejón · 5×5</option>
+        <option value="normal" selected>Plaza · 8×8</option>
+        <option value="dificil">Avenida · 10×10</option>
+      </select>
+    </div>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <div class="herramientas" role="group" aria-label="Herramienta">
+      <button type="button" id="h-piedra" class="herr activa" aria-pressed="true" aria-label="Herramienta piedra"><span class="muestra piedra" aria-hidden="true"></span> Piedra</button>
+      <button type="button" id="h-hueco" class="herr" aria-pressed="false" aria-label="Herramienta hueco"><span class="muestra hueco" aria-hidden="true">×</span> Hueco</button>
+      <span class="pequeno">Con el botón derecho, <kbd>Mayús</kbd> o la tecla <kbd>X</kbd> usas la otra herramienta. Arrastra para pintar varias casillas.</span>
+    </div>
+
+    <div class="zona-calle">
+      <div id="calle" class="calle" role="group" aria-label="Calle"></div>
+    </div>
+    <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+
+    <dl class="contadores" aria-hidden="true">
+      <div><dt>Piedras</dt><dd id="c-piedras">0/0</dd></div>
+      <div><dt>Filas cumplidas</dt><dd id="c-filas">0</dd></div>
+      <div><dt>Columnas cumplidas</dt><dd id="c-cols">0</dd></div>
+      <div><dt>Ayudas</dt><dd id="c-ayudas">0/0</dd></div>
+    </dl>
+
+    <div class="acciones">
+      <button type="button" id="deshacer" class="boton" aria-label="Deshacer el último paso" disabled>Deshacer</button>
+      <button type="button" id="pista" class="boton" aria-label="Pedir una pista: coloca una casilla que se deduce" disabled>Pista</button>
+      <button type="button" id="revisar" class="boton" aria-label="Revisar: marca las casillas que están mal" disabled>Revisar</button>
+      <button type="button" id="reiniciar" class="boton" disabled>Vaciar</button>
+    </div>
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+    <p class="pequeno">Con teclado: flechas para moverte, <kbd>Espacio</kbd> o <kbd>Intro</kbd> para usar la herramienta, <kbd>X</kbd> para poner o quitar un hueco, <kbd>Retroceso</kbd> para dejar la casilla vacía, <kbd>T</kbd> cambia de herramienta, <kbd>U</kbd> deshace, <kbd>P</kbd> pide una pista y <kbd>V</kbd> revisa.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <pre id="compartir-texto" class="compartir"></pre>
+      <p class="pequeno">El texto para compartir no enseña la calle, solo el tamaño, las estrellas y las ayudas que usaste, así que no desvela nada del reto.</p>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra calle de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos completados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>Cada casilla de la calle lleva una <strong>piedra</strong> o se queda <strong>vacía</strong>.</li>
+      <li>Las cifras a la izquierda de cada fila y encima de cada columna, en orden, dan la longitud de cada <strong>tramo de piedras seguidas</strong>. Por ejemplo, <code>3 1</code> es un tramo de tres piedras y, después, al menos un hueco y una piedra suelta. Un <code>0</code> es una línea sin ninguna piedra.</li>
+      <li>Pon piedras donde las cifras lo obliguen. Con la herramienta <strong>Hueco</strong> anotas «aquí seguro que no hay piedra»; es solo una nota para ti y no cuenta en la solución.</li>
+      <li>Cuando una fila o columna tiene sus tramos igual que las cifras, sus cifras se tachan y aparece una <strong>✓</strong>.</li>
+      <li>Ganas cuando <strong>todas las filas y columnas están cumplidas</strong>.</li>
+      <li><strong>Nunca hace falta adivinar:</strong> cada calle se puede resolver razonando línea a línea, y tiene una sola solución.</li>
+      <li><strong>Pista</strong> coloca una casilla que se deduce con lógica. <strong>Revisar</strong> marca con una <strong>!</strong> lo que tengas mal. Hay 3 de cada una, y las estrellas dependen de cuántas uses: 3 estrellas sin ayudas, 2 con una o dos, 1 con más. <strong>Deshacer</strong> es ilimitado.</li>
+      <li>El <strong>reto diario</strong> es la misma calle para todo el mundo ese día (la Plaza de 8×8) y cuenta para la racha. En <strong>Práctica</strong> la calle es aleatoria y no afecta a las estadísticas.</li>
+    </ol>
+    <h3>Las marcas</h3>
+    <ul id="leyenda" class="leyenda">
+      <li><span class="muestra piedra" aria-hidden="true"></span><span>Piedra</span></li>
+      <li><span class="muestra hueco" aria-hidden="true">×</span><span>Hueco (nota: sin piedra)</span></li>
+      <li><span class="muestra mala" aria-hidden="true">!</span><span>Mal puesta (tras revisar)</span></li>
+      <li><span class="muestra ok" aria-hidden="true">✓</span><span>Fila o columna cumplida</span></li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un juego de lógica con <strong>solucionador incluido</strong> puede tener toda su lógica en Python y publicarse como web estática sin servidor. El HTML, el CSS y un poco de JavaScript solo dibujan la calle y avisan a Python de cada casilla que marcas.</p>
+    <p>También es un ejercicio de diseño sobre lo que funciona hoy en los juegos web: los puzles son lo que más se juega en el navegador, las sesiones duran pocos minutos, el reto diario es el mismo para todos y el resultado se puede compartir sin estropearle nada a nadie. Este es un puzle de deducción pura, sin azar ni prisa.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: generar la calle, calcular las cifras, comprobar las líneas cumplidas, deshacer, las pistas, la revisión, las estrellas, el texto para compartir y la racha de días.</li>
+      <li><strong>Sin adivinar y con solución única:</strong> cada calle se genera al azar y se pasa por un <em>solucionador de lógica de líneas</em>. Para cada fila o columna calcula todas las formas de colocar sus tramos que no contradicen lo ya sabido; si en todas ellas una casilla es piedra (o en todas es vacía), esa casilla queda decidida. Repite fila a fila y columna a columna hasta que no avanza. Solo se acepta la calle si el solucionador la completa entera; si no, se prueba otra parecida.</li>
+      <li><strong>Las pistas</strong> usan el orden en que el solucionador fue decidiendo casillas: te da la primera que aún no tienes bien puesta, aunque tengas errores en otras partes.</li>
+      <li><strong>La misma calle para todos:</strong> el reto diario convierte la fecha en una semilla (hash FNV-1a). Para que dé el mismo resultado en cualquier versión de Python, el generador de números aleatorios (mulberry32) está escrito dentro del propio archivo en lugar de usar el módulo <code>random</code>.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Guardado:</strong> el reto del día guarda las casillas y las ayudas gastadas, así que recargar la página no pierde el progreso.</li>
+      <li><strong>Accesibilidad:</strong> las marcas se distinguen por la forma y el texto (bloque, ×, !, ✓), no solo por el color; cada casilla tiene un nombre para lectores de pantalla, la primera de cada fila y columna lee también sus cifras, y se juega entero con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Deducir una cuadrícula a partir de las longitudes de los tramos de cada línea es una mecánica de lógica clásica y de uso libre. El nombre, el tema de la calle empedrada, las calles generadas al azar (no hay dibujos de terceros), la garantía de solución única sin adivinar, las pistas y la revisión limitadas, las estrellas, los textos y el diseño son propios; no se ha copiado ningún juego, personaje, imagen ni sonido. Todo se dibuja con CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.resolver(*codigo._generar(20261121, 'normal')[2:4])[0])"</code> (devuelve <code>True</code>: el solucionador resuelve esa calle entera).</p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
