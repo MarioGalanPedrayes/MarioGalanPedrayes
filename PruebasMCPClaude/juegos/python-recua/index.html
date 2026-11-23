@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Recua: roguelite de ruta por un puerto de montaña. Lleva una caravana de mulas por un mapa de senderos, gestiona pan, ánimo, monedas y sacos, arriesga en encuentros con resultado oculto y mejora tu recua entre viajes. La lógica está en Python y corre en el navegador con Pyodide.">
+<title>Recua · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Recua</h1>
+  <p class="intro">Una <em>recua</em> es una fila de mulas de carga. Tú guías la tuya desde el valle hasta el mercado de la cumbre por un mapa de senderos que se ve entero. Cada tramo gasta pan, cada sitio ofrece algo y alguna decisión sale mal sin avisar. Hay que llegar arriba con el valor que pide el objetivo.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">Viaje</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <div id="fila-nivel" class="fila" hidden>
+      <label for="nivel">Nivel de la práctica</label>
+      <select id="nivel">
+        <option value="facil">Cañada · 5 etapas · objetivo holgado</option>
+        <option value="normal" selected>Collada · 6 etapas · objetivo medio</option>
+        <option value="dificil">Puerto · 7 etapas · objetivo exigente</option>
+      </select>
+    </div>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <dl class="contadores" aria-hidden="true">
+      <div><dt>Pan</dt><dd id="c-pan">–</dd></div>
+      <div><dt>Ánimo</dt><dd id="c-animo">–</dd></div>
+      <div><dt>Monedas</dt><dd id="c-monedas">–</dd></div>
+      <div><dt>Sacos</dt><dd id="c-carga">–</dd></div>
+      <div><dt>Valor si llegas ya</dt><dd id="c-valor">–</dd></div>
+      <div><dt>Objetivo</dt><dd id="c-objetivo">–</dd></div>
+      <div><dt>Referencia</dt><dd id="c-ref">–</dd></div>
+      <div><dt>Pistas</dt><dd id="c-pistas">0/3</dd></div>
+    </dl>
+    <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+    <p id="alerta-viable" class="aviso" hidden>Con lo que llevas ya no se puede llegar al objetivo. Puedes seguir por probar o reiniciar el viaje.</p>
+
+    <div class="mapa-caja">
+      <div id="mapa" class="mapa" role="group" aria-label="Mapa de senderos. Arriba está la cumbre y abajo el valle. Muévete con las flechas."></div>
+    </div>
+    <ul class="claves" aria-label="Qué significa cada letra del mapa">
+      <li><span class="mini">V</span> Valle (salida)</li>
+      <li><span class="mini">A</span> Aldea: pan y descanso</li>
+      <li><span class="mini">M</span> Almacén: comprar sacos</li>
+      <li><span class="mini">F</span> Feria: vender sacos</li>
+      <li><span class="mini">P</span> Paso difícil: obligatorio decidir</li>
+      <li><span class="mini">?</span> Encuentro: resultado oculto</li>
+      <li><span class="mini">E</span> Ermita: descanso gratis</li>
+      <li><span class="mini">C</span> Cumbre (meta)</li>
+    </ul>
+
+    <div id="ficha" class="ficha"></div>
+
+    <div class="acciones">
+      <button type="button" id="pista" class="boton" aria-label="Pedir una pista" disabled>Pista</button>
+      <button type="button" id="reiniciar" class="boton" disabled>Reiniciar viaje</button>
+    </div>
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+    <p class="pequeno">Elige un sitio con ratón, toque o con <kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd>; <kbd>Intro</kbd> lo selecciona. Con el sitio elegido, <kbd>I</kbd> te lleva allí si hay sendero. Las ofertas del sitio donde estás se hacen con los botones de la ficha o con las teclas <kbd>1</kbd> a <kbd>9</kbd>. <kbd>P</kbd> pide una pista.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <p id="resultado-sellos" class="pequeno"></p>
+      <div id="bloque-compartir">
+        <pre id="compartir-texto" class="compartir"></pre>
+        <p class="pequeno">El texto para compartir enseña tu nota y los tipos de sitio que recorriste, pero no el resultado de los encuentros ni lo que compraste, así que no desvela cómo se gana.</p>
+      </div>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otro viaje de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-cuadra">
+    <h2 id="t-cuadra">La cuadra: mejoras que se quedan</h2>
+    <p>Cada viaje de <strong>práctica</strong> termina con <strong>sellos</strong> (el sello es el visto bueno del mercado). Con ellos compras mejoras permanentes para las siguientes prácticas. El reto diario se juega siempre sin mejoras, para que sea igual para todo el mundo.</p>
+    <p class="pequeno">Sellos disponibles: <strong id="sellos">0</strong>. Lo que compres vale desde el próximo viaje de práctica, no el que tienes en marcha.</p>
+    <ul id="mejoras" class="mejoras"></ul>
+    <p id="mensaje-mejoras" class="mensaje" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos ganados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>El <strong>mapa</strong> tiene el valle abajo, la cumbre arriba y en medio varias etapas con tres sitios cada una. Los senderos van de una etapa a la siguiente (recto o en diagonal) y se ve cuáles hay. Cada sitio tiene un tipo, y las ofertas de todos se pueden consultar antes de decidir la ruta.</li>
+      <li>Llevas cuatro cosas: <strong>pan</strong>, <strong>ánimo</strong> de la recua, <strong>monedas</strong> y <strong>sacos</strong> de mercancía (caben cuatro). <strong>Cada tramo gasta un pan.</strong> Si no queda, la recua pierde 2 de ánimo en ese tramo, y si no aguanta, no puede seguir.</li>
+      <li>En el sitio donde estás puedes hacer <strong>todas las ofertas que quieras</strong>, en el orden que quieras, y después sigues por un sendero. No se puede volver atrás. Se compran sacos en los almacenes (y en el valle), se venden en las ferias, se compra pan y descanso en las aldeas, y la ermita regala una cosa a elegir.</li>
+      <li>En un <strong>paso difícil</strong> hay que decidir antes de seguir: cruzar cuesta ánimo (la cifra está a la vista) y rodear cuesta panes.</li>
+      <li>Un <strong>encuentro</strong> es una apuesta: ves lo que cuesta, pero no cómo sale. Puede salir bien o mal, y lo que sale está fijado de antemano por la semilla de ese viaje.</li>
+      <li>En la <strong>cumbre</strong> se venden los sacos que quedan al precio que marca el mercado. Ganas si <strong>monedas + sacos × precio</strong> llega al objetivo. Si el ánimo se acaba o te quedas sin ninguna jugada, pierdes.</li>
+      <li>La <strong>referencia</strong> es el mejor valor que se puede lograr en ese mapa, calculado por un buscador exacto escrito en Python. El objetivo es una parte de la ganancia de esa referencia según el nivel. Tres estrellas si logras el 90 % de la ganancia, dos con el 70 %, una si ganas. Las pistas (3 como máximo) limitan la nota a dos estrellas.</li>
+      <li>El <strong>reto diario</strong> es el mismo viaje para todo el mundo ese día (nivel Collada, sin mejoras) y cuenta para la racha. En <strong>Práctica</strong> el mapa es aleatorio, se usan tus mejoras y ganas sellos.</li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Esta práctica quiere mostrar que un juego de ruta con recursos, riesgo y progreso entre partidas, con su propio buscador de la mejor jugada, puede tener <strong>toda su lógica en Python</strong> y publicarse como web estática. El HTML, el CSS y un poco de JavaScript solo dibujan el mapa y avisan a Python de cada acción.</p>
+    <p>También es un ejercicio de diseño a partir de lo que cuentan los análisis de 2026 sobre juegos de navegador. El informe de Poki sobre la web gaming sitúa las sesiones típicas entre 11 y 20 minutos y a jugadores que saltan entre dos o tres juegos. Otro artículo ve crecer los juegos de profundidad media sobre los hipercasuales: progreso que se conserva entre visitas, partidas por rondas con rejugabilidad, estrategia por encima de reflejos, contenido generado por algoritmo y retos con semilla compartida en lugar de multijugador en tiempo real. Los puzles diarios, por su parte, funcionan por el mismo reto para todos y el resultado que se comparte sin spoilers. Recua junta esas ideas en un viaje de unos diez minutos.</p>
+    <p class="pequeno">Fuentes consultadas (resumidas con palabras propias): <a href="https://poki.com/blog/state-of-web-gaming-report-2026" rel="noopener">Poki, informe 2026 sobre web gaming</a>; <a href="https://dev.to/jasonguo/the-death-of-hyper-casual-why-mid-core-is-the-new-gold-mine-for-browser-games-in-2026-3l8" rel="noopener">dev.to, sobre el auge de los juegos de profundidad media</a>; <a href="https://dinogame.gg/blog/rise-of-daily-web-puzzles/" rel="noopener">dinogame.gg, sobre los puzles diarios</a>.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: la generación del mapa, las ofertas de cada tipo de sitio, el gasto de pan y ánimo, los límites de las alforjas, el cálculo de objetivo y estrellas, las pistas, el texto para compartir, la racha de días y el catálogo de mejoras.</li>
+      <li><strong>Siempre se puede ganar:</strong> cada mapa se resuelve entero con una búsqueda con memoria (cada situación posible se calcula una vez) que conoce hasta el resultado de los encuentros. Si el mejor viaje posible no gana lo suficiente, se genera otro mapa parecido. Esa búsqueda da la referencia y las pistas.</li>
+      <li><strong>Sin azar en vivo:</strong> el mapa, los precios y lo que sale en cada encuentro dependen solo de la semilla, con un generador (mulberry32) escrito dentro del propio archivo en lugar del módulo <code>random</code>, para que dé lo mismo en cualquier versión de Python. Esto vale lo mismo para el reto diario, cuya semilla es un hash (FNV-1a) de la fecha.</li>
+      <li><strong>La partida se calcula, no se guarda:</strong> el estado es siempre el resultado de repetir, desde el principio, la lista de acciones. Por eso recargar la página no pierde el viaje. No hay «deshacer»: en los encuentros dejaría ver el resultado y volver.</li>
+      <li><strong>Mejoras permanentes:</strong> los sellos y las mejoras se guardan en <code>localStorage</code> (siempre dentro de <code>try/catch</code>), y Python las aplica al empezar cada viaje de práctica: más alforjas, más pan, más ánimo, más monedas o ver cómo saldrá cada encuentro. El objetivo de un mapa no cambia con las mejoras; lo que cambia es lo fácil que resulta llegar.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Accesibilidad:</strong> cada sitio lleva una letra y su nombre además del estilo (nada depende solo del color), los botones tienen nombre para lectores de pantalla, se puede jugar solo con teclado y el mapa se adapta a pantallas estrechas.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Elegir ruta por un mapa con ramas, gestionar recursos y apostar en sucesos son mecánicas genéricas y de uso libre. El nombre, el tema de la arriería asturiana, el mapa con senderos visibles, los seis tipos de sitio con sus ofertas, el paso obligatorio, los encuentros con resultado fijado por semilla, la referencia exacta con estrellas, las mejoras de la cuadra, el reto diario con racha, los textos y el diseño son propios; no se ha copiado ningún juego, personaje, imagen ni sonido de terceros. Todo se dibuja con CSS y texto. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a>. Para probar la lógica en tu ordenador: <code>python -c "import codigo; print(codigo.jugar_bot(20261123, 'normal'))"</code> (juega el viaje perfecto de esa semilla y devuelve el valor, el objetivo y la referencia).</p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>
