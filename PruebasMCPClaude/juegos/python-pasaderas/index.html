@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Pasaderas: juego de palabras de cuatro letras. Cruza el río pisando palabras que se diferencian en una sola letra, esquivando las piedras que tapa la crecida. Reto diario, pistas y estrellas. La lógica está escrita en Python y se ejecuta en el navegador con Pyodide.">
+<title>Pasaderas · Juegos en Python</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<header class="cabecera">
+  <p class="etiqueta">Juegos · Python en el navegador</p>
+  <h1>Pasaderas</h1>
+  <p class="intro">Para cruzar el río hay que pisar piedras, y cada piedra es una palabra de cuatro letras. De una a la siguiente solo se pasa cambiando <em>una</em> letra. Llega a la otra orilla en el menor número de pasos que puedas.</p>
+</header>
+
+<main>
+  <section class="panel" id="juego" aria-labelledby="t-juego">
+    <div class="barra">
+      <h2 id="t-juego">El río</h2>
+      <div class="modos" role="group" aria-label="Modo de juego">
+        <button type="button" id="modo-diario" class="modo activo" aria-pressed="true" disabled>Reto diario</button>
+        <button type="button" id="modo-practica" class="modo" aria-pressed="false" disabled>Práctica</button>
+      </div>
+    </div>
+    <p id="estado-carga" class="aviso" role="status">Cargando el motor de Python…</p>
+    <div id="fila-nivel" class="fila" hidden>
+      <label for="nivel">Nivel de la práctica</label>
+      <select id="nivel">
+        <option value="vado">Vado · 3-4 pasos, sin crecida</option>
+        <option value="corriente" selected>Corriente · 4-6 pasos, 1 piedra tapada</option>
+        <option value="torrente">Torrente · 5-8 pasos, 2 piedras tapadas</option>
+      </select>
+    </div>
+    <p id="titulo-partida" class="pequeno"></p>
+
+    <div class="orillas">
+      <div class="orilla"><span class="rotulo">Sales de</span><span id="o-inicio" class="palabra grande">····</span></div>
+      <div class="orilla"><span class="rotulo">Llegas a</span><span id="o-fin" class="palabra grande">····</span></div>
+    </div>
+    <p class="pequeno" id="info-par"></p>
+
+    <div class="agua" aria-hidden="true">
+      <p class="rotulo">Piedras bajo el agua (no se pueden pisar):</p>
+      <ul id="bloqueadas" class="lista-bloq"></ul>
+    </div>
+
+    <h3>Tu camino</h3>
+    <ol id="camino" class="camino" aria-label="Piedras pisadas"></ol>
+    <p id="resumen" class="sr-solo" role="status" aria-live="polite"></p>
+
+    <form id="form-paso" class="paso" autocomplete="off">
+      <label for="entrada">Siguiente piedra</label>
+      <input id="entrada" name="entrada" type="text" maxlength="4" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="mensaje" disabled>
+      <button type="submit" id="pisar" class="boton principal" aria-label="Pisar la piedra escrita" disabled>Pisar</button>
+    </form>
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+
+    <dl class="contadores" aria-hidden="true">
+      <div><dt>Pasos</dt><dd id="c-pasos">0</dd></div>
+      <div><dt>Par</dt><dd id="c-par">0</dd></div>
+      <div><dt>Pistas</dt><dd id="c-pistas">0/3</dd></div>
+    </dl>
+
+    <div class="acciones">
+      <button type="button" id="deshacer" class="boton" aria-label="Volver a la piedra anterior" disabled>Deshacer</button>
+      <button type="button" id="pista" class="boton" aria-label="Pedir una pista: la siguiente piedra de un camino mínimo" disabled>Pista</button>
+      <button type="button" id="reiniciar" class="boton" aria-label="Volver a la orilla de salida" disabled>Reiniciar</button>
+      <button type="button" id="rendirse" class="boton" aria-label="Rendirse y ver un camino mínimo" disabled>Rendirme</button>
+    </div>
+    <p class="pequeno">Con teclado: escribe la palabra y pulsa <kbd>Intro</kbd>. <kbd>Ctrl</kbd>+<kbd>Z</kbd> deshace. Con el foco fuera del cuadro de texto, <kbd>U</kbd> deshace y <kbd>P</kbd> pide una pista. Escribe sin tildes ni eñes.</p>
+
+    <div id="resultado" class="resultado" hidden>
+      <h3 id="resultado-titulo"></h3>
+      <p id="resultado-texto"></p>
+      <ol id="solucion" class="camino" hidden></ol>
+      <pre id="compartir-texto" class="compartir"></pre>
+      <p class="pequeno">El texto para compartir no enseña ninguna palabra, solo los pasos, el par, las estrellas y las pistas.</p>
+      <div class="acciones">
+        <button type="button" id="copiar" class="boton principal">Copiar resultado</button>
+        <button type="button" id="otra" class="boton">Otra de práctica</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-stats">
+    <h2 id="t-stats">Tu racha en el reto diario</h2>
+    <dl class="stats">
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor-racha">0</dd></div>
+      <div><dt>Retos completados</dt><dd id="st-completados">0</dd></div>
+      <div><dt>Con tres estrellas</dt><dd id="st-tres">0</dd></div>
+    </dl>
+    <p class="pequeno">Los datos se guardan solo en este navegador (<code>localStorage</code>). No hay cuentas ni servidor.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-reglas">
+    <h2 id="t-reglas">Cómo se juega</h2>
+    <ol>
+      <li>Estás en la palabra de <strong>salida</strong>. Escribe una palabra que se diferencie de la actual en <strong>una sola letra</strong> (cambiada de sitio no vale: la letra se sustituye en su misma posición). Por ejemplo, de <code>casa</code> a <code>caso</code> o a <code>cosa</code>.</li>
+      <li>Solo valen las palabras de la lista del juego (unas 500 de uso corriente). Si una palabra existe pero no sale, es que no está en la lista.</li>
+      <li>No se pisa dos veces la misma piedra ni las que están <strong>bajo el agua</strong>: son las que ha tapado la crecida y se ven arriba antes de empezar.</li>
+      <li>Ganas al pisar la palabra <strong>meta</strong>. El <strong>par</strong> es el menor número de pasos posible con la crecida ya contada, calculado de forma exacta.</li>
+      <li><strong>Estrellas:</strong> 3 si llegas en el par o menos, 2 hasta dos pasos de más, 1 con más. Cada pista quita estrellas (una o dos pistas, una estrella; tres, dos), pero nunca bajas de una.</li>
+      <li><strong>Pista</strong> (3 por partida) te dice la siguiente piedra de un camino mínimo desde donde estás. <strong>Deshacer</strong> es ilimitado. Si te quedas sin salida, el juego te avisa.</li>
+      <li>El <strong>reto diario</strong> es el mismo río para todo el mundo ese día (nivel Corriente) y cuenta para la racha. En <strong>Práctica</strong> eliges nivel y no afecta a las estadísticas.</li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="t-objetivo">
+    <h2 id="t-objetivo">Qué se busca con esta página</h2>
+    <p>Mostrar que un juego de palabras con <strong>solucionador exacto</strong> puede tener toda su lógica en Python y publicarse como web estática sin servidor. El HTML, el CSS y un poco de JavaScript solo dibujan el camino y avisan a Python de cada palabra que escribes.</p>
+    <p>También es un ejercicio de diseño sobre lo que funciona hoy en el navegador: los puzles y los juegos de palabras dominan las sesiones cortas, el reto diario es igual para todos y el resultado se puede compartir sin desvelar nada. Aquí la tensión no viene de adivinar una palabra oculta, sino de planificar una ruta con un número de pasos como objetivo.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-hecho">
+    <h2 id="t-hecho">Cómo está hecho</h2>
+    <ul>
+      <li><code>codigo.py</code> contiene las reglas: la lista de palabras, el grafo de piedras, el generador de partidas, la validación de cada paso, las pistas, las estrellas, el texto para compartir y la racha.</li>
+      <li><strong>El grafo:</strong> dos palabras son vecinas si se diferencian en una letra. Para construirlo sin comparar todas con todas, cada palabra se agrupa con las que comparten sus otras tres letras (<code>c_sa</code> reúne <code>casa</code>, <code>cosa</code>, <code>cesa</code>…).</li>
+      <li><strong>El par exacto:</strong> una búsqueda en anchura desde la salida, sin pisar las piedras tapadas, da el menor número de pasos. La misma búsqueda sirve para las pistas (desde donde estás) y para avisar de que no hay salida.</li>
+      <li><strong>La crecida:</strong> el generador elige salida y meta, y luego tapa palabras que estaban en algún camino mínimo, de modo que la ruta obvia deja de valer, pero comprueba siempre que sigue habiendo camino. El par que se enseña es el nuevo.</li>
+      <li><strong>La misma partida para todos:</strong> el reto diario convierte la fecha en una semilla (hash FNV-1a) y el generador de números aleatorios (mulberry32) está escrito dentro del archivo, para que dé lo mismo en cualquier versión de Python.</li>
+      <li><strong>Python en el navegador:</strong> <a href="https://pyodide.org" rel="noopener">Pyodide</a> ejecuta Python compilado a WebAssembly. <code>script.js</code> carga <code>codigo.py</code>, llama a sus funciones y recibe el estado como texto JSON.</li>
+      <li><strong>Guardado:</strong> el reto del día guarda el camino y las pistas gastadas; al recargar, Python vuelve a comprobar cada paso guardado.</li>
+      <li><strong>Accesibilidad:</strong> el cambio de letra se marca con subrayado y negrita, no solo con color; hay avisos en texto para lectores de pantalla y se juega entero con teclado.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="t-original">
+    <h2 id="t-original">Originalidad</h2>
+    <p>Pasar de una palabra a otra cambiando una letra por paso es un pasatiempo clásico de uso libre. El nombre, el tema del río, la lista de palabras (escrita para este juego, sin tomar ninguna lista de terceros), la crecida que tapa piedras, el par exacto, las pistas limitadas, las estrellas, los textos y el diseño son propios; no se ha copiado ningún juego, personaje, imagen ni sonido. Todo se dibuja con CSS. Como motor de Python solo se usa Pyodide, cargado desde su CDN.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-codigo">
+    <h2 id="t-codigo">Código Python</h2>
+    <p><a href="codigo.py" download>Descargar codigo.py</a> y <a href="pruebas.py" download>pruebas.py</a>. Para probar la lógica en tu ordenador: <code>python pruebas.py</code>.</p>
+    <details>
+      <summary>Ver el código completo</summary>
+      <pre><code id="python-source">Cargando…</code></pre>
+    </details>
+  </section>
+</main>
+
+<footer class="pie">
+  <a href="../../practicas/">← Volver al índice de prácticas</a>
+  <small>Hecho con ayuda de IA (Claude) como herramienta · Mario Galán Pedrayes · Técnico en Desarrollo Web y Multiplataforma</small>
+</footer>
+<noscript><p class="aviso">Esta página necesita JavaScript para ejecutar el juego.</p></noscript>
+</body>
+</html>

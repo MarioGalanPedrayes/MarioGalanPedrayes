@@ -2,6 +2,16 @@
   {
     "tema": "Juegos",
     "tecnologia": "Python",
+    "carpeta": "PruebasMCPClaude/juegos/python-pasaderas",
+    "titulo": "PASADERAS — puzle de palabras en grafo: cambiar una letra por paso, piedras tapadas por la crecida, par exacto por búsqueda en anchura, pistas limitadas y reto diario con racha",
+    "descripcion": "Juego de palabras de cuatro letras para cruzar un río: de la palabra de salida a la meta cambiando una letra por paso, sin repetir piedras ni pisar las que tapa la crecida (visibles de antemano). Tres niveles (Vado, Corriente, Torrente), par exacto calculado en Python con búsqueda en anchura, estrellas según pasos y pistas (3), deshacer ilimitado, opción de rendirse y reto diario con racha. Lista de palabras propia y generador determinista mulberry32.",
+    "ejecutable_en_navegador": true,
+    "url": "https://MarioGalanPedrayes.github.io/MarioGalanPedrayes/PruebasMCPClaude/juegos/python-pasaderas/",
+    "fecha": "2026-11-25"
+  },
+  {
+    "tema": "Juegos",
+    "tecnologia": "Python",
     "carpeta": "PruebasMCPClaude/juegos/python-recua",
     "titulo": "Recua — ruta con ramas, gestión de pan/ánimo/monedas/sacos, encuentros con resultado oculto, reto diario y mejoras",
     "descripcion": "Roguelite de ruta: guías una recua de mulas por un mapa de senderos visible, del valle a la cumbre. Cada tramo gasta pan; en aldeas, almacenes, ferias y ermitas compras, vendes o descansas; los pasos difíciles obligan a elegir entre ánimo y pan; los encuentros son apuestas con resultado fijado por semilla. Un solucionador exacto en Python da la referencia, las estrellas y 3 pistas. Reto diario con racha y práctica con sellos para mejoras permanentes.",
